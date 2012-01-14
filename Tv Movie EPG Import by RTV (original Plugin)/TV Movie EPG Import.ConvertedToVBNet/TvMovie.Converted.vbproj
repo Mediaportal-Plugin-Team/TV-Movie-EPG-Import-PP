@@ -1,0 +1,109 @@
+﻿<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{9038DBB3-C3CC-4ED5-A1DB-E922CEC59B35}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>TvMovie</RootNamespace>
+    <AssemblyName>TvMovie++</AssemblyName>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <SourceAnalysisOverrideSettingsFile>C:\Users\ab\Desktop\SharpDevelopPortable\App\SharpDevelop\bin\Data\settings\Settings.SourceAnalysis</SourceAnalysisOverrideSettingsFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG,TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG,TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.VisualBasic.Targets" />
+  <ItemGroup>
+    <Import Include="Microsoft.VisualBasic" />
+    <Import Include="System" />
+    <Reference Include="Common.Utils">
+      <HintPath>C:\Program Files\Team MediaPortal\MediaPortal TV Server\Common.Utils.dll</HintPath>
+    </Reference>
+    <Reference Include="Gentle.Common">
+      <HintPath>C:\Program Files\Team MediaPortal\MediaPortal TV Server\Gentle.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="Gentle.Framework">
+      <HintPath>C:\Program Files\Team MediaPortal\MediaPortal TV Server\Gentle.Framework.dll</HintPath>
+    </Reference>
+    <Reference Include="PluginBase">
+      <HintPath>C:\Program Files\Team MediaPortal\MediaPortal TV Server\PluginBase.dll</HintPath>
+    </Reference>
+    <Reference Include="PowerScheduler.Interfaces">
+      <HintPath>C:\Program Files\Team MediaPortal\MediaPortal TV Server\PowerScheduler.Interfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="SetupControls">
+      <HintPath>C:\Program Files\Team MediaPortal\MediaPortal TV Server\SetupControls.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="TvBusinessLayer">
+      <HintPath>C:\Program Files\Team MediaPortal\MediaPortal TV Server\TvBusinessLayer.dll</HintPath>
+    </Reference>
+    <Reference Include="TvControl">
+      <HintPath>C:\Program Files\Team MediaPortal\MediaPortal TV Server\TvControl.dll</HintPath>
+    </Reference>
+    <Reference Include="TVDatabase">
+      <HintPath>C:\Program Files\Team MediaPortal\MediaPortal TV Server\TVDatabase.dll</HintPath>
+    </Reference>
+    <Reference Include="TvLibrary.Interfaces">
+      <HintPath>C:\Program Files\Team MediaPortal\MediaPortal TV Server\TvLibrary.Interfaces.dll</HintPath>
+    </Reference>
+    <Compile Include="Properties\AssemblyInfo.vb" />
+    <Compile Include="SolutionInfo.vb" />
+    <Compile Include="TvMovie.vb" />
+    <Compile Include="TvMovieDatabase.vb" />
+    <Compile Include="TvMovieSetup.Designer.vb">
+      <DependentUpon>TvMovieSetup.vb</DependentUpon>
+    </Compile>
+    <Compile Include="TvMovieSetup.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <EmbeddedResource Include="TvMovieSetup.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>TvMovieSetup.vb</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+</Project>

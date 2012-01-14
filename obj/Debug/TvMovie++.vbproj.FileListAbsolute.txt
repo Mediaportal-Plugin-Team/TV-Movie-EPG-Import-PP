@@ -1,0 +1,11 @@
+Z:\Projekte\MediaPortal\TVMovie++\bin\Debug\TvMovie++.dll
+Z:\Projekte\MediaPortal\TVMovie++\bin\Debug\TvMovie++.pdb
+Z:\Projekte\MediaPortal\TVMovie++\obj\Debug\ResolveAssemblyReference.cache
+Z:\Projekte\MediaPortal\TVMovie++\obj\Debug\TvMovie.SetupTv.Sections.TvMovieSetup.resources
+Z:\Projekte\MediaPortal\TVMovie++\obj\Debug\TvMovie++.vbproj.GenerateResource.Cache
+Z:\Projekte\MediaPortal\TVMovie++\obj\Debug\TvMovie++.dll
+Z:\Projekte\MediaPortal\TVMovie++\obj\Debug\TvMovie++.pdb
+Z:\Projekte\MediaPortal\TVMovie++\bin\Debug\Libaries\Core.dll
+Z:\Projekte\MediaPortal\TVMovie++\bin\Debug\Libaries\Utils.dll
+Z:\Projekte\MediaPortal\TVMovie++\bin\Debug\Libaries\sqlite.dll
+Z:\Projekte\MediaPortal\TVMovie++\bin\Debug\Libaries\Databases.dll
