@@ -253,7 +253,7 @@ Namespace TvEngine
 
 		Public ReadOnly Property Version() As String Implements ITvServerPlugin.Version
 			Get
-				Return "1.0.3.0"
+                Return "1.0.4.0"
 			End Get
 		End Property
 
@@ -285,7 +285,7 @@ Namespace TvEngine
 				StartStopTimer(False)
 				_stateTimer.Dispose()
 			End If
-		End Sub
+        End Sub
         <CLSCompliant(False)> _
         Public ReadOnly Property Setup() As SectionSettings Implements ITvServerPlugin.Setup
             Get
@@ -293,7 +293,8 @@ Namespace TvEngine
             End Get
         End Property
 
-		#End Region
+#End Region
+
     End Class
 
 #Region "32/64bit check"

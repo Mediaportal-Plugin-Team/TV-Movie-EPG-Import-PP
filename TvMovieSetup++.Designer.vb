@@ -79,6 +79,9 @@ Namespace SetupTv.Sections
             Me.checkBoxEnableImport = New MediaPortal.UserInterface.Controls.MPCheckBox
             Me.tabPageImportOptions = New System.Windows.Forms.TabPage
             Me.GroupBox2 = New System.Windows.Forms.GroupBox
+            Me.CheckBoxMyFilms = New MediaPortal.UserInterface.Controls.MPCheckBox
+            Me.CheckBoxMovingPictures = New MediaPortal.UserInterface.Controls.MPCheckBox
+            Me.CheckBoxTvSeries = New MediaPortal.UserInterface.Controls.MPCheckBox
             Me.ButtonBrowseMPDatabases = New System.Windows.Forms.Button
             Me.Label3 = New System.Windows.Forms.Label
             Me.tbMPDatabasePath = New System.Windows.Forms.TextBox
@@ -107,9 +110,7 @@ Namespace SetupTv.Sections
             Me.columnHeader2 = New System.Windows.Forms.ColumnHeader
             Me.fileDialogDb = New System.Windows.Forms.OpenFileDialog
             Me.OpenFileDialog1 = New System.Windows.Forms.OpenFileDialog
-            Me.CheckBoxTvSeries = New MediaPortal.UserInterface.Controls.MPCheckBox
-            Me.CheckBoxMovingPictures = New MediaPortal.UserInterface.Controls.MPCheckBox
-            Me.CheckBoxMyFilms = New MediaPortal.UserInterface.Controls.MPCheckBox
+            Me.ButtonEPGgrab = New System.Windows.Forms.Button
             Me.tabControlTvMovie.SuspendLayout()
             Me.tabPageSettings.SuspendLayout()
             Me.groupBoxEnableTvMovie.SuspendLayout()
@@ -448,6 +449,39 @@ Namespace SetupTv.Sections
             Me.GroupBox2.TabStop = False
             Me.GroupBox2.Text = "Import additional Infos from MediaPortal databases"
             '
+            'CheckBoxMyFilms
+            '
+            Me.CheckBoxMyFilms.AutoSize = True
+            Me.CheckBoxMyFilms.FlatStyle = System.Windows.Forms.FlatStyle.Popup
+            Me.CheckBoxMyFilms.Location = New System.Drawing.Point(16, 107)
+            Me.CheckBoxMyFilms.Name = "CheckBoxMyFilms"
+            Me.CheckBoxMyFilms.Size = New System.Drawing.Size(148, 17)
+            Me.CheckBoxMyFilms.TabIndex = 71
+            Me.CheckBoxMyFilms.Text = "My Films (not included yet)"
+            Me.CheckBoxMyFilms.UseVisualStyleBackColor = True
+            '
+            'CheckBoxMovingPictures
+            '
+            Me.CheckBoxMovingPictures.AutoSize = True
+            Me.CheckBoxMovingPictures.FlatStyle = System.Windows.Forms.FlatStyle.Popup
+            Me.CheckBoxMovingPictures.Location = New System.Drawing.Point(16, 84)
+            Me.CheckBoxMovingPictures.Name = "CheckBoxMovingPictures"
+            Me.CheckBoxMovingPictures.Size = New System.Drawing.Size(181, 17)
+            Me.CheckBoxMovingPictures.TabIndex = 70
+            Me.CheckBoxMovingPictures.Text = "MovingPictures (not included yet)"
+            Me.CheckBoxMovingPictures.UseVisualStyleBackColor = True
+            '
+            'CheckBoxTvSeries
+            '
+            Me.CheckBoxTvSeries.AutoSize = True
+            Me.CheckBoxTvSeries.FlatStyle = System.Windows.Forms.FlatStyle.Popup
+            Me.CheckBoxTvSeries.Location = New System.Drawing.Point(16, 61)
+            Me.CheckBoxTvSeries.Name = "CheckBoxTvSeries"
+            Me.CheckBoxTvSeries.Size = New System.Drawing.Size(85, 17)
+            Me.CheckBoxTvSeries.TabIndex = 69
+            Me.CheckBoxTvSeries.Text = "MP-TvSeries"
+            Me.CheckBoxTvSeries.UseVisualStyleBackColor = True
+            '
             'ButtonBrowseMPDatabases
             '
             Me.ButtonBrowseMPDatabases.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
@@ -619,6 +653,7 @@ Namespace SetupTv.Sections
             Me.groupBoxMapping.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
                         Or System.Windows.Forms.AnchorStyles.Left) _
                         Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.groupBoxMapping.Controls.Add(Me.ButtonEPGgrab)
             Me.groupBoxMapping.Controls.Add(Me.panelTimeSpan)
             Me.groupBoxMapping.Controls.Add(Me.treeViewMpChannels)
             Me.groupBoxMapping.Controls.Add(Me.treeViewTvMStations)
@@ -640,7 +675,7 @@ Namespace SetupTv.Sections
             Me.panelTimeSpan.Controls.Add(Me.maskedTextBoxTimeStart)
             Me.panelTimeSpan.Controls.Add(Me.label1)
             Me.panelTimeSpan.Controls.Add(Me.maskedTextBoxTimeEnd)
-            Me.panelTimeSpan.Location = New System.Drawing.Point(64, 298)
+            Me.panelTimeSpan.Location = New System.Drawing.Point(14, 298)
             Me.panelTimeSpan.Name = "panelTimeSpan"
             Me.panelTimeSpan.Size = New System.Drawing.Size(139, 27)
             Me.panelTimeSpan.TabIndex = 4
@@ -713,7 +748,7 @@ Namespace SetupTv.Sections
             Me.treeViewTvMStations.ShowNodeToolTips = True
             Me.treeViewTvMStations.ShowPlusMinus = False
             Me.treeViewTvMStations.ShowRootLines = False
-            Me.treeViewTvMStations.Size = New System.Drawing.Size(172, 270)
+            Me.treeViewTvMStations.Size = New System.Drawing.Size(172, 244)
             Me.treeViewTvMStations.Sorted = True
             Me.treeViewTvMStations.TabIndex = 3
             '
@@ -774,38 +809,14 @@ Namespace SetupTv.Sections
             Me.OpenFileDialog1.Filter = "Application (*.exe)|*.exe|All files (*.*)|*.*"
             Me.OpenFileDialog1.InitialDirectory = "Environment.GetFolderPath(Environment.SpecialFolder.MyComputer)"
             '
-            'CheckBoxTvSeries
+            'ButtonEPGgrab
             '
-            Me.CheckBoxTvSeries.AutoSize = True
-            Me.CheckBoxTvSeries.FlatStyle = System.Windows.Forms.FlatStyle.Popup
-            Me.CheckBoxTvSeries.Location = New System.Drawing.Point(16, 61)
-            Me.CheckBoxTvSeries.Name = "CheckBoxTvSeries"
-            Me.CheckBoxTvSeries.Size = New System.Drawing.Size(85, 17)
-            Me.CheckBoxTvSeries.TabIndex = 69
-            Me.CheckBoxTvSeries.Text = "MP-TvSeries"
-            Me.CheckBoxTvSeries.UseVisualStyleBackColor = True
-            '
-            'CheckBoxMovingPictures
-            '
-            Me.CheckBoxMovingPictures.AutoSize = True
-            Me.CheckBoxMovingPictures.FlatStyle = System.Windows.Forms.FlatStyle.Popup
-            Me.CheckBoxMovingPictures.Location = New System.Drawing.Point(16, 84)
-            Me.CheckBoxMovingPictures.Name = "CheckBoxMovingPictures"
-            Me.CheckBoxMovingPictures.Size = New System.Drawing.Size(181, 17)
-            Me.CheckBoxMovingPictures.TabIndex = 70
-            Me.CheckBoxMovingPictures.Text = "MovingPictures (not included yet)"
-            Me.CheckBoxMovingPictures.UseVisualStyleBackColor = True
-            '
-            'CheckBoxMyFilms
-            '
-            Me.CheckBoxMyFilms.AutoSize = True
-            Me.CheckBoxMyFilms.FlatStyle = System.Windows.Forms.FlatStyle.Popup
-            Me.CheckBoxMyFilms.Location = New System.Drawing.Point(16, 107)
-            Me.CheckBoxMyFilms.Name = "CheckBoxMyFilms"
-            Me.CheckBoxMyFilms.Size = New System.Drawing.Size(148, 17)
-            Me.CheckBoxMyFilms.TabIndex = 71
-            Me.CheckBoxMyFilms.Text = "My Films (not included yet)"
-            Me.CheckBoxMyFilms.UseVisualStyleBackColor = True
+            Me.ButtonEPGgrab.Location = New System.Drawing.Point(178, 336)
+            Me.ButtonEPGgrab.Name = "ButtonEPGgrab"
+            Me.ButtonEPGgrab.Size = New System.Drawing.Size(249, 27)
+            Me.ButtonEPGgrab.TabIndex = 5
+            Me.ButtonEPGgrab.Text = "Enable EPG grabbing for not mapped channels"
+            Me.ButtonEPGgrab.UseVisualStyleBackColor = True
             '
             'TvMovieSetup
             '
@@ -902,5 +913,6 @@ Namespace SetupTv.Sections
         Private WithEvents CheckBoxTvSeries As MediaPortal.UserInterface.Controls.MPCheckBox
         Private WithEvents CheckBoxMyFilms As MediaPortal.UserInterface.Controls.MPCheckBox
         Private WithEvents CheckBoxMovingPictures As MediaPortal.UserInterface.Controls.MPCheckBox
+        Friend WithEvents ButtonEPGgrab As System.Windows.Forms.Button
     End Class
 End Namespace

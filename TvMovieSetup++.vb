@@ -805,7 +805,14 @@ Namespace SetupTv.Sections
                 End If
             End With
         End Sub
+        Private Sub ButtonEPGgrab_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonEPGgrab.Click
+            SaveMapping()
+
+            Dim EPGgrab As New frmEPGgrab
+            EPGgrab.ShowDialog()
+        End Sub
 #End Region
+
 
     End Class
 End Namespace
