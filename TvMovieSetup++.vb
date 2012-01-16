@@ -244,6 +244,14 @@ Namespace SetupTv.Sections
             End If
             setting.Persist()
 
+            setting = layer.GetSetting("ClickfinderDataAvailable", "false")
+            If CheckBoxClickfinderPG.Checked Then
+                setting.Value = "true"
+            Else
+                setting.Value = "false"
+            End If
+            setting.Persist()
+
         End Sub
 
         Public Overrides Sub OnSectionActivated()
@@ -283,6 +291,7 @@ Namespace SetupTv.Sections
             CheckBoxTvSeries.Checked = layer.GetSetting("TvMovieImportTvSeriesInfos", "false").Value = "true"
             CheckBoxMovingPictures.Checked = layer.GetSetting("TvMovieImportMovingPicturesInfos", "false").Value = "true"
             CheckBoxMyFilms.Checked = layer.GetSetting("TvMovieImportMyFilmsInfos", "false").Value = "true"
+            CheckBoxClickfinderPG.Checked = layer.GetSetting("ClickfinderDataAvailable", "false").Value = "true"
 
         End Sub
 
@@ -812,7 +821,6 @@ Namespace SetupTv.Sections
             EPGgrab.ShowDialog()
         End Sub
 #End Region
-
 
     End Class
 End Namespace

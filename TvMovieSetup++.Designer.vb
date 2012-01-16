@@ -97,6 +97,7 @@ Namespace SetupTv.Sections
             Me.tabPageMapChannels = New MediaPortal.UserInterface.Controls.MPTabPage
             Me.labelNote = New MediaPortal.UserInterface.Controls.MPLabel
             Me.groupBoxMapping = New MediaPortal.UserInterface.Controls.MPGroupBox
+            Me.ButtonEPGgrab = New System.Windows.Forms.Button
             Me.panelTimeSpan = New System.Windows.Forms.Panel
             Me.maskedTextBoxTimeStart = New System.Windows.Forms.MaskedTextBox
             Me.label1 = New MediaPortal.UserInterface.Controls.MPLabel
@@ -108,9 +109,10 @@ Namespace SetupTv.Sections
             Me.columnHeader1 = New System.Windows.Forms.ColumnHeader
             Me.listView2 = New MediaPortal.UserInterface.Controls.MPListView
             Me.columnHeader2 = New System.Windows.Forms.ColumnHeader
+            Me.tabClickfinderPG = New System.Windows.Forms.TabPage
+            Me.CheckBoxClickfinderPG = New MediaPortal.UserInterface.Controls.MPCheckBox
             Me.fileDialogDb = New System.Windows.Forms.OpenFileDialog
             Me.OpenFileDialog1 = New System.Windows.Forms.OpenFileDialog
-            Me.ButtonEPGgrab = New System.Windows.Forms.Button
             Me.tabControlTvMovie.SuspendLayout()
             Me.tabPageSettings.SuspendLayout()
             Me.groupBoxEnableTvMovie.SuspendLayout()
@@ -124,6 +126,7 @@ Namespace SetupTv.Sections
             Me.tabPageMapChannels.SuspendLayout()
             Me.groupBoxMapping.SuspendLayout()
             Me.panelTimeSpan.SuspendLayout()
+            Me.tabClickfinderPG.SuspendLayout()
             Me.SuspendLayout()
             '
             'openFileDialog
@@ -143,6 +146,7 @@ Namespace SetupTv.Sections
             Me.tabControlTvMovie.Controls.Add(Me.tabPageSettings)
             Me.tabControlTvMovie.Controls.Add(Me.tabPageImportOptions)
             Me.tabControlTvMovie.Controls.Add(Me.tabPageMapChannels)
+            Me.tabControlTvMovie.Controls.Add(Me.tabClickfinderPG)
             Me.tabControlTvMovie.Location = New System.Drawing.Point(0, 0)
             Me.tabControlTvMovie.Name = "tabControlTvMovie"
             Me.tabControlTvMovie.SelectedIndex = 0
@@ -667,6 +671,15 @@ Namespace SetupTv.Sections
             Me.groupBoxMapping.TabStop = False
             Me.groupBoxMapping.Text = "Map channels to TV Movie stations"
             '
+            'ButtonEPGgrab
+            '
+            Me.ButtonEPGgrab.Location = New System.Drawing.Point(178, 336)
+            Me.ButtonEPGgrab.Name = "ButtonEPGgrab"
+            Me.ButtonEPGgrab.Size = New System.Drawing.Size(249, 27)
+            Me.ButtonEPGgrab.TabIndex = 5
+            Me.ButtonEPGgrab.Text = "Enable EPG grabbing for not mapped channels"
+            Me.ButtonEPGgrab.UseVisualStyleBackColor = True
+            '
             'panelTimeSpan
             '
             Me.panelTimeSpan.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
@@ -798,6 +811,28 @@ Namespace SetupTv.Sections
             Me.columnHeader2.Text = "TV Movie stations"
             Me.columnHeader2.Width = 179
             '
+            'tabClickfinderPG
+            '
+            Me.tabClickfinderPG.Controls.Add(Me.CheckBoxClickfinderPG)
+            Me.tabClickfinderPG.Location = New System.Drawing.Point(4, 22)
+            Me.tabClickfinderPG.Name = "tabClickfinderPG"
+            Me.tabClickfinderPG.Padding = New System.Windows.Forms.Padding(3)
+            Me.tabClickfinderPG.Size = New System.Drawing.Size(456, 358)
+            Me.tabClickfinderPG.TabIndex = 3
+            Me.tabClickfinderPG.Text = "Clickfinder ProgramGuide"
+            Me.tabClickfinderPG.UseVisualStyleBackColor = True
+            '
+            'CheckBoxClickfinderPG
+            '
+            Me.CheckBoxClickfinderPG.AutoSize = True
+            Me.CheckBoxClickfinderPG.FlatStyle = System.Windows.Forms.FlatStyle.Popup
+            Me.CheckBoxClickfinderPG.Location = New System.Drawing.Point(18, 22)
+            Me.CheckBoxClickfinderPG.Name = "CheckBoxClickfinderPG"
+            Me.CheckBoxClickfinderPG.Size = New System.Drawing.Size(57, 17)
+            Me.CheckBoxClickfinderPG.TabIndex = 70
+            Me.CheckBoxClickfinderPG.Text = "Enable"
+            Me.CheckBoxClickfinderPG.UseVisualStyleBackColor = True
+            '
             'fileDialogDb
             '
             Me.fileDialogDb.FileName = "TVDaten.mdb"
@@ -808,15 +843,6 @@ Namespace SetupTv.Sections
             '
             Me.OpenFileDialog1.Filter = "Application (*.exe)|*.exe|All files (*.*)|*.*"
             Me.OpenFileDialog1.InitialDirectory = "Environment.GetFolderPath(Environment.SpecialFolder.MyComputer)"
-            '
-            'ButtonEPGgrab
-            '
-            Me.ButtonEPGgrab.Location = New System.Drawing.Point(178, 336)
-            Me.ButtonEPGgrab.Name = "ButtonEPGgrab"
-            Me.ButtonEPGgrab.Size = New System.Drawing.Size(249, 27)
-            Me.ButtonEPGgrab.TabIndex = 5
-            Me.ButtonEPGgrab.Text = "Enable EPG grabbing for not mapped channels"
-            Me.ButtonEPGgrab.UseVisualStyleBackColor = True
             '
             'TvMovieSetup
             '
@@ -848,6 +874,8 @@ Namespace SetupTv.Sections
             Me.groupBoxMapping.PerformLayout()
             Me.panelTimeSpan.ResumeLayout(False)
             Me.panelTimeSpan.PerformLayout()
+            Me.tabClickfinderPG.ResumeLayout(False)
+            Me.tabClickfinderPG.PerformLayout()
             Me.ResumeLayout(False)
 
         End Sub
@@ -881,7 +909,7 @@ Namespace SetupTv.Sections
         Private WithEvents checkBoxSlowImport As MediaPortal.UserInterface.Controls.MPCheckBox
         Private WithEvents linkLabelInfo As System.Windows.Forms.LinkLabel
         Private WithEvents imageListTvmStations As System.Windows.Forms.ImageList
-        Private WithEvents progressBarImportTotal As System.Windows.Forms.ProgressBar
+        Public WithEvents progressBarImportTotal As System.Windows.Forms.ProgressBar
         Private WithEvents buttonImportNow As System.Windows.Forms.Button
         Private WithEvents tabPageImportOptions As System.Windows.Forms.TabPage
         Private WithEvents groupBoxDescriptions As MediaPortal.UserInterface.Controls.MPGroupBox
@@ -914,5 +942,7 @@ Namespace SetupTv.Sections
         Private WithEvents CheckBoxMyFilms As MediaPortal.UserInterface.Controls.MPCheckBox
         Private WithEvents CheckBoxMovingPictures As MediaPortal.UserInterface.Controls.MPCheckBox
         Friend WithEvents ButtonEPGgrab As System.Windows.Forms.Button
+        Friend WithEvents tabClickfinderPG As System.Windows.Forms.TabPage
+        Private WithEvents CheckBoxClickfinderPG As MediaPortal.UserInterface.Controls.MPCheckBox
     End Class
 End Namespace

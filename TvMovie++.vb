@@ -253,7 +253,7 @@ Namespace TvEngine
 
         Public ReadOnly Property Version() As String Implements ITvServerPlugin.Version
             Get
-                Return "1.0.4.0"
+                Return "1.0.4.0 beta"
             End Get
         End Property
 

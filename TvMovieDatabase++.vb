@@ -1108,12 +1108,16 @@ Namespace TvEngine
                 Broker.Execute("CREATE  TABLE `mptvdb`.`TVMovieProgram` ( `idTVMovieProgram` INT NOT NULL AUTO_INCREMENT , `idProgram` INT NOT NULL DEFAULT 0 , `TVMovieBewertung` INT NOT NULL DEFAULT 0 , `idSeries` INT NOT NULL DEFAULT 0 , `idEpisode` VARCHAR(45) NOT NULL , `local` BIT(1) NOT NULL DEFAULT 0 , PRIMARY KEY (`idTVMovieProgram`) )")
             End Try
 
+
             'TVSeries implementation
             If _tvbLayer.GetSetting("TvMovieImportTvSeriesInfos").Value = "true" Then
                 GetSeriesInfos()
             End If
 
-            GetTvMovieHighlights()
+            If _tvbLayer.GetSetting("ClickfinderDataAvailable").Value = "true" Then
+                GetTvMovieHighlights()
+            End If
+
 
             If _tvbLayer.GetSetting("TvMovieRunAppAfter").Value IsNot String.Empty Then
                 RunApplicationAfterImport()
