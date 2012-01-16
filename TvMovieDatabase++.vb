@@ -32,9 +32,8 @@ Imports TvLibrary.Log
 Imports System.Collections
 Imports Gentle.Framework
 Imports Gentle.Common
-
-
-
+Imports TvMovie.TvDatabase
+Imports TvMovie.ClickfinderDB
 
 
 Namespace TvEngine
@@ -1100,9 +1099,21 @@ Namespace TvEngine
 
         Private Sub StartTVMoviePlus()
 
+            'Reset TvMovieProgram Table
+            Try
+                Broker.Execute("drop table `mptvdb`.`tvmovieprogram`")
+                Broker.Execute("CREATE  TABLE `mptvdb`.`TVMovieProgram` ( `idTVMovieProgram` INT NOT NULL AUTO_INCREMENT , `idProgram` INT NOT NULL DEFAULT 0 , `TVMovieBewertung` INT NOT NULL DEFAULT 0 , `idSeries` INT NOT NULL DEFAULT 0 , `idEpisode` VARCHAR(45) NOT NULL , `local` BIT(1) NOT NULL DEFAULT 0 , PRIMARY KEY (`idTVMovieProgram`) )")
+            Catch ex As Exception
+                'Falls die Tabelle nicht existiert, abfangen & erstellen
+                Broker.Execute("CREATE  TABLE `mptvdb`.`TVMovieProgram` ( `idTVMovieProgram` INT NOT NULL AUTO_INCREMENT , `idProgram` INT NOT NULL DEFAULT 0 , `TVMovieBewertung` INT NOT NULL DEFAULT 0 , `idSeries` INT NOT NULL DEFAULT 0 , `idEpisode` VARCHAR(45) NOT NULL , `local` BIT(1) NOT NULL DEFAULT 0 , PRIMARY KEY (`idTVMovieProgram`) )")
+            End Try
+
+            'TVSeries implementation
             If _tvbLayer.GetSetting("TvMovieImportTvSeriesInfos").Value = "true" Then
                 GetSeriesInfos()
             End If
+
+            GetTvMovieHighlights()
 
             If _tvbLayer.GetSetting("TvMovieRunAppAfter").Value IsNot String.Empty Then
                 RunApplicationAfterImport()
@@ -1161,15 +1172,24 @@ Namespace TvEngine
                             _Result(d).EpisodeNum = CStr(_TvSeriesDB.EpisodeIndex)
                             _Result(d).StarRating = _TvSeriesDB.EpisodeRating
 
+                            'Daten in TvMovieProgram schreiben
+                            Dim _TvMovieProgram As New TVMovieProgram(_Result(d).IdProgram)
+                            _TvMovieProgram.idSeries = _TvSeriesDB(i).SeriesID
+                            _TvMovieProgram.idEpisode = _TvSeriesDB.EpisodeCompositeID
+                            _TvMovieProgram.local = True
+
+
                             'Wenn sie nicht lokal existiert, Describtion ändern
                             If _TvSeriesDB.EpisodeExistLocal = False Then
                                 If InStr(_Result(d).Description, "Neue Folge: " & _Result(d).EpisodeName) = 0 Then
                                     _Result(d).Description = Replace(_Result(d).Description, "Folge: " & _Result(d).EpisodeName, "Neue Folge: " & _Result(d).EpisodeName)
                                     _CounterNewEpisode = _CounterNewEpisode + 1
                                 End If
+                                _TvMovieProgram.local = False
                             End If
 
                             _Result(d).Persist()
+                            _TvMovieProgram.Persist()
 
                             _EpisodeFoundCounter = _EpisodeFoundCounter + 1
                         End If
@@ -1184,13 +1204,67 @@ Namespace TvEngine
                 _TvSeriesDB.Dispose()
 
                 Log.Info("")
-                Log.[Info]("TVMovie: Summary: Infos for {0}/{1} episodes found, {2} new episodes identify", _CounterFound, _Counter, _CounterNewEpisode)
+                Log.[Info]("TVMovie: [GetSeriesInfos]: Summary: Infos for {0}/{1} episodes found, {2} new episodes identify, saved in TvMovieProgram", _CounterFound, _Counter, _CounterNewEpisode)
 
             Catch ex As Exception
                 Log.[Error]("TVMovie: [GetSeriesInfos]: exception err:{0} stack:{1}", ex.Message, ex.StackTrace)
             End Try
         End Sub
 
+        Private Sub GetTvMovieHighlights()
+
+            Try
+                'Alle Sendungen mit Bewertung laden
+                Dim _ClickfinderDB As New ClickfinderDB("SELECT Titel, Beginn, Ende, SenderKennung, Bewertung, KzLive, KzWiederholung FROM Sendungen WHERE Bewertung > 0 ORDER BY SenderKennung ASC", TvMovie.DatabasePath)
+                Dim _CounterFound As Integer = 0
+
+                For i As Integer = 0 To _ClickfinderDB.Count - 1
+
+                    'Überprüfen ob SenderKennung gemappt ist
+                    Dim sb As New SqlBuilder(Gentle.Framework.StatementType.Select, GetType(TvMovieMapping))
+                    sb.AddConstraint([Operator].Equals, "stationName", _ClickfinderDB(i).SenderKennung)
+                    Dim stmt As SqlStatement = sb.GetStatement(True)
+                    Dim _Result As IList(Of TvMovieMapping) = ObjectFactory.GetCollection(GetType(TvMovieMapping), stmt.Execute())
+
+                    'Falls channel gemappt, Sendung im Program suchen
+                    If _Result.Count = 1 Then
+                        Dim _channel As Channel = Channel.Retrieve(_Result(0).IdChannel)
+                        Dim _Titel As String = _ClickfinderDB(i).Titel
+
+                        Dim layer As New TvBusinessLayer
+                        'Titel: Live Korrektur
+                        If _ClickfinderDB(i).KzLive = True And layer.GetSetting("TvMovieShowLive").Value = "true" Then
+                            _Titel = _Titel & " (LIVE)"
+                        End If
+                        'Titel: Wdh. Korrektur
+                        If _ClickfinderDB(i).KzWiederholung = True And layer.GetSetting("TvMovieShowRepeating").Value = "true" Then
+                            _Titel = _Titel & " (Wdh.)"
+                        End If
+
+                        'Wenn Program gefunden dann in TvMovieProgram schreiben
+                        If layer.GetProgramExists(_channel, _ClickfinderDB(i).Beginn, _ClickfinderDB(i).Ende).Count = 1 Then
+                            Dim _Program As Program = Program.RetrieveByTitleTimesAndChannel(_Titel, _ClickfinderDB(i).Beginn, _ClickfinderDB(i).Ende, _Result(0).IdChannel)
+                            Dim _TvMovieProgram As New TVMovieProgram(_Program.IdProgram)
+
+                            _TvMovieProgram.TVMovieBewertung = _ClickfinderDB(i).Bewertung
+                            _TvMovieProgram.idEpisode = String.Empty
+                            _TvMovieProgram.Persist()
+
+                            _CounterFound = _CounterFound + 1
+                        Else
+                            'Nur alte Sendungen < 2 Tage sind nicht im EPG enthalten
+                            'Log.[Info]("Channel: {0}, Start: {1}, Ende: {2}", _channel.DisplayName, _ClickfinderDB(i).Beginn, _ClickfinderDB(i).Ende)
+                        End If
+
+                    End If
+                Next
+
+                Log.[Info]("TVMovie: [GetTvMovieHighlights]: Summary: Infos for {0}/{1} saved in TvMovieProgram", _CounterFound, _ClickfinderDB.Count)
+
+            Catch ex As Exception
+                Log.[Error]("TVMovie: [GetTvMovieHighlights]: exception err:{0} stack:{1}", ex.Message, ex.StackTrace)
+            End Try
+        End Sub
 #End Region
     End Class
 

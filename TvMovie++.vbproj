@@ -105,6 +105,8 @@
       <HintPath>C:\Program Files\Team MediaPortal\MediaPortal TV Server\TvLibrary.Interfaces.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Compile Include="Classes\ClickfinderDB.vb" />
+    <Compile Include="Classes\TVMovieProgram.vb" />
     <Compile Include="Classes\TVSeriesDB.vb" />
     <Compile Include="EnableEPGgrab.Designer.vb">
       <DependentUpon>EnableEPGgrab.vb</DependentUpon>

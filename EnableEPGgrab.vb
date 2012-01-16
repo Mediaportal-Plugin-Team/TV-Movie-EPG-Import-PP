@@ -60,7 +60,7 @@ Public Class frmEPGgrab
             For i As Integer = 0 To EPGgrabData.Rows.Count - 1
                 If CBool(EPGgrabData.Rows(i).Cells(0).Value) = True Then
 
-                    Dim _channel As Channel = Channel.Retrieve(EPGgrabData.Rows(i).Cells(1).Value)
+                    Dim _channel As Channel = Channel.Retrieve(CInt(EPGgrabData.Rows(i).Cells(1).Value))
 
                     _channel.GrabEpg = True
                     _channel.Persist()
