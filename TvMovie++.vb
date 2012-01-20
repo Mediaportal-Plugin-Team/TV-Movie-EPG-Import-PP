@@ -46,7 +46,7 @@ Namespace TvEngine
         Private _stateTimer As System.Timers.Timer
         Private _isImporting As Boolean = False
         Private Const _timerIntervall As Long = 1800000
-        Private Const _localMachineRegSubKey As String = "HKEY_CURRENT_USER\Software\Classes\VirtualStore\MACHINE\SOFTWARE\Ewe\TVGhost\Gemeinsames"
+        Private Const _localMachineRegSubKey As String = "HKEY_CURRENT_USER\Software\Ewe\TVGhost\Gemeinsames"
 
         Private Const _virtualStoreRegSubKey32b As String = "HKEY_CURRENT_USER\Software\Classes\VirtualStore\MACHINE\SOFTWARE\Ewe\TVGhost\Gemeinsames"
 
@@ -60,11 +60,14 @@ Namespace TvEngine
             Dim value As String = String.Empty
 
             Try
+                value = _localMachineRegSubKey
 
-                If OS.GetOSType = OS.OSType.Is32Bit Then
-                    value = My.Computer.Registry.GetValue(_virtualStoreRegSubKey32b, valueName, Nothing).ToString
-                Else
-                    value = My.Computer.Registry.GetValue(_virtualStoreRegSubKey32b, valueName, Nothing).ToString
+                If String.IsNullOrEmpty(value) Then
+                    If OS.GetOSType = OS.OSType.Is32Bit Then
+                        value = My.Computer.Registry.GetValue(_virtualStoreRegSubKey32b, valueName, Nothing).ToString
+                    Else
+                        value = My.Computer.Registry.GetValue(_virtualStoreRegSubKey64b, valueName, Nothing).ToString
+                    End If
                 End If
 
             Catch ex As Exception
@@ -84,7 +87,13 @@ Namespace TvEngine
                 Dim path As String = setting.Value
 
                 If Not File.Exists(path) Then
-                    path = GetRegistryValueFromValueName("ProgrammPath")
+                    setting = TvMovieDatabase.TvBLayer.GetSetting("TvMoviedatabasepath", String.Empty)
+                    path = IO.Path.GetDirectoryName(setting.Value)
+
+                    If Not IO.Directory.Exists(path) Then
+                        path = GetRegistryValueFromValueName("ProgrammPath")
+                    End If
+
                     setting.Value = path
                     setting.Persist()
                 End If
@@ -101,6 +110,7 @@ Namespace TvEngine
                 Dim path As String = TvMovieDatabase.TvBLayer.GetSetting("TvMoviedatabasepath", String.Empty).Value
 
                 If Not File.Exists(path) Then
+
                     path = GetRegistryValueFromValueName("DBDatei")
                 End If
 
@@ -253,7 +263,7 @@ Namespace TvEngine
 
         Public ReadOnly Property Version() As String Implements ITvServerPlugin.Version
             Get
-                Return "1.0.4.0 beta"
+                Return "1.0.4.3 beta"
             End Get
         End Property
 
