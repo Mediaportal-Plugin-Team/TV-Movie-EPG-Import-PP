@@ -234,26 +234,26 @@ Click Next to continue or Cancel to exit Setup.</Value>
     <Name>Tv Movie EPG Import++</Name>
     <Id>2c7eaceb-5b35-488a-aefb-f5c72c0410f4</Id>
     <Author>rtv, Scrounger</Author>
-    <HomePage />
+    <HomePage>http://code.google.com/p/tv-movie-epg-import-plusplus/</HomePage>
     <ForumPage />
     <UpdateUrl />
     <Version>
       <Major>1</Major>
       <Minor>0</Minor>
       <Build>4</Build>
-      <Revision>3</Revision>
+      <Revision>6</Revision>
     </Version>
     <ExtensionDescription />
     <VersionDescription />
     <DevelopmentStatus>Beta</DevelopmentStatus>
     <OnlineLocation />
-    <ReleaseDate>2012-01-20T17:12:10.717709+01:00</ReleaseDate>
+    <ReleaseDate>2012-01-21T17:12:10</ReleaseDate>
     <Tags />
     <Location>Z:\Projekte\MediaPortal\TVMovie++\MPE1\Tv Movie EPG Import++.mpe1</Location>
     <Params>
       <Items>
         <SectionParam Name="Icon">
-          <Value />
+          <Value>..\Grafiken\MPE1 Icon.png</Value>
           <ValueType>File</ValueType>
           <Description>The icon file of the package (jpg,png,bmp)</Description>
         </SectionParam>
@@ -326,11 +326,18 @@ Click Next to continue or Cancel to exit Setup.</Value>
         <ZipFileName>Installer{CopyFile}\{9f26bc4e-1b89-4998-b9e8-a9eef5396f6e}-TvMovie++.dll</ZipFileName>
         <DestinationFilename>%Temp%\TvServer\Plugins\TvMovie++.dll</DestinationFilename>
       </FileItem>
+      <FileItem InstallType="CopyFile" SystemFile="true" Modified="true">
+        <Param1 />
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\Grafiken\MPE1 Icon.png</LocalFileName>
+        <ZipFileName>Installer{CopyFile}\{18251e59-7ad0-425f-8695-e3cce9c7aa6f}-MPE1 Icon.png</ZipFileName>
+        <DestinationFilename />
+      </FileItem>
     </Items>
   </UniqueFileList>
   <ProjectSettings>
     <FolderGroups />
-    <ProjectFilename>TvMovie++.xmp2</ProjectFilename>
+    <ProjectFilename>Tv Movie EPG Import++.xmp2</ProjectFilename>
   </ProjectSettings>
   <IsSkin>false</IsSkin>
 </PackageClass>

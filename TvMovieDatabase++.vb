@@ -1216,6 +1216,9 @@ Namespace TvEngine
         End Sub
 
         Private Sub GetTvMovieHighlights()
+            Dim _Debug As String = String.Empty
+
+
 
             Try
                 'Alle Sendungen mit Bewertung laden
@@ -1233,22 +1236,17 @@ Namespace TvEngine
                     'Falls channel gemappt, Sendung im Program suchen
                     If _Result.Count = 1 Then
                         Dim _channel As Channel = Channel.Retrieve(_Result(0).IdChannel)
-                        Dim _Titel As String = _ClickfinderDB(i).Titel
+
+                        _Debug = "Clickfinder Titel: " & _ClickfinderDB(i).Titel & ", Channel: " & _channel.DisplayName
 
                         Dim layer As New TvBusinessLayer
-                        'Titel: Live Korrektur
-                        If _ClickfinderDB(i).KzLive = True And layer.GetSetting("TvMovieShowLive").Value = "true" Then
-                            _Titel = _Titel & " (LIVE)"
-                        End If
-                        'Titel: Wdh. Korrektur
-                        If _ClickfinderDB(i).KzWiederholung = True And layer.GetSetting("TvMovieShowRepeating").Value = "true" Then
-                            _Titel = _Titel & " (Wdh.)"
-                        End If
 
                         'Wenn Program gefunden dann in TvMovieProgram schreiben
                         If layer.GetProgramExists(_channel, _ClickfinderDB(i).Beginn, _ClickfinderDB(i).Ende).Count = 1 Then
-                            Dim _Program As Program = Program.RetrieveByTitleTimesAndChannel(_Titel, _ClickfinderDB(i).Beginn, _ClickfinderDB(i).Ende, _Result(0).IdChannel)
-                            Dim _TvMovieProgram As New TVMovieProgram(_Program.IdProgram)
+                            Dim _Program As IList(Of Program) = layer.GetPrograms(_channel, _ClickfinderDB(i).Beginn)
+
+                            'Dim _Program As Program = Program..RetrieveByTitleTimesAndChannel(_Titel, _ClickfinderDB(i).Beginn, _ClickfinderDB(i).Ende, _Result(0).IdChannel)
+                            Dim _TvMovieProgram As New TVMovieProgram(_Program(0).IdProgram)
 
                             _TvMovieProgram.TVMovieBewertung = _ClickfinderDB(i).Bewertung
                             _TvMovieProgram.idEpisode = String.Empty
@@ -1266,7 +1264,8 @@ Namespace TvEngine
                 Log.[Info]("TVMovie: [GetTvMovieHighlights]: Summary: Infos for {0}/{1} saved in TvMovieProgram", _CounterFound, _ClickfinderDB.Count)
 
             Catch ex As Exception
-                Log.[Error]("TVMovie: [GetTvMovieHighlights]: exception err:{0} stack:{1}", ex.Message, ex.StackTrace)
+                Log.[Error]("TVMovie: [GetTvMovieHighlights]: databasePath: {0} exception err:{1} stack:{2}", TvMovie.DatabasePath, ex.Message, ex.StackTrace)
+                Log.[Error]("TVMovie: [GetTvMovieHighlights]: get {0}", _Debug)
             End Try
         End Sub
 #End Region

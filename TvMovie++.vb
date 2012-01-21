@@ -60,14 +60,10 @@ Namespace TvEngine
             Dim value As String = String.Empty
 
             Try
-                value = _localMachineRegSubKey
-
-                If String.IsNullOrEmpty(value) Then
-                    If OS.GetOSType = OS.OSType.Is32Bit Then
-                        value = My.Computer.Registry.GetValue(_virtualStoreRegSubKey32b, valueName, Nothing).ToString
-                    Else
-                        value = My.Computer.Registry.GetValue(_virtualStoreRegSubKey64b, valueName, Nothing).ToString
-                    End If
+                If OS.GetOSType = OS.OSType.Is32Bit Then
+                    value = My.Computer.Registry.GetValue(_virtualStoreRegSubKey32b, valueName, Nothing).ToString
+                Else
+                    value = My.Computer.Registry.GetValue(_virtualStoreRegSubKey64b, valueName, Nothing).ToString
                 End If
 
             Catch ex As Exception
@@ -87,16 +83,17 @@ Namespace TvEngine
                 Dim path As String = setting.Value
 
                 If Not File.Exists(path) Then
-                    setting = TvMovieDatabase.TvBLayer.GetSetting("TvMoviedatabasepath", String.Empty)
-                    path = IO.Path.GetDirectoryName(setting.Value)
+                    Dim setting2 As Setting = TvMovieDatabase.TvBLayer.GetSetting("TvMovieDatabasepath", String.Empty)
+                    path = IO.Path.GetDirectoryName(setting2.Value) & "\"
 
                     If Not IO.Directory.Exists(path) Then
                         path = GetRegistryValueFromValueName("ProgrammPath")
                     End If
 
-                    setting.Value = path
-                    setting.Persist()
                 End If
+
+                setting.Value = path
+                setting.Persist()
 
                 Return path
             End Get
@@ -263,7 +260,7 @@ Namespace TvEngine
 
         Public ReadOnly Property Version() As String Implements ITvServerPlugin.Version
             Get
-                Return "1.0.4.3 beta"
+                Return "1.0.4.6 beta"
             End Get
         End Property
 
