@@ -10,3 +10,4 @@ Z:\Projekte\MediaPortal\TVMovie++\bin\Debug\Libaries\Utils.dll
 Z:\Projekte\MediaPortal\TVMovie++\bin\Debug\Libaries\sqlite.dll
 Z:\Projekte\MediaPortal\TVMovie++\bin\Debug\Libaries\Databases.dll
 Z:\Projekte\MediaPortal\TVMovie++\obj\Debug\TvMovie.frmEPGgrab.resources
+Z:\Projekte\MediaPortal\TVMovie++\obj\Debug\TvMovie.Resources.resources

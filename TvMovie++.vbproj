@@ -115,6 +115,11 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.vb" />
+    <Compile Include="Properties\Resources.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="SolutionInfo.vb" />
     <Compile Include="TvMovie++.vb" />
     <Compile Include="TvMovieDatabase++.vb" />
@@ -126,6 +131,11 @@
     </Compile>
     <EmbeddedResource Include="EnableEPGgrab.resx">
       <DependentUpon>EnableEPGgrab.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <CustomToolNamespace>My.Resources</CustomToolNamespace>
+      <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.vb</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="TvMovieSetup++.resx">
       <SubType>Designer</SubType>

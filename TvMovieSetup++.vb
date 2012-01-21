@@ -94,7 +94,9 @@ Namespace SetupTv.Sections
         Private Sub linkLabelInfo_LinkClicked(ByVal sender As Object, ByVal e As LinkLabelLinkClickedEventArgs) Handles linkLabelInfo.LinkClicked
             Process.Start("http://www.tvmovie.de/ClickFinder.57.0.html")
         End Sub
-
+        Private Sub LinkClickfinderPG_LinkClicked(ByVal sender As System.Object, ByVal e As System.Windows.Forms.LinkLabelLinkClickedEventArgs) Handles LinkClickfinderPG.LinkClicked
+            Process.Start("http://de.team-mediaportal.com/erweiterungen/fernsehen/clickfinder-programguide")
+        End Sub
 #End Region
 
 #Region "Constructor"
@@ -821,6 +823,7 @@ Namespace SetupTv.Sections
             EPGgrab.ShowDialog()
         End Sub
 #End Region
+
 
     End Class
 End Namespace

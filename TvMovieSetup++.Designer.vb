@@ -110,9 +110,13 @@ Namespace SetupTv.Sections
             Me.listView2 = New MediaPortal.UserInterface.Controls.MPListView
             Me.columnHeader2 = New System.Windows.Forms.ColumnHeader
             Me.tabClickfinderPG = New System.Windows.Forms.TabPage
+            Me.GroupBox3 = New System.Windows.Forms.GroupBox
+            Me.LinkClickfinderPG = New System.Windows.Forms.LinkLabel
             Me.CheckBoxClickfinderPG = New MediaPortal.UserInterface.Controls.MPCheckBox
             Me.fileDialogDb = New System.Windows.Forms.OpenFileDialog
             Me.OpenFileDialog1 = New System.Windows.Forms.OpenFileDialog
+            Me.Label4 = New System.Windows.Forms.Label
+            Me.Label5 = New System.Windows.Forms.Label
             Me.tabControlTvMovie.SuspendLayout()
             Me.tabPageSettings.SuspendLayout()
             Me.groupBoxEnableTvMovie.SuspendLayout()
@@ -127,6 +131,7 @@ Namespace SetupTv.Sections
             Me.groupBoxMapping.SuspendLayout()
             Me.panelTimeSpan.SuspendLayout()
             Me.tabClickfinderPG.SuspendLayout()
+            Me.GroupBox3.SuspendLayout()
             Me.SuspendLayout()
             '
             'openFileDialog
@@ -813,7 +818,7 @@ Namespace SetupTv.Sections
             '
             'tabClickfinderPG
             '
-            Me.tabClickfinderPG.Controls.Add(Me.CheckBoxClickfinderPG)
+            Me.tabClickfinderPG.Controls.Add(Me.GroupBox3)
             Me.tabClickfinderPG.Location = New System.Drawing.Point(4, 22)
             Me.tabClickfinderPG.Name = "tabClickfinderPG"
             Me.tabClickfinderPG.Padding = New System.Windows.Forms.Padding(3)
@@ -822,11 +827,34 @@ Namespace SetupTv.Sections
             Me.tabClickfinderPG.Text = "Clickfinder ProgramGuide"
             Me.tabClickfinderPG.UseVisualStyleBackColor = True
             '
+            'GroupBox3
+            '
+            Me.GroupBox3.Controls.Add(Me.Label5)
+            Me.GroupBox3.Controls.Add(Me.LinkClickfinderPG)
+            Me.GroupBox3.Controls.Add(Me.CheckBoxClickfinderPG)
+            Me.GroupBox3.Controls.Add(Me.Label4)
+            Me.GroupBox3.Location = New System.Drawing.Point(20, 14)
+            Me.GroupBox3.Name = "GroupBox3"
+            Me.GroupBox3.Size = New System.Drawing.Size(430, 338)
+            Me.GroupBox3.TabIndex = 73
+            Me.GroupBox3.TabStop = False
+            Me.GroupBox3.Text = "Clickfinder ProgramGuide"
+            '
+            'LinkClickfinderPG
+            '
+            Me.LinkClickfinderPG.AutoSize = True
+            Me.LinkClickfinderPG.Location = New System.Drawing.Point(71, 48)
+            Me.LinkClickfinderPG.Name = "LinkClickfinderPG"
+            Me.LinkClickfinderPG.Size = New System.Drawing.Size(126, 13)
+            Me.LinkClickfinderPG.TabIndex = 72
+            Me.LinkClickfinderPG.TabStop = True
+            Me.LinkClickfinderPG.Text = "Clickfinder ProgramGuide"
+            '
             'CheckBoxClickfinderPG
             '
             Me.CheckBoxClickfinderPG.AutoSize = True
             Me.CheckBoxClickfinderPG.FlatStyle = System.Windows.Forms.FlatStyle.Popup
-            Me.CheckBoxClickfinderPG.Location = New System.Drawing.Point(18, 22)
+            Me.CheckBoxClickfinderPG.Location = New System.Drawing.Point(25, 24)
             Me.CheckBoxClickfinderPG.Name = "CheckBoxClickfinderPG"
             Me.CheckBoxClickfinderPG.Size = New System.Drawing.Size(57, 17)
             Me.CheckBoxClickfinderPG.TabIndex = 70
@@ -843,6 +871,24 @@ Namespace SetupTv.Sections
             '
             Me.OpenFileDialog1.Filter = "Application (*.exe)|*.exe|All files (*.*)|*.*"
             Me.OpenFileDialog1.InitialDirectory = "Environment.GetFolderPath(Environment.SpecialFolder.MyComputer)"
+            '
+            'Label4
+            '
+            Me.Label4.Location = New System.Drawing.Point(22, 48)
+            Me.Label4.Name = "Label4"
+            Me.Label4.Size = New System.Drawing.Size(372, 49)
+            Me.Label4.TabIndex = 73
+            Me.Label4.Text = "If you use                                          plugin, you have to enable it" & _
+                " to import additional infos. Otherwise disable this function, it increases the i" & _
+                "mport time."
+            '
+            'Label5
+            '
+            Me.Label5.AutoSize = True
+            Me.Label5.Location = New System.Drawing.Point(211, 57)
+            Me.Label5.Name = "Label5"
+            Me.Label5.Size = New System.Drawing.Size(0, 13)
+            Me.Label5.TabIndex = 74
             '
             'TvMovieSetup
             '
@@ -875,7 +921,8 @@ Namespace SetupTv.Sections
             Me.panelTimeSpan.ResumeLayout(False)
             Me.panelTimeSpan.PerformLayout()
             Me.tabClickfinderPG.ResumeLayout(False)
-            Me.tabClickfinderPG.PerformLayout()
+            Me.GroupBox3.ResumeLayout(False)
+            Me.GroupBox3.PerformLayout()
             Me.ResumeLayout(False)
 
         End Sub
@@ -944,5 +991,9 @@ Namespace SetupTv.Sections
         Friend WithEvents ButtonEPGgrab As System.Windows.Forms.Button
         Friend WithEvents tabClickfinderPG As System.Windows.Forms.TabPage
         Private WithEvents CheckBoxClickfinderPG As MediaPortal.UserInterface.Controls.MPCheckBox
+        Friend WithEvents GroupBox3 As System.Windows.Forms.GroupBox
+        Friend WithEvents LinkClickfinderPG As System.Windows.Forms.LinkLabel
+        Friend WithEvents Label5 As System.Windows.Forms.Label
+        Friend WithEvents Label4 As System.Windows.Forms.Label
     End Class
 End Namespace

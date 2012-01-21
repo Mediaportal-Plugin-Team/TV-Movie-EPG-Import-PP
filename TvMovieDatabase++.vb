@@ -1216,56 +1216,56 @@ Namespace TvEngine
         End Sub
 
         Private Sub GetTvMovieHighlights()
-            Dim _Debug As String = String.Empty
-
-
-
             Try
                 'Alle Sendungen mit Bewertung laden
                 Dim _ClickfinderDB As New ClickfinderDB("SELECT Titel, Beginn, Ende, SenderKennung, Bewertung, KzLive, KzWiederholung FROM Sendungen WHERE Bewertung > 0 ORDER BY SenderKennung ASC", TvMovie.DatabasePath)
                 Dim _CounterFound As Integer = 0
 
                 For i As Integer = 0 To _ClickfinderDB.Count - 1
+                    Dim _DebugchannelName As String = String.Empty
+                    Try
+                        'Überprüfen ob SenderKennung gemappt ist
+                        Dim sb As New SqlBuilder(Gentle.Framework.StatementType.Select, GetType(TvMovieMapping))
+                        sb.AddConstraint([Operator].Equals, "stationName", _ClickfinderDB(i).SenderKennung)
+                        Dim stmt As SqlStatement = sb.GetStatement(True)
+                        Dim _Result As IList(Of TvMovieMapping) = ObjectFactory.GetCollection(GetType(TvMovieMapping), stmt.Execute())
 
-                    'Überprüfen ob SenderKennung gemappt ist
-                    Dim sb As New SqlBuilder(Gentle.Framework.StatementType.Select, GetType(TvMovieMapping))
-                    sb.AddConstraint([Operator].Equals, "stationName", _ClickfinderDB(i).SenderKennung)
-                    Dim stmt As SqlStatement = sb.GetStatement(True)
-                    Dim _Result As IList(Of TvMovieMapping) = ObjectFactory.GetCollection(GetType(TvMovieMapping), stmt.Execute())
+                        'Falls channel gemappt, Sendung im Program suchen
+                        If _Result.Count = 1 Then
+                            Dim _channel As Channel = Channel.Retrieve(_Result(0).IdChannel)
+                            _DebugchannelName = _channel.DisplayName
 
-                    'Falls channel gemappt, Sendung im Program suchen
-                    If _Result.Count = 1 Then
-                        Dim _channel As Channel = Channel.Retrieve(_Result(0).IdChannel)
+                            Dim layer As New TvBusinessLayer
 
-                        _Debug = "Clickfinder Titel: " & _ClickfinderDB(i).Titel & ", Channel: " & _channel.DisplayName
+                            'Wenn Program gefunden dann in TvMovieProgram schreiben
+                            If layer.GetProgramExists(_channel, _ClickfinderDB(i).Beginn, _ClickfinderDB(i).Ende).Count = 1 Then
+                                Dim _Program As IList(Of Program) = layer.GetPrograms(_channel, _ClickfinderDB(i).Beginn)
 
-                        Dim layer As New TvBusinessLayer
+                                'Dim _Program As Program = Program..RetrieveByTitleTimesAndChannel(_Titel, _ClickfinderDB(i).Beginn, _ClickfinderDB(i).Ende, _Result(0).IdChannel)
+                                Dim _TvMovieProgram As New TVMovieProgram(_Program(0).IdProgram)
 
-                        'Wenn Program gefunden dann in TvMovieProgram schreiben
-                        If layer.GetProgramExists(_channel, _ClickfinderDB(i).Beginn, _ClickfinderDB(i).Ende).Count = 1 Then
-                            Dim _Program As IList(Of Program) = layer.GetPrograms(_channel, _ClickfinderDB(i).Beginn)
+                                _TvMovieProgram.TVMovieBewertung = _ClickfinderDB(i).Bewertung
+                                _TvMovieProgram.idEpisode = String.Empty
+                                _TvMovieProgram.Persist()
 
-                            'Dim _Program As Program = Program..RetrieveByTitleTimesAndChannel(_Titel, _ClickfinderDB(i).Beginn, _ClickfinderDB(i).Ende, _Result(0).IdChannel)
-                            Dim _TvMovieProgram As New TVMovieProgram(_Program(0).IdProgram)
+                                _CounterFound = _CounterFound + 1
+                            Else
+                                'Nur alte Sendungen < 2 Tage sind nicht im EPG enthalten
+                                'Log.[Info]("Channel: {0}, Start: {1}, Ende: {2}", _channel.DisplayName, _ClickfinderDB(i).Beginn, _ClickfinderDB(i).Ende)
+                            End If
 
-                            _TvMovieProgram.TVMovieBewertung = _ClickfinderDB(i).Bewertung
-                            _TvMovieProgram.idEpisode = String.Empty
-                            _TvMovieProgram.Persist()
-
-                            _CounterFound = _CounterFound + 1
-                        Else
-                            'Nur alte Sendungen < 2 Tage sind nicht im EPG enthalten
-                            'Log.[Info]("Channel: {0}, Start: {1}, Ende: {2}", _channel.DisplayName, _ClickfinderDB(i).Beginn, _ClickfinderDB(i).Ende)
                         End If
 
-                    End If
+                    Catch ex As Exception
+                        Log.[Error]("TVMovie: [GetTvMovieHighlights]: databasePath: {0} exception err:{1} stack:{2}", TvMovie.DatabasePath, ex.Message, ex.StackTrace)
+                        Log.[Error]("TVMovie: [GetTvMovieHighlights]: Titel: {0}, SenderKennung:{1}, DisplayName:{2}, Beginn:{3}", _ClickfinderDB(i).Titel, _ClickfinderDB(i).SenderKennung, _DebugchannelName, _ClickfinderDB(i).Beginn)
+                    End Try
                 Next
 
                 Log.[Info]("TVMovie: [GetTvMovieHighlights]: Summary: Infos for {0}/{1} saved in TvMovieProgram", _CounterFound, _ClickfinderDB.Count)
 
             Catch ex As Exception
                 Log.[Error]("TVMovie: [GetTvMovieHighlights]: databasePath: {0} exception err:{1} stack:{2}", TvMovie.DatabasePath, ex.Message, ex.StackTrace)
-                Log.[Error]("TVMovie: [GetTvMovieHighlights]: get {0}", _Debug)
             End Try
         End Sub
 #End Region
