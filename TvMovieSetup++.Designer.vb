@@ -111,12 +111,12 @@ Namespace SetupTv.Sections
             Me.columnHeader2 = New System.Windows.Forms.ColumnHeader
             Me.tabClickfinderPG = New System.Windows.Forms.TabPage
             Me.GroupBox3 = New System.Windows.Forms.GroupBox
+            Me.Label5 = New System.Windows.Forms.Label
             Me.LinkClickfinderPG = New System.Windows.Forms.LinkLabel
             Me.CheckBoxClickfinderPG = New MediaPortal.UserInterface.Controls.MPCheckBox
+            Me.Label4 = New System.Windows.Forms.Label
             Me.fileDialogDb = New System.Windows.Forms.OpenFileDialog
             Me.OpenFileDialog1 = New System.Windows.Forms.OpenFileDialog
-            Me.Label4 = New System.Windows.Forms.Label
-            Me.Label5 = New System.Windows.Forms.Label
             Me.tabControlTvMovie.SuspendLayout()
             Me.tabPageSettings.SuspendLayout()
             Me.groupBoxEnableTvMovie.SuspendLayout()
@@ -475,9 +475,9 @@ Namespace SetupTv.Sections
             Me.CheckBoxMovingPictures.FlatStyle = System.Windows.Forms.FlatStyle.Popup
             Me.CheckBoxMovingPictures.Location = New System.Drawing.Point(16, 84)
             Me.CheckBoxMovingPictures.Name = "CheckBoxMovingPictures"
-            Me.CheckBoxMovingPictures.Size = New System.Drawing.Size(181, 17)
+            Me.CheckBoxMovingPictures.Size = New System.Drawing.Size(97, 17)
             Me.CheckBoxMovingPictures.TabIndex = 70
-            Me.CheckBoxMovingPictures.Text = "MovingPictures (not included yet)"
+            Me.CheckBoxMovingPictures.Text = "MovingPictures"
             Me.CheckBoxMovingPictures.UseVisualStyleBackColor = True
             '
             'CheckBoxTvSeries
@@ -840,6 +840,14 @@ Namespace SetupTv.Sections
             Me.GroupBox3.TabStop = False
             Me.GroupBox3.Text = "Clickfinder ProgramGuide"
             '
+            'Label5
+            '
+            Me.Label5.AutoSize = True
+            Me.Label5.Location = New System.Drawing.Point(211, 57)
+            Me.Label5.Name = "Label5"
+            Me.Label5.Size = New System.Drawing.Size(0, 13)
+            Me.Label5.TabIndex = 74
+            '
             'LinkClickfinderPG
             '
             Me.LinkClickfinderPG.AutoSize = True
@@ -861,17 +869,6 @@ Namespace SetupTv.Sections
             Me.CheckBoxClickfinderPG.Text = "Enable"
             Me.CheckBoxClickfinderPG.UseVisualStyleBackColor = True
             '
-            'fileDialogDb
-            '
-            Me.fileDialogDb.FileName = "TVDaten.mdb"
-            Me.fileDialogDb.RestoreDirectory = True
-            Me.fileDialogDb.Title = "Please enter the path to TV movie's database"
-            '
-            'OpenFileDialog1
-            '
-            Me.OpenFileDialog1.Filter = "Application (*.exe)|*.exe|All files (*.*)|*.*"
-            Me.OpenFileDialog1.InitialDirectory = "Environment.GetFolderPath(Environment.SpecialFolder.MyComputer)"
-            '
             'Label4
             '
             Me.Label4.Location = New System.Drawing.Point(22, 48)
@@ -882,13 +879,16 @@ Namespace SetupTv.Sections
                 " to import additional infos. Otherwise disable this function, it increases the i" & _
                 "mport time."
             '
-            'Label5
+            'fileDialogDb
             '
-            Me.Label5.AutoSize = True
-            Me.Label5.Location = New System.Drawing.Point(211, 57)
-            Me.Label5.Name = "Label5"
-            Me.Label5.Size = New System.Drawing.Size(0, 13)
-            Me.Label5.TabIndex = 74
+            Me.fileDialogDb.FileName = "TVDaten.mdb"
+            Me.fileDialogDb.RestoreDirectory = True
+            Me.fileDialogDb.Title = "Please enter the path to TV movie's database"
+            '
+            'OpenFileDialog1
+            '
+            Me.OpenFileDialog1.Filter = "Application (*.exe)|*.exe|All files (*.*)|*.*"
+            Me.OpenFileDialog1.InitialDirectory = "Environment.GetFolderPath(Environment.SpecialFolder.MyComputer)"
             '
             'TvMovieSetup
             '

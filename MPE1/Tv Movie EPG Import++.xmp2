@@ -241,7 +241,7 @@ Click Next to continue or Cancel to exit Setup.</Value>
       <Major>1</Major>
       <Minor>0</Minor>
       <Build>4</Build>
-      <Revision>8</Revision>
+      <Revision>9</Revision>
     </Version>
     <ExtensionDescription />
     <VersionDescription />
@@ -330,7 +330,7 @@ Click Next to continue or Cancel to exit Setup.</Value>
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>..\Grafiken\MPE1 Icon.png</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{18251e59-7ad0-425f-8695-e3cce9c7aa6f}-MPE1 Icon.png</ZipFileName>
+        <ZipFileName>Installer{CopyFile}\{33d2a638-1e92-456e-afba-b1e73d35a21d}-MPE1 Icon.png</ZipFileName>
         <DestinationFilename />
       </FileItem>
     </Items>

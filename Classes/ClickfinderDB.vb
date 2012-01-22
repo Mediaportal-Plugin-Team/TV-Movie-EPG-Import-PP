@@ -1,4 +1,24 @@
-﻿Imports System.Reflection
+﻿#Region "Copyright (C) 2005-2011 Team MediaPortal"
+
+' Copyright (C) 2005-2011 Team MediaPortal
+' http://www.team-mediaportal.com
+' 
+' MediaPortal is free software: you can redistribute it and/or modify
+' it under the terms of the GNU General Public License as published by
+' the Free Software Foundation, either version 2 of the License, or
+' (at your option) any later version.
+' 
+' MediaPortal is distributed in the hope that it will be useful,
+' but WITHOUT ANY WARRANTY; without even the implied warranty of
+' MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+' GNU General Public License for more details.
+' 
+' You should have received a copy of the GNU General Public License
+' along with MediaPortal. If not, see <http://www.gnu.org/licenses/>.
+
+#End Region
+
+Imports System.Reflection
 Imports System.Data.OleDb
 Imports MediaPortal.UserInterface.Controls
 Imports MediaPortal.Configuration
@@ -9,15 +29,50 @@ Imports TvDatabase
 Imports System.Data
 Imports System.Collections
 
-
 Public Class ClickfinderDB
-#Region "Variablen"
+
+#Region "Members"
     Private Shared _Table As DataTable
     Private Shared _TvServerTable As DataTable
     Private Shared _Index As Integer
     Private Shared _IndexColumn As Integer
     Private Shared _ClickfinderDataBaseFolder As String
+#End Region
 
+#Region "Constructors"
+    Public Sub New(ByVal SQLString As String, ByVal DatabasePath As String)
+        'Fill Dataset with SQLString Query
+        Dim DataAdapter As OleDb.OleDbDataAdapter
+        Dim Data As New DataSet
+
+        Dim layer As New TvBusinessLayer()
+
+        _ClickfinderDataBaseFolder = System.IO.Path.GetDirectoryName(DatabasePath)
+
+        Try
+
+            Dim Con As New OleDb.OleDbConnection
+            Dim Cmd As New OleDb.OleDbCommand
+
+            Con.ConnectionString = "Provider=Microsoft.Jet.OLEDB.4.0;" & "Data Source=" & DatabasePath
+            Con.Open()
+
+            DataAdapter = New OleDbDataAdapter(SQLString, Con)
+            DataAdapter.Fill(Data, "ClickfinderDB")
+
+            DataAdapter.Dispose()
+            Con.Close()
+
+            _Table = Data.Tables("ClickfinderDB")
+
+            'PrimärSchlüssel für Datatable festlegen, damit gesucht werden kann.
+            _Table.PrimaryKey = New DataColumn() {_Table.Columns("Sendungen.Pos")}
+
+        Catch ex As Exception
+            MsgBox(ex.Message)
+        End Try
+
+    End Sub
 #End Region
 
 #Region "Properties"
@@ -43,17 +98,6 @@ Public Class ClickfinderDB
         End Get
     End Property
     Public Class DataBaseItem
-
-
-
-
-
-        'SubProperties for _item
-
-
-
-
-
         Public ReadOnly Property Titel() As String
             Get
                 If Not IsDBNull(_Table.Rows(_Index).Item("Titel")) Then
@@ -63,7 +107,6 @@ Public Class ClickfinderDB
                 End If
             End Get
         End Property
-
         Public ReadOnly Property Beginn() As Date
             Get
                 If Not IsDBNull(_Table.Rows(_Index).Item("Beginn")) Then
@@ -82,7 +125,6 @@ Public Class ClickfinderDB
                 End If
             End Get
         End Property
-
         Public ReadOnly Property SenderKennung() As String
             Get
                 If Not IsDBNull(_Table.Rows(_Index).Item("SenderKennung")) Then
@@ -157,7 +199,6 @@ Public Class ClickfinderDB
         End Property
 
     End Class
-
     Public ReadOnly Property DataTable() As DataTable
         Get
             Return _Table
@@ -165,39 +206,5 @@ Public Class ClickfinderDB
     End Property
 
 #End Region
-
-    Public Sub New(ByVal SQLString As String, ByVal DatabasePath As String)
-        'Fill Dataset with SQLString Query
-        Dim DataAdapter As OleDb.OleDbDataAdapter
-        Dim Data As New DataSet
-
-        Dim layer As New TvBusinessLayer()
-
-        _ClickfinderDataBaseFolder = System.IO.Path.GetDirectoryName(DatabasePath)
-
-        Try
-
-            Dim Con As New OleDb.OleDbConnection
-            Dim Cmd As New OleDb.OleDbCommand
-
-            Con.ConnectionString = "Provider=Microsoft.Jet.OLEDB.4.0;" & "Data Source=" & DatabasePath
-            Con.Open()
-
-            DataAdapter = New OleDbDataAdapter(SQLString, Con)
-            DataAdapter.Fill(Data, "ClickfinderDB")
-
-            DataAdapter.Dispose()
-            Con.Close()
-
-            _Table = Data.Tables("ClickfinderDB")
-
-            'PrimärSchlüssel für Datatable festlegen, damit gesucht werden kann.
-            _Table.PrimaryKey = New DataColumn() {_Table.Columns("Sendungen.Pos")}
-
-        Catch ex As Exception
-            MsgBox(ex.Message)
-        End Try
-
-    End Sub
 
 End Class
