@@ -207,7 +207,7 @@ Namespace SetupTv.Sections
             Me.GroupBox1.Controls.Add(Me.BTAppBrowse)
             Me.GroupBox1.Location = New System.Drawing.Point(16, 138)
             Me.GroupBox1.Name = "GroupBox1"
-            Me.GroupBox1.Size = New System.Drawing.Size(391, 67)
+            Me.GroupBox1.Size = New System.Drawing.Size(408, 67)
             Me.GroupBox1.TabIndex = 67
             Me.GroupBox1.TabStop = False
             Me.GroupBox1.Text = "Run application after import"
@@ -227,7 +227,7 @@ Namespace SetupTv.Sections
             '
             Me.tbRunAppAfter.Location = New System.Drawing.Point(96, 17)
             Me.tbRunAppAfter.Name = "tbRunAppAfter"
-            Me.tbRunAppAfter.Size = New System.Drawing.Size(247, 20)
+            Me.tbRunAppAfter.Size = New System.Drawing.Size(264, 20)
             Me.tbRunAppAfter.TabIndex = 6
             '
             'Label2
@@ -242,7 +242,7 @@ Namespace SetupTv.Sections
             'BTAppBrowse
             '
             Me.BTAppBrowse.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.BTAppBrowse.Location = New System.Drawing.Point(350, 17)
+            Me.BTAppBrowse.Location = New System.Drawing.Point(367, 17)
             Me.BTAppBrowse.Name = "BTAppBrowse"
             Me.BTAppBrowse.Size = New System.Drawing.Size(21, 20)
             Me.BTAppBrowse.TabIndex = 66
@@ -453,7 +453,7 @@ Namespace SetupTv.Sections
             Me.GroupBox2.Controls.Add(Me.tbMPDatabasePath)
             Me.GroupBox2.Location = New System.Drawing.Point(16, 194)
             Me.GroupBox2.Name = "GroupBox2"
-            Me.GroupBox2.Size = New System.Drawing.Size(424, 153)
+            Me.GroupBox2.Size = New System.Drawing.Size(440, 153)
             Me.GroupBox2.TabIndex = 7
             Me.GroupBox2.TabStop = False
             Me.GroupBox2.Text = "Import additional Infos from MediaPortal databases"
@@ -494,7 +494,7 @@ Namespace SetupTv.Sections
             'ButtonBrowseMPDatabases
             '
             Me.ButtonBrowseMPDatabases.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.ButtonBrowseMPDatabases.Location = New System.Drawing.Point(390, 25)
+            Me.ButtonBrowseMPDatabases.Location = New System.Drawing.Point(406, 25)
             Me.ButtonBrowseMPDatabases.Name = "ButtonBrowseMPDatabases"
             Me.ButtonBrowseMPDatabases.Size = New System.Drawing.Size(21, 20)
             Me.ButtonBrowseMPDatabases.TabIndex = 68

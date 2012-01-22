@@ -1099,6 +1099,11 @@ Namespace TvEngine
 
         Private Sub StartTVMoviePlus()
 
+            Log.[Debug]("TVMovie: [TvMovie++ Settings]: TvMovieRunAppAfter = " & _tvbLayer.GetSetting("TvMovieRunAppAfter").Value)
+            Log.[Debug]("TVMovie: [TvMovie++ Settings]: TvMovieImportTvSeriesInfos = " & _tvbLayer.GetSetting("TvMovieImportTvSeriesInfos").Value)
+            Log.[Debug]("TVMovie: [TvMovie++ Settings]: TvMovieImportMovingPicturesInfos = " & _tvbLayer.GetSetting("TvMovieImportMovingPicturesInfos").Value)
+            Log.[Debug]("TVMovie: [TvMovie++ Settings]: ClickfinderDataAvailable = " & _tvbLayer.GetSetting("ClickfinderDataAvailable").Value)
+
             'Reset TvMovieProgram Table
             Try
                 Broker.Execute("drop table `mptvdb`.`tvmovieprogram`")
@@ -1108,13 +1113,12 @@ Namespace TvEngine
                 Broker.Execute("CREATE  TABLE `mptvdb`.`TVMovieProgram` ( `idTVMovieProgram` INT NOT NULL AUTO_INCREMENT , `idProgram` INT NOT NULL DEFAULT 0 , `TVMovieBewertung` INT NOT NULL DEFAULT 0 , `idSeries` INT NOT NULL DEFAULT 0 , `idEpisode` VARCHAR(45) , `local` BIT(1) NOT NULL DEFAULT 0 , `idMovingPictures` INT NOT NULL DEFAULT 0 , PRIMARY KEY (`idTVMovieProgram`) )")
             End Try
 
-
             'TVSeries importieren
             If _tvbLayer.GetSetting("TvMovieImportTvSeriesInfos").Value = "true" Then
                 GetSeriesInfos()
             End If
 
-            'TVSeries importieren
+            'MovingPictures importieren
             If _tvbLayer.GetSetting("TvMovieImportMovingPicturesInfos").Value = "true" Then
                 getMovingPicturesInfos()
             End If
@@ -1124,36 +1128,16 @@ Namespace TvEngine
                 GetTvMovieHighlights()
             End If
 
-
-
+            'Run App after import
             If _tvbLayer.GetSetting("TvMovieRunAppAfter").Value IsNot String.Empty Then
                 RunApplicationAfterImport()
             End If
 
         End Sub
 
-        Private Sub RunApplicationAfterImport()
-            If File.Exists(_tvbLayer.GetSetting("TvMovieRunAppAfter").Value) Then
-
-
-                Dim Application As New ProcessStartInfo
-                Application.FileName = _tvbLayer.GetSetting("TvMovieRunAppAfter").Value
-
-                If _tvbLayer.GetSetting("TvMovieRunAppHidden", "true").Value = "true" Then
-                    Application.WindowStyle = ProcessWindowStyle.Hidden
-                Else
-                    Application.WindowStyle = ProcessWindowStyle.Normal
-                End If
-
-                Process.Start(Application)
-                Log.Debug("TVMovie: Application {0} started", _tvbLayer.GetSetting("TvMovieRunAppAfter").Value)
-            Else
-                Log.Error("TVMovie: Error - RunApplicationAfter not found")
-            End If
-        End Sub
-
         Private Sub GetSeriesInfos()
             Try
+                Log.[Debug]("TVMovie: [GetSeriesInfos]: start import")
 
                 Dim _Counter As Integer = 0
                 Dim _CounterFound As Integer = 0
@@ -1198,35 +1182,38 @@ Namespace TvEngine
 
                                     _Result(d).Persist()
 
-                                    Try
+                                    'Clickfinder ProgramGuide Infos in TvMovieProgram schreiben, sofern aktiviert
+                                    If _tvbLayer.GetSetting("ClickfinderDataAvailable").Value = "true" Then
+                                        Try
 
-                                        'idProgram in TvMovieProgram suchen & Daten aktualisieren
-                                        Dim _TvMovieProgram As TVMovieProgram = TVMovieProgram.Retrieve(_Result(d).IdProgram)
-                                        _TvMovieProgram.idSeries = _TvSeriesDB(i).SeriesID
-                                        _TvMovieProgram.idEpisode = _TvSeriesDB.EpisodeCompositeID
-                                        _TvMovieProgram.local = True
+                                            'idProgram in TvMovieProgram suchen & Daten aktualisieren
+                                            Dim _TvMovieProgram As TVMovieProgram = TVMovieProgram.Retrieve(_Result(d).IdProgram)
+                                            _TvMovieProgram.idSeries = _TvSeriesDB(i).SeriesID
+                                            _TvMovieProgram.idEpisode = _TvSeriesDB.EpisodeCompositeID
+                                            _TvMovieProgram.local = True
 
-                                        If _TvSeriesDB.EpisodeExistLocal = False Then
-                                            _TvMovieProgram.local = False
-                                        End If
+                                            If _TvSeriesDB.EpisodeExistLocal = False Then
+                                                _TvMovieProgram.local = False
+                                            End If
 
-                                        _TvMovieProgram.Persist()
+                                            _TvMovieProgram.Persist()
 
-                                    Catch ex As Exception
+                                        Catch ex As Exception
 
-                                        'idProgram in TvMovieProgram nicht gefunden -> Daten neu anlegen
-                                        Dim _TvMovieProgram As New TVMovieProgram(_Result(d).IdProgram)
-                                        _TvMovieProgram.idSeries = _TvSeriesDB(i).SeriesID
-                                        _TvMovieProgram.idEpisode = _TvSeriesDB.EpisodeCompositeID
-                                        _TvMovieProgram.local = True
+                                            'idProgram in TvMovieProgram nicht gefunden -> Daten neu anlegen
+                                            Dim _TvMovieProgram As New TVMovieProgram(_Result(d).IdProgram)
+                                            _TvMovieProgram.idSeries = _TvSeriesDB(i).SeriesID
+                                            _TvMovieProgram.idEpisode = _TvSeriesDB.EpisodeCompositeID
+                                            _TvMovieProgram.local = True
 
-                                        If _TvSeriesDB.EpisodeExistLocal = False Then
-                                            _TvMovieProgram.local = False
-                                        End If
+                                            If _TvSeriesDB.EpisodeExistLocal = False Then
+                                                _TvMovieProgram.local = False
+                                            End If
 
-                                        _TvMovieProgram.Persist()
+                                            _TvMovieProgram.Persist()
 
-                                    End Try
+                                        End Try
+                                    End If
 
                                     _EpisodeFoundCounter = _EpisodeFoundCounter + 1
 
@@ -1259,6 +1246,8 @@ Namespace TvEngine
 
         Private Sub getMovingPicturesInfos()
             Try
+                Log.[Debug]("TVMovie: [GetMovingPicturesInfos]: start import")
+
                 Dim _MovingPicturesDB As New MovingPicturesDB
                 _MovingPicturesDB.LoadAllMovingPicturesFilms()
 
@@ -1286,21 +1275,24 @@ Namespace TvEngine
 
                                 _Result(d).Persist()
 
-                                Try
-                                    'idProgram in TvMovieProgram suchen & Daten aktualisieren
-                                    Dim _TvMovieProgram As TVMovieProgram = TVMovieProgram.Retrieve(_Result(d).IdProgram)
-                                    _Result(d).StarRating = _MovingPicturesDB(i).Rating
-                                    _TvMovieProgram.idMovingPictures = _MovingPicturesDB(i).MovingPicturesID
-                                    _TvMovieProgram.local = True
-                                    _TvMovieProgram.Persist()
+                                'Clickfinder ProgramGuide Infos in TvMovieProgram schreiben, sofern aktiviert
+                                If _tvbLayer.GetSetting("ClickfinderDataAvailable").Value = "true" Then
+                                    Try
+                                        'idProgram in TvMovieProgram suchen & Daten aktualisieren
+                                        Dim _TvMovieProgram As TVMovieProgram = TVMovieProgram.Retrieve(_Result(d).IdProgram)
+                                        _Result(d).StarRating = _MovingPicturesDB(i).Rating
+                                        _TvMovieProgram.idMovingPictures = _MovingPicturesDB(i).MovingPicturesID
+                                        _TvMovieProgram.local = True
+                                        _TvMovieProgram.Persist()
 
-                                Catch ex As Exception
-                                    'idProgram in TvMovieProgram nicht gefunden -> Daten neu anlegen
-                                    Dim _TvMovieProgram As New TVMovieProgram(_Result(d).IdProgram)
-                                    _TvMovieProgram.idMovingPictures = _MovingPicturesDB(i).MovingPicturesID
-                                    _TvMovieProgram.local = True
-                                    _TvMovieProgram.Persist()
-                                End Try
+                                    Catch ex As Exception
+                                        'idProgram in TvMovieProgram nicht gefunden -> Daten neu anlegen
+                                        Dim _TvMovieProgram As New TVMovieProgram(_Result(d).IdProgram)
+                                        _TvMovieProgram.idMovingPictures = _MovingPicturesDB(i).MovingPicturesID
+                                        _TvMovieProgram.local = True
+                                        _TvMovieProgram.Persist()
+                                    End Try
+                                End If
 
                                 Counter = Counter + 1
 
@@ -1322,10 +1314,8 @@ Namespace TvEngine
         End Sub
 
         Private Sub GetTvMovieHighlights()
-            'DATABASE Path anpassen bei New _CLickfinderDB !!!!!!!
-
-
             Try
+                Log.[Debug]("TVMovie: [GetTvMovieHighlights]: start import")
                 'Alle Sendungen mit Bewertung laden
                 Dim _ClickfinderDB As New ClickfinderDB("SELECT Titel, Beginn, Ende, SenderKennung, Bewertung, KzLive, KzWiederholung FROM Sendungen WHERE Bewertung > 0 ORDER BY SenderKennung ASC", TvMovie.DatabasePath)
                 Dim _CounterFound As Integer = 0
@@ -1388,6 +1378,25 @@ Namespace TvEngine
 
         End Sub
 
+        Private Sub RunApplicationAfterImport()
+            If File.Exists(_tvbLayer.GetSetting("TvMovieRunAppAfter").Value) Then
+
+
+                Dim Application As New ProcessStartInfo
+                Application.FileName = _tvbLayer.GetSetting("TvMovieRunAppAfter").Value
+
+                If _tvbLayer.GetSetting("TvMovieRunAppHidden", "true").Value = "true" Then
+                    Application.WindowStyle = ProcessWindowStyle.Hidden
+                Else
+                    Application.WindowStyle = ProcessWindowStyle.Normal
+                End If
+
+                Process.Start(Application)
+                Log.Debug("TVMovie: Application {0} started", _tvbLayer.GetSetting("TvMovieRunAppAfter").Value)
+            Else
+                Log.Error("TVMovie: Error - RunApplicationAfter not found")
+            End If
+        End Sub
 #End Region
     End Class
 
