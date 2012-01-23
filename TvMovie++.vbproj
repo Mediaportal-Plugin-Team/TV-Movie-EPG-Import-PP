@@ -130,6 +130,7 @@
     <Compile Include="TvMovieSetup++.vb">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="Classes\VideoDB.vb" />
     <EmbeddedResource Include="EnableEPGgrab.resx">
       <DependentUpon>EnableEPGgrab.vb</DependentUpon>
     </EmbeddedResource>

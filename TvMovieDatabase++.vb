@@ -1107,10 +1107,10 @@ Namespace TvEngine
             'Reset TvMovieProgram Table
             Try
                 Broker.Execute("drop table `mptvdb`.`tvmovieprogram`")
-                Broker.Execute("CREATE  TABLE `mptvdb`.`TVMovieProgram` ( `idTVMovieProgram` INT NOT NULL AUTO_INCREMENT , `idProgram` INT NOT NULL DEFAULT 0 , `TVMovieBewertung` INT NOT NULL DEFAULT 0 , `idSeries` INT NOT NULL DEFAULT 0 , `idEpisode` VARCHAR(45) , `local` BIT(1) NOT NULL DEFAULT 0 , `idMovingPictures` INT NOT NULL DEFAULT 0 , PRIMARY KEY (`idTVMovieProgram`) )")
+                Broker.Execute("CREATE  TABLE `mptvdb`.`TVMovieProgram` ( `idTVMovieProgram` INT NOT NULL AUTO_INCREMENT , `idProgram` INT NOT NULL DEFAULT 0 , `TVMovieBewertung` INT NOT NULL DEFAULT 0 , `idSeries` INT NOT NULL DEFAULT 0 , `idEpisode` VARCHAR(45) , `local` BIT(1) NOT NULL DEFAULT 0 , `idMovingPictures` INT NOT NULL DEFAULT 0 , `idVideo` INT NOT NULL DEFAULT 0 , PRIMARY KEY (`idTVMovieProgram`) )")
             Catch ex As Exception
                 'Falls die Tabelle nicht existiert, abfangen & erstellen
-                Broker.Execute("CREATE  TABLE `mptvdb`.`TVMovieProgram` ( `idTVMovieProgram` INT NOT NULL AUTO_INCREMENT , `idProgram` INT NOT NULL DEFAULT 0 , `TVMovieBewertung` INT NOT NULL DEFAULT 0 , `idSeries` INT NOT NULL DEFAULT 0 , `idEpisode` VARCHAR(45) , `local` BIT(1) NOT NULL DEFAULT 0 , `idMovingPictures` INT NOT NULL DEFAULT 0 , PRIMARY KEY (`idTVMovieProgram`) )")
+                Broker.Execute("CREATE  TABLE `mptvdb`.`TVMovieProgram` ( `idTVMovieProgram` INT NOT NULL AUTO_INCREMENT , `idProgram` INT NOT NULL DEFAULT 0 , `TVMovieBewertung` INT NOT NULL DEFAULT 0 , `idSeries` INT NOT NULL DEFAULT 0 , `idEpisode` VARCHAR(45) , `local` BIT(1) NOT NULL DEFAULT 0 , `idMovingPictures` INT NOT NULL DEFAULT 0 , `idVideo` INT NOT NULL DEFAULT 0 , PRIMARY KEY (`idTVMovieProgram`) )")
             End Try
 
             'TVSeries importieren
@@ -1121,6 +1121,11 @@ Namespace TvEngine
             'MovingPictures importieren
             If _tvbLayer.GetSetting("TvMovieImportMovingPicturesInfos").Value = "true" Then
                 getMovingPicturesInfos()
+            End If
+
+            'MP VideoDatabase importieren
+            If _tvbLayer.GetSetting("TvMovieImportVideoDatabaseInfos").Value = "true" Then
+                GetVideoDatabaseInfos()
             End If
 
             'Tv Movie Highlight und Suchoptionen für Clickfinder ProgramGuide importieren
@@ -1237,21 +1242,22 @@ Namespace TvEngine
                 _TvSeriesDB.Dispose()
 
                 Log.Info("")
-                Log.[Info]("TVMovie: [GetSeriesInfos]: Summary: Infos for {0}/{1} episodes found, {2} new episodes identify, saved in TvMovieProgram", _CounterFound, _Counter, _CounterNewEpisode)
+                Log.[Info]("TVMovie: [GetSeriesInfos]: Summary: Infos for {0}/{1} episodes found, {2} new episodes identify", _CounterFound, _Counter, _CounterNewEpisode)
 
             Catch ex As Exception
                 Log.[Error]("TVMovie: [GetSeriesInfos]: exception err:{0} stack:{1}", ex.Message, ex.StackTrace)
             End Try
         End Sub
 
-        Private Sub getMovingPicturesInfos()
+        Private Sub GetMovingPicturesInfos()
             Try
                 Log.[Debug]("TVMovie: [GetMovingPicturesInfos]: start import")
 
                 Dim _MovingPicturesDB As New MovingPicturesDB
                 _MovingPicturesDB.LoadAllMovingPicturesFilms()
 
-                Dim Counter As Integer = 0
+                Dim EPGCounter As Integer = 0
+                Dim MovieCounter As Integer = 0
 
                 For i As Integer = 0 To _MovingPicturesDB.Count - 1
 
@@ -1263,6 +1269,10 @@ Namespace TvEngine
                         sb.AddConstraint([Operator].Equals, _titleAllowed, _MovingPicturesDB(i).Title)
                         Dim stmt As SqlStatement = sb.GetStatement(True)
                         Dim _Result As IList(Of Program) = ObjectFactory.GetCollection(GetType(Program), stmt.Execute())
+
+                        If _Result.Count > 0 Then
+                            MovieCounter = MovieCounter + 1
+                        End If
 
                         For d As Integer = 0 To _Result.Count - 1
 
@@ -1280,7 +1290,6 @@ Namespace TvEngine
                                     Try
                                         'idProgram in TvMovieProgram suchen & Daten aktualisieren
                                         Dim _TvMovieProgram As TVMovieProgram = TVMovieProgram.Retrieve(_Result(d).IdProgram)
-                                        _Result(d).StarRating = _MovingPicturesDB(i).Rating
                                         _TvMovieProgram.idMovingPictures = _MovingPicturesDB(i).MovingPicturesID
                                         _TvMovieProgram.local = True
                                         _TvMovieProgram.Persist()
@@ -1294,7 +1303,7 @@ Namespace TvEngine
                                     End Try
                                 End If
 
-                                Counter = Counter + 1
+                                EPGCounter = EPGCounter + 1
 
                             Catch ex As Exception
                                 Log.[Error]("TVMovie: [GetMovingPicturesInfos]: Loop _Result exception err:{0} stack:{1}", ex.Message, ex.StackTrace)
@@ -1307,7 +1316,7 @@ Namespace TvEngine
                     End Try
                 Next
 
-                Log.[Info]("TVMovie: [GetMovingPicturesInfos]: Summary: {0} MovingPictures Films found", Counter)
+                Log.[Info]("TVMovie: [GetMovingPicturesInfos]: Summary: {0} MovingPictures Films found in {1} EPG entries", MovieCounter, EPGCounter)
             Catch ex As Exception
                 Log.[Error]("TVMovie: [GetMovingPicturesInfos]: exception err:{0} stack:{1}", ex.Message, ex.StackTrace)
             End Try
@@ -1374,6 +1383,87 @@ Namespace TvEngine
 
             Catch ex As Exception
                 Log.[Error]("TVMovie: [GetTvMovieHighlights]: databasePath: {0} exception err:{1} stack:{2}", TvMovie.DatabasePath, ex.Message, ex.StackTrace)
+            End Try
+
+        End Sub
+
+        Private Sub GetVideoDatabaseInfos()
+
+            Try
+                Log.[Debug]("TVMovie: [GetVideoInfos]: start import")
+
+                Dim _VideoDB As New VideoDB
+                _VideoDB.LoadAllVideoDBFilms()
+
+                Dim EPGCounter As Integer = 0
+                Dim MovieCounter As Integer = 0
+
+                For i As Integer = 0 To _VideoDB.Count - 1
+
+                    Try
+                        Dim _titleAllowed As String = Replace(Replace(Replace(Replace(Replace(Replace(Replace("title", "'", "''"), "!", "%"), ".", "%"), " ", "_"), ":", "%"), "?", "%"), "-", "%")
+
+                        Dim sb As New SqlBuilder(Gentle.Framework.StatementType.Select, GetType(Program))
+                        sb.AddConstraint([Operator].Equals, _titleAllowed, _VideoDB(i).Title)
+                        Dim stmt As SqlStatement = sb.GetStatement(True)
+                        Dim _Result As IList(Of Program) = ObjectFactory.GetCollection(GetType(Program), stmt.Execute())
+
+                        If _Result.Count > 0 Then
+                            MovieCounter = MovieCounter + 1
+                        End If
+
+                        For d As Integer = 0 To _Result.Count - 1
+
+                            Try
+                                'Daten im EPG (program) updaten
+
+                                'Wenn TvMovieImportMovingPicturesInfos deaktiviert, dann Rating aus VideoDatabase nehmen
+                                If _tvbLayer.GetSetting("TvMovieImportMovingPicturesInfos").Value = "false" Then
+                                    _Result(d).StarRating = _VideoDB(i).Rating
+                                End If
+
+                                If InStr(_Result(d).Description, "existiert lokal") = 0 Then
+                                    _Result(d).Description = "existiert lokal" & vbNewLine & _Result(d).Description
+                                End If
+
+                                _Result(d).Persist()
+
+                                'Clickfinder ProgramGuide Infos in TvMovieProgram schreiben, sofern aktiviert
+                                If _tvbLayer.GetSetting("ClickfinderDataAvailable").Value = "true" Then
+                                    Try
+                                        'idProgram in TvMovieProgram suchen & Daten aktualisieren
+                                        Dim _TvMovieProgram As TVMovieProgram = TVMovieProgram.Retrieve(_Result(d).IdProgram)
+                                        _TvMovieProgram.idVideo = _VideoDB(i).VideoID
+                                        _TvMovieProgram.local = True
+
+                                        _TvMovieProgram.Persist()
+
+                                    Catch ex As Exception
+                                        'idProgram in TvMovieProgram nicht gefunden -> Daten neu anlegen
+                                        Dim _TvMovieProgram As New TVMovieProgram(_Result(d).IdProgram)
+                                        _TvMovieProgram.idVideo = _VideoDB(i).VideoID
+                                        _TvMovieProgram.local = True
+
+                                        _TvMovieProgram.Persist()
+                                    End Try
+                                End If
+
+                                EPGCounter = EPGCounter + 1
+
+                            Catch ex As Exception
+                                Log.[Error]("TVMovie: [GetVideoInfos]: Loop _Result exception err:{0} stack:{1}", ex.Message, ex.StackTrace)
+                                Log.[Error]("TVMovie: [GetVideoInfos]: title:{0} idchannel:{1} startTime: {2}", _Result(d).Title, _Result(d).ReferencedChannel.DisplayName, _Result(d).StartTime)
+                            End Try
+                        Next
+
+                    Catch ex As Exception
+                        Log.[Error]("TVMovie: [GetVideoInfos]: Loop _VideoDB - exception err:{0} stack:{1}", ex.Message, ex.StackTrace)
+                    End Try
+                Next
+
+                Log.[Info]("TVMovie: [GetMovingPicturesInfos]: Summary: {0} Video Films found in {1} EPG entries", MovieCounter, EPGCounter)
+            Catch ex As Exception
+                Log.[Error]("TVMovie: [GetVideoInfos]: exception err:{0} stack:{1}", ex.Message, ex.StackTrace)
             End Try
 
         End Sub

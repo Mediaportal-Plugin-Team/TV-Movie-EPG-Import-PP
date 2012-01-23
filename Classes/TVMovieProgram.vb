@@ -56,6 +56,9 @@ Namespace TvDatabase
         <TableColumn("idMovingPictures", NotNull:=True)> _
         Private m_idMovingPictures As Integer
 
+        <TableColumn("idVideo", NotNull:=True)> _
+        Private m_idVideo As Integer
+
 #End Region
 
 #Region "Constructors"
@@ -172,6 +175,19 @@ Namespace TvDatabase
                 m_idMovingPictures = value
             End Set
         End Property
+
+        ''' <summary>
+        ''' Property relating to database column idVideo
+        ''' </summary>
+        Public Property idVideo() As Integer
+            Get
+                Return m_idVideo
+            End Get
+            Set(ByVal value As Integer)
+                m_isChanged = m_isChanged Or m_idVideo <> value
+                m_idVideo = value
+            End Set
+        End Property
 #End Region
 
 #Region "Storage and Retrieval"
@@ -207,6 +223,7 @@ Namespace TvDatabase
                 Try
                     MyBase.Persist()
                 Catch ex As Exception
+                    MsgBox("Exception in TVMovieProgram.Persist() with Message " & ex.Message)
                     Log.[Error]("Exception in TVMovieProgram.Persist() with Message {0}", ex.Message)
                     Return
                 End Try
