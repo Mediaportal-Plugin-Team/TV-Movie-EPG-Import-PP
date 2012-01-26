@@ -65,9 +65,9 @@ Public Class MovingPicturesDB
 
                 m_db = New SQLiteClient(layer.GetSetting("TvMovieMPDatabase", "%ProgramData%\Team MediaPortal\MediaPortal\database").Value & "\movingpictures.db3")
                 ' Retry 10 times on busy (DB in use or system resources exhausted)
-                m_db.BusyRetries = 10
+                m_db.BusyRetries = 20
                 ' Wait 100 ms between each try (default 10)
-                m_db.BusyRetryDelay = 10
+                m_db.BusyRetryDelay = 1000
 
                 DatabaseUtility.SetPragmas(m_db)
             Else

@@ -1326,7 +1326,7 @@ Namespace TvEngine
             Try
                 Log.[Debug]("TVMovie: [GetTvMovieHighlights]: start import")
                 'Alle Sendungen mit Bewertung laden
-                Dim _ClickfinderDB As New ClickfinderDB("SELECT Titel, Beginn, Ende, SenderKennung, Bewertung, KzLive, KzWiederholung FROM Sendungen WHERE Bewertung > 0 ORDER BY SenderKennung ASC", TvMovie.DatabasePath)
+                Dim _ClickfinderDB As New ClickfinderDB("SELECT * FROM Sendungen WHERE Bewertung > 0 ORDER BY SenderKennung ASC", TvMovie.DatabasePath)
                 Dim _CounterFound As Integer = 0
 
                 For i As Integer = 0 To _ClickfinderDB.Count - 1
@@ -1339,38 +1339,47 @@ Namespace TvEngine
                         Dim _Result As IList(Of TvMovieMapping) = ObjectFactory.GetCollection(GetType(TvMovieMapping), stmt.Execute())
 
                         'Falls channel gemappt, Sendung im Program suchen
-                        If _Result.Count = 1 Then
-                            Dim _channel As Channel = Channel.Retrieve(_Result(0).IdChannel)
-                            _DebugchannelName = _channel.DisplayName
+                        If _Result.Count > 0 Then
+                            For d As Integer = 0 To _Result.Count - 1
 
-                            Dim layer As New TvBusinessLayer
+                                Dim _channel As Channel = Channel.Retrieve(_Result(d).IdChannel)
+                                _DebugchannelName = _channel.DisplayName
 
-                            'Wenn Program gefunden dann in TvMovieProgram schreiben
-                            If layer.GetProgramExists(_channel, _ClickfinderDB(i).Beginn, _ClickfinderDB(i).Ende).Count = 1 Then
-                                Dim _Program As IList(Of Program) = layer.GetPrograms(_channel, _ClickfinderDB(i).Beginn)
+                                Dim sb2 As New SqlBuilder(Gentle.Framework.StatementType.Select, GetType(Program))
+                                sb2.AddConstraint([Operator].Equals, "startTime", _ClickfinderDB(i).Beginn)
+                                sb2.AddConstraint([Operator].Equals, "endTime", _ClickfinderDB(i).Ende)
+                                sb2.AddConstraint([Operator].Equals, "idChannel", _channel.IdChannel)
+                                Dim stmt2 As SqlStatement = sb2.GetStatement(True)
+                                Dim _Program As IList(Of Program) = ObjectFactory.GetCollection(GetType(Program), stmt2.Execute())
 
-                                Try
+                                'Wenn Program gefunden dann in TvMovieProgram schreiben
+                                If _Program.Count = 1 Then
+                                    Try
+                                        'idProgram in TvMovieProgram suchen & Daten aktualisieren
+                                        Dim _TvMovieProgram As TVMovieProgram = TVMovieProgram.Retrieve(_Program(0).IdProgram)
+                                        _TvMovieProgram.TVMovieBewertung = _ClickfinderDB(i).Bewertung
+                                        _TvMovieProgram.Persist()
 
-                                    'idProgram in TvMovieProgram suchen & Daten aktualisieren
-                                    Dim _TvMovieProgram As TVMovieProgram = TVMovieProgram.Retrieve(_Program(0).IdProgram)
-                                    _TvMovieProgram.TVMovieBewertung = _ClickfinderDB(i).Bewertung
-                                    _TvMovieProgram.Persist()
+                                    Catch ex As Exception
 
-                                Catch ex As Exception
+                                        'idProgram in TvMovieProgram nicht gefunden -> Daten neu anlegen
+                                        Dim _TvMovieProgram As New TVMovieProgram(_Program(0).IdProgram)
+                                        _TvMovieProgram.TVMovieBewertung = _ClickfinderDB(i).Bewertung
+                                        _TvMovieProgram.Persist()
 
-                                    'idProgram in TvMovieProgram nicht gefunden -> Daten neu anlegen
-                                    Dim _TvMovieProgram As New TVMovieProgram(_Program(0).IdProgram)
-                                    _TvMovieProgram.TVMovieBewertung = _ClickfinderDB(i).Bewertung
-                                    _TvMovieProgram.Persist()
+                                    End Try
 
-                                End Try
+                                    _CounterFound = _CounterFound + 1
 
-                                _CounterFound = _CounterFound + 1
-                            Else
-                                'Nur alte Sendungen < 2 Tage sind nicht im EPG enthalten
-                                'Log.[Info]("Channel: {0}, Start: {1}, Ende: {2}", _channel.DisplayName, _ClickfinderDB(i).Beginn, _ClickfinderDB(i).Ende)
-                            End If
+                                ElseIf _Program.Count > 1 Then
+                                    Log.[Debug]("Program found in {0} EPG Entries (Start: {1}, Ende: {2}, Titel: {3}, Channel: {4}", _
+                                                _Program.Count, _ClickfinderDB(i).Beginn, _ClickfinderDB(i).Ende, _ClickfinderDB(i).Titel, _channel.DisplayName)
+                                Else
+                                    'Nur alte Sendungen < 2 Tage sind nicht im EPG enthalten
+                                    'Log.[Debug]("Start: {0}, Ende: {1}, Titel: {2}, Channel: {3}", _ClickfinderDB(i).Beginn, _ClickfinderDB(i).Ende, _ClickfinderDB(i).Titel, _channel.DisplayName)
+                                End If
 
+                            Next
                         End If
 
                     Catch ex As Exception
