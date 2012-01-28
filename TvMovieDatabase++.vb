@@ -1107,10 +1107,10 @@ Namespace TvEngine
             'Reset TvMovieProgram Table
             Try
                 Broker.Execute("drop table `mptvdb`.`tvmovieprogram`")
-                Broker.Execute("CREATE  TABLE `mptvdb`.`TVMovieProgram` ( `idTVMovieProgram` INT NOT NULL AUTO_INCREMENT , `idProgram` INT NOT NULL DEFAULT 0 , `TVMovieBewertung` INT NOT NULL DEFAULT 0 , `idSeries` INT NOT NULL DEFAULT 0 , `idEpisode` VARCHAR(45) , `local` BIT(1) NOT NULL DEFAULT 0 , `idMovingPictures` INT NOT NULL DEFAULT 0 , `idVideo` INT NOT NULL DEFAULT 0 , PRIMARY KEY (`idTVMovieProgram`) )")
+                Broker.Execute("CREATE  TABLE `mptvdb`.`TVMovieProgram` ( `idTVMovieProgram` INT NOT NULL AUTO_INCREMENT , `idProgram` INT NOT NULL DEFAULT 0 , `TVMovieBewertung` INT NOT NULL DEFAULT 0 , `FanArt` VARCHAR(255) , `idSeries` INT NOT NULL DEFAULT 0 , `SeriesPosterImage` VARCHAR(255) , `idEpisode` VARCHAR(15) , `EpisodeImage` VARCHAR(255) , `local` BIT(1) NOT NULL DEFAULT 0 , `idMovingPictures` INT NOT NULL DEFAULT 0 , `idVideo` INT NOT NULL DEFAULT 0 , `KurzKritik` VARCHAR(255) , `BildDateiname` VARCHAR(32) , PRIMARY KEY (`idTVMovieProgram`) )")
             Catch ex As Exception
                 'Falls die Tabelle nicht existiert, abfangen & erstellen
-                Broker.Execute("CREATE  TABLE `mptvdb`.`TVMovieProgram` ( `idTVMovieProgram` INT NOT NULL AUTO_INCREMENT , `idProgram` INT NOT NULL DEFAULT 0 , `TVMovieBewertung` INT NOT NULL DEFAULT 0 , `idSeries` INT NOT NULL DEFAULT 0 , `idEpisode` VARCHAR(45) , `local` BIT(1) NOT NULL DEFAULT 0 , `idMovingPictures` INT NOT NULL DEFAULT 0 , `idVideo` INT NOT NULL DEFAULT 0 , PRIMARY KEY (`idTVMovieProgram`) )")
+                Broker.Execute("CREATE  TABLE `mptvdb`.`TVMovieProgram` ( `idTVMovieProgram` INT NOT NULL AUTO_INCREMENT , `idProgram` INT NOT NULL DEFAULT 0 , `TVMovieBewertung` INT NOT NULL DEFAULT 0 , `FanArt` VARCHAR(255) , `idSeries` INT NOT NULL DEFAULT 0 , `SeriesPosterImage` VARCHAR(255) , `idEpisode` VARCHAR(15) , `EpisodeImage` VARCHAR(255) , `local` BIT(1) NOT NULL DEFAULT 0 , `idMovingPictures` INT NOT NULL DEFAULT 0 , `idVideo` INT NOT NULL DEFAULT 0 , `KurzKritik` VARCHAR(255) , `BildDateiname` VARCHAR(32) , PRIMARY KEY (`idTVMovieProgram`) )")
             End Try
 
             'TVSeries importieren
@@ -1178,6 +1178,7 @@ Namespace TvEngine
                                     _Result(d).EpisodeNum = CStr(_TvSeriesDB.EpisodeIndex)
                                     _Result(d).StarRating = _TvSeriesDB.EpisodeRating
 
+                                    'Falls Episode nicht lokal verfügbar -> im EPG Describtion kennzeichnen
                                     If _TvSeriesDB.EpisodeExistLocal = False Then
                                         If InStr(_Result(d).Description, "Neue Folge: " & _Result(d).EpisodeName) = 0 Then
                                             _Result(d).Description = Replace(_Result(d).Description, "Folge: " & _Result(d).EpisodeName, "Neue Folge: " & _Result(d).EpisodeName)
@@ -1188,37 +1189,68 @@ Namespace TvEngine
                                     _Result(d).Persist()
 
                                     'Clickfinder ProgramGuide Infos in TvMovieProgram schreiben, sofern aktiviert
-                                    If _tvbLayer.GetSetting("ClickfinderDataAvailable").Value = "true" Then
-                                        Try
+                                    'If _tvbLayer.GetSetting("ClickfinderDataAvailable").Value = "true" Then
+                                    Try
 
-                                            'idProgram in TvMovieProgram suchen & Daten aktualisieren
-                                            Dim _TvMovieProgram As TVMovieProgram = TVMovieProgram.Retrieve(_Result(d).IdProgram)
-                                            _TvMovieProgram.idSeries = _TvSeriesDB(i).SeriesID
-                                            _TvMovieProgram.idEpisode = _TvSeriesDB.EpisodeCompositeID
-                                            _TvMovieProgram.local = True
+                                        'idProgram in TvMovieProgram suchen & Daten aktualisieren
+                                        Dim _TvMovieProgram As TVMovieProgram = TVMovieProgram.Retrieve(_Result(d).IdProgram)
+                                        _TvMovieProgram.idSeries = _TvSeriesDB(i).SeriesID
+                                        _TvMovieProgram.idEpisode = _TvSeriesDB.EpisodeCompositeID
+                                        _TvMovieProgram.local = True
 
-                                            If _TvSeriesDB.EpisodeExistLocal = False Then
-                                                _TvMovieProgram.local = False
-                                            End If
+                                        'Episoden Image
+                                        If Not String.IsNullOrEmpty(_TvSeriesDB.EpisodeImage) = True Then
+                                            _TvMovieProgram.EpisodeImage = _TvSeriesDB.EpisodeImage
+                                        End If
 
-                                            _TvMovieProgram.Persist()
+                                        'Serien Poster Image
+                                        If Not String.IsNullOrEmpty(_TvSeriesDB(i).SeriesPosterImage) = True Then
+                                            _TvMovieProgram.SeriesPosterImage = _TvSeriesDB(i).SeriesPosterImage
+                                        End If
 
-                                        Catch ex As Exception
+                                        'FanArt
+                                        If Not String.IsNullOrEmpty(_TvSeriesDB(i).FanArt) = True Then
+                                            _TvMovieProgram.FanArt = _TvSeriesDB(i).FanArt
+                                        End If
 
-                                            'idProgram in TvMovieProgram nicht gefunden -> Daten neu anlegen
-                                            Dim _TvMovieProgram As New TVMovieProgram(_Result(d).IdProgram)
-                                            _TvMovieProgram.idSeries = _TvSeriesDB(i).SeriesID
-                                            _TvMovieProgram.idEpisode = _TvSeriesDB.EpisodeCompositeID
-                                            _TvMovieProgram.local = True
+                                        If _TvSeriesDB.EpisodeExistLocal = False Then
+                                            _TvMovieProgram.local = False
+                                        End If
 
-                                            If _TvSeriesDB.EpisodeExistLocal = False Then
-                                                _TvMovieProgram.local = False
-                                            End If
+                                        _TvMovieProgram.Persist()
 
-                                            _TvMovieProgram.Persist()
+                                    Catch ex As Exception
 
-                                        End Try
-                                    End If
+                                        'idProgram in TvMovieProgram nicht gefunden -> Daten neu anlegen
+                                        Dim _TvMovieProgram As New TVMovieProgram(_Result(d).IdProgram)
+                                        _TvMovieProgram.idSeries = _TvSeriesDB(i).SeriesID
+                                        _TvMovieProgram.idEpisode = _TvSeriesDB.EpisodeCompositeID
+                                        _TvMovieProgram.local = True
+
+                                        'Episoden Image
+                                        If Not String.IsNullOrEmpty(_TvSeriesDB.EpisodeImage) = True Then
+                                            _TvMovieProgram.EpisodeImage = _TvSeriesDB.EpisodeImage
+                                        End If
+
+                                        'Serien Poster Image
+                                        If Not String.IsNullOrEmpty(_TvSeriesDB(i).SeriesPosterImage) = True Then
+                                            _TvMovieProgram.SeriesPosterImage = _TvSeriesDB(i).SeriesPosterImage
+                                        End If
+
+                                        'FanArt
+                                        If Not String.IsNullOrEmpty(_TvSeriesDB(i).FanArt) = True Then
+                                            _TvMovieProgram.FanArt = _TvSeriesDB(i).FanArt
+                                        End If
+
+
+                                        If _TvSeriesDB.EpisodeExistLocal = False Then
+                                            _TvMovieProgram.local = False
+                                        End If
+
+                                        _TvMovieProgram.Persist()
+
+                                    End Try
+                                    'End If
 
                                     _EpisodeFoundCounter = _EpisodeFoundCounter + 1
 
@@ -1326,7 +1358,7 @@ Namespace TvEngine
             Try
                 Log.[Debug]("TVMovie: [GetTvMovieHighlights]: start import")
                 'Alle Sendungen mit Bewertung laden
-                Dim _ClickfinderDB As New ClickfinderDB("SELECT * FROM Sendungen WHERE Bewertung > 0 ORDER BY SenderKennung ASC", TvMovie.DatabasePath)
+                Dim _ClickfinderDB As New ClickfinderDB("SELECT * FROM Sendungen WHERE Bewertung > 0 ORDER BY SenderKennung ASC", "\\MEDIASTATION\TV Movie\TV Movie ClickFinder\tvdaten.mdb")
                 Dim _CounterFound As Integer = 0
 
                 For i As Integer = 0 To _ClickfinderDB.Count - 1
@@ -1358,6 +1390,9 @@ Namespace TvEngine
                                         'idProgram in TvMovieProgram suchen & Daten aktualisieren
                                         Dim _TvMovieProgram As TVMovieProgram = TVMovieProgram.Retrieve(_Program(0).IdProgram)
                                         _TvMovieProgram.TVMovieBewertung = _ClickfinderDB(i).Bewertung
+                                        _TvMovieProgram.KurzKritik = _ClickfinderDB(i).Kurzkritik
+                                        _TvMovieProgram.BildDateiname = _ClickfinderDB(i).Bilddateiname
+
                                         _TvMovieProgram.Persist()
 
                                     Catch ex As Exception
@@ -1365,6 +1400,9 @@ Namespace TvEngine
                                         'idProgram in TvMovieProgram nicht gefunden -> Daten neu anlegen
                                         Dim _TvMovieProgram As New TVMovieProgram(_Program(0).IdProgram)
                                         _TvMovieProgram.TVMovieBewertung = _ClickfinderDB(i).Bewertung
+                                        _TvMovieProgram.KurzKritik = _ClickfinderDB(i).Kurzkritik
+                                        _TvMovieProgram.BildDateiname = _ClickfinderDB(i).Bilddateiname
+
                                         _TvMovieProgram.Persist()
 
                                     End Try
@@ -1383,7 +1421,7 @@ Namespace TvEngine
                         End If
 
                     Catch ex As Exception
-                        Log.[Error]("TVMovie: [GetTvMovieHighlights]: databasePath: {0} exception err:{1} stack:{2}", TvMovie.DatabasePath, ex.Message, ex.StackTrace)
+                        Log.[Error]("TVMovie: [GetTvMovieHighlights]: databasePath: {0} exception err:{1} stack:{2}", "\\MEDIASTATION\TV Movie\TV Movie ClickFinder\tvdaten.mdb", ex.Message, ex.StackTrace)
                         Log.[Error]("TVMovie: [GetTvMovieHighlights]: Titel: {0}, SenderKennung:{1}, DisplayName:{2}, Beginn:{3}", _ClickfinderDB(i).Titel, _ClickfinderDB(i).SenderKennung, _DebugchannelName, _ClickfinderDB(i).Beginn)
                     End Try
                 Next
@@ -1391,7 +1429,7 @@ Namespace TvEngine
                 Log.[Info]("TVMovie: [GetTvMovieHighlights]: Summary: Infos for {0}/{1} saved in TvMovieProgram", _CounterFound, _ClickfinderDB.Count)
 
             Catch ex As Exception
-                Log.[Error]("TVMovie: [GetTvMovieHighlights]: databasePath: {0} exception err:{1} stack:{2}", TvMovie.DatabasePath, ex.Message, ex.StackTrace)
+                Log.[Error]("TVMovie: [GetTvMovieHighlights]: databasePath: {0} exception err:{1} stack:{2}", "\\MEDIASTATION\TV Movie\TV Movie ClickFinder\tvdaten.mdb", ex.Message, ex.StackTrace)
             End Try
 
         End Sub

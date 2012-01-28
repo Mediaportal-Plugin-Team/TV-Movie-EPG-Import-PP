@@ -1,40 +1,22 @@
-﻿#Region "Copyright (C) 2005-2011 Team MediaPortal"
-
-' Copyright (C) 2005-2011 Team MediaPortal
-' http://www.team-mediaportal.com
-' 
-' MediaPortal is free software: you can redistribute it and/or modify
-' it under the terms of the GNU General Public License as published by
-' the Free Software Foundation, either version 2 of the License, or
-' (at your option) any later version.
-' 
-' MediaPortal is distributed in the hope that it will be useful,
-' but WITHOUT ANY WARRANTY; without even the implied warranty of
-' MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-' GNU General Public License for more details.
-' 
-' You should have received a copy of the GNU General Public License
-' along with MediaPortal. If not, see <http://www.gnu.org/licenses/>.
-
-#End Region
-
-Imports System.Collections.Generic
+﻿Imports System.Collections.Generic
 Imports System.Globalization
 Imports System.IO
 Imports System.Runtime.CompilerServices
 Imports System.Threading
 Imports TvLibrary.Log
 
+
 Imports MediaPortal.Database
 Imports SQLite.NET
 Imports TvDatabase
 
 Public Class TVSeriesDB
+
     Implements IDisposable
 
-#Region "Members"
+#Region "Member"
     Private disposed As Boolean = False
-    Private m_db As SQLiteClient = Nothing
+    Private Shared m_db As SQLiteClient = Nothing
     Private _EpisodeInfos As SQLiteResultSet
     Private Shared _SeriesInfos As SQLiteResultSet
     Private _TVSeriesThumbPath As String
@@ -42,6 +24,7 @@ Public Class TVSeriesDB
     Private _SeriesID As Integer
     Private _EpisodeID As String
     Private Shared _Index As Integer
+
 #End Region
 
 #Region "Constructors"
@@ -69,9 +52,9 @@ Public Class TVSeriesDB
 
                 m_db = New SQLiteClient(layer.GetSetting("TvMovieMPDatabase", "%ProgramData%\Team MediaPortal\MediaPortal\database").Value & "\TVSeriesDatabase4.db3")
                 ' Retry 10 times on busy (DB in use or system resources exhausted)
-                m_db.BusyRetries = 20
+                m_db.BusyRetries = 10
                 ' Wait 100 ms between each try (default 10)
-                m_db.BusyRetryDelay = 1000
+                m_db.BusyRetryDelay = 10
 
                 DatabaseUtility.SetPragmas(m_db)
             Else
@@ -81,6 +64,7 @@ Public Class TVSeriesDB
 
         Catch ex As Exception
             Log.[Error]("TVMovie: [OpenTvSeriesDB]: TvSeries Database exception err:{0} stack:{1}", ex.Message, ex.StackTrace)
+            MsgBox(ex.Message)
             OpenTvSeriesDB()
         End Try
         'Log.Info("picture database opened")
@@ -168,6 +152,38 @@ Public Class TVSeriesDB
                 End If
             End Get
         End Property
+
+        Public ReadOnly Property SeriesPosterImage() As String
+            Get
+                If _SeriesInfos IsNot Nothing AndAlso _SeriesInfos.Rows.Count > 0 Then
+                    Return DatabaseUtility.[Get](_SeriesInfos, _Index, "PosterBannerFileName")
+                Else
+                    Return ""
+                End If
+            End Get
+        End Property
+        Public ReadOnly Property FanArt() As String
+            Get
+                Dim _result As SQLiteResultSet
+                Dim strSQL As String = [String].Format("SELECT * FROM Fanart WHERE seriesID = '{0}' AND LocalPath LIKE '_%'", SeriesID)
+
+                _result = m_db.Execute(strSQL)
+
+                If _result IsNot Nothing AndAlso _result.Rows.Count > 0 Then
+                    For i As Integer = 0 To _result.Rows.Count - 1
+
+                        If Not String.IsNullOrEmpty(DatabaseUtility.[Get](_result, i, "LocalPath")) Then
+                            Return DatabaseUtility.[Get](_result, i, "LocalPath")
+                            Exit Property
+                        End If
+                    Next
+                    Return ""
+                Else
+                    Return ""
+                End If
+
+            End Get
+        End Property
     End Class
 
 
@@ -229,6 +245,16 @@ Public Class TVSeriesDB
         End Get
 
     End Property
+    Public ReadOnly Property EpisodeImage() As String
+        Get
+            If _EpisodeInfos IsNot Nothing AndAlso _EpisodeInfos.Rows.Count > 0 Then
+                Return DatabaseUtility.[Get](_EpisodeInfos, 0, "thumbFilename")
+            Else
+                Return ""
+            End If
+        End Get
+    End Property
+
 #End Region
 
 #Region "IDisposable Members"

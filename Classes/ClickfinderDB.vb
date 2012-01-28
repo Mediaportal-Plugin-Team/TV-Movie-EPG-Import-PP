@@ -197,6 +197,24 @@ Public Class ClickfinderDB
                 End If
             End Get
         End Property
+        Public ReadOnly Property Kurzkritik() As String
+            Get
+                If Not IsDBNull(_Table.Rows(_Index).Item("Kurzkritik")) Then
+                    Return CStr(_Table.Rows(_Index).Item("Kurzkritik"))
+                Else
+                    Return ""
+                End If
+            End Get
+        End Property
+        Public ReadOnly Property Bilddateiname() As String
+            Get
+                If Not IsDBNull(_Table.Rows(_Index).Item("Bilddateiname")) Then
+                    Return _Table.Rows(_Index).Item("Bilddateiname")
+                Else
+                    Return ""
+                End If
+            End Get
+        End Property
 
     End Class
     Public ReadOnly Property DataTable() As DataTable

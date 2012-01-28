@@ -47,8 +47,17 @@ Namespace TvDatabase
         <TableColumn("idSeries", NotNull:=True)> _
         Private m_idSeries As Integer
 
+        <TableColumn("SeriesPosterImage", NotNull:=True)> _
+        Private m_SeriesPosterImage As String
+
+        <TableColumn("FanArt", NotNull:=True)> _
+        Private m_FanArt As String
+
         <TableColumn("idEpisode", NotNull:=True)> _
         Private m_idEpisode As String
+
+        <TableColumn("EpisodeImage", NotNull:=True)> _
+        Private m_EpisodeImage As String
 
         <TableColumn("local", NotNull:=True)> _
         Private m_local As Boolean
@@ -58,6 +67,12 @@ Namespace TvDatabase
 
         <TableColumn("idVideo", NotNull:=True)> _
         Private m_idVideo As Integer
+
+        <TableColumn("KurzKritik", NotNull:=True)> _
+        Private m_KurzKritik As String
+
+        <TableColumn("BildDateiname", NotNull:=True)> _
+        Private m_BildDateiname As String
 
 #End Region
 
@@ -131,7 +146,6 @@ Namespace TvDatabase
                 m_idProgram = value
             End Set
         End Property
-
         ''' <summary>
         ''' Property relating to database column idSeries
         ''' </summary>
@@ -144,6 +158,35 @@ Namespace TvDatabase
                 m_idSeries = value
             End Set
         End Property
+        Public Property SeriesPosterImage() As String
+            Get
+                Return m_SeriesPosterImage
+            End Get
+            Set(ByVal value As String)
+                m_isChanged = m_isChanged Or m_SeriesPosterImage <> value
+                '"\" am Anfang entfernen sofern vorhanden
+                If Not String.IsNullOrEmpty(value) And value(0) = "\" Then
+                    value = value.Remove(0, 1)
+                End If
+
+                m_SeriesPosterImage = value
+            End Set
+        End Property
+
+        Public Property FanArt() As String
+            Get
+                Return m_FanArt
+            End Get
+            Set(ByVal value As String)
+                m_isChanged = m_isChanged Or m_FanArt <> value
+                '"\" am Anfang entfernen sofern vorhanden
+                If Not String.IsNullOrEmpty(value) And value(0) = "\" Then
+                    value = value.Remove(0, 1)
+                End If
+
+                m_FanArt = value
+            End Set
+        End Property
         Public Property idEpisode() As String
             Get
                 Return m_idEpisode
@@ -151,6 +194,20 @@ Namespace TvDatabase
             Set(ByVal value As String)
                 m_isChanged = m_isChanged Or m_idEpisode <> value
                 m_idEpisode = value
+            End Set
+        End Property
+        Public Property EpisodeImage() As String
+            Get
+                Return m_EpisodeImage
+            End Get
+            Set(ByVal value As String)
+                m_isChanged = m_isChanged Or m_EpisodeImage <> value
+                '"\" am Anfang entfernen sofern vorhanden
+                If Not String.IsNullOrEmpty(value) And value(0) = "\" Then
+                    value = value.Remove(0, 1)
+                End If
+
+                m_EpisodeImage = value
             End Set
         End Property
 
@@ -186,6 +243,24 @@ Namespace TvDatabase
             Set(ByVal value As Integer)
                 m_isChanged = m_isChanged Or m_idVideo <> value
                 m_idVideo = value
+            End Set
+        End Property
+        Public Property KurzKritik() As String
+            Get
+                Return m_KurzKritik
+            End Get
+            Set(ByVal value As String)
+                m_isChanged = m_isChanged Or m_KurzKritik <> value
+                m_KurzKritik = value
+            End Set
+        End Property
+        Public Property BildDateiname() As String
+            Get
+                Return m_BildDateiname
+            End Get
+            Set(ByVal value As String)
+                m_isChanged = m_isChanged Or m_BildDateiname <> value
+                m_BildDateiname = value
             End Set
         End Property
 #End Region
