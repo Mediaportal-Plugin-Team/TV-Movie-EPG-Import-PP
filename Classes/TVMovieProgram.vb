@@ -298,7 +298,6 @@ Namespace TvDatabase
                 Try
                     MyBase.Persist()
                 Catch ex As Exception
-                    MsgBox("Exception in TVMovieProgram.Persist() with Message " & ex.Message)
                     Log.[Error]("Exception in TVMovieProgram.Persist() with Message {0}", ex.Message)
                     Return
                 End Try

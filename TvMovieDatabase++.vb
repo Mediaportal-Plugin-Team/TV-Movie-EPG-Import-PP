@@ -1189,68 +1189,68 @@ Namespace TvEngine
                                     _Result(d).Persist()
 
                                     'Clickfinder ProgramGuide Infos in TvMovieProgram schreiben, sofern aktiviert
-                                    'If _tvbLayer.GetSetting("ClickfinderDataAvailable").Value = "true" Then
-                                    Try
+                                    If _tvbLayer.GetSetting("ClickfinderDataAvailable", "false").Value = "true" Then
+                                        Try
 
-                                        'idProgram in TvMovieProgram suchen & Daten aktualisieren
-                                        Dim _TvMovieProgram As TVMovieProgram = TVMovieProgram.Retrieve(_Result(d).IdProgram)
-                                        _TvMovieProgram.idSeries = _TvSeriesDB(i).SeriesID
-                                        _TvMovieProgram.idEpisode = _TvSeriesDB.EpisodeCompositeID
-                                        _TvMovieProgram.local = True
+                                            'idProgram in TvMovieProgram suchen & Daten aktualisieren
+                                            Dim _TvMovieProgram As TVMovieProgram = TVMovieProgram.Retrieve(_Result(d).IdProgram)
+                                            _TvMovieProgram.idSeries = _TvSeriesDB(i).SeriesID
+                                            _TvMovieProgram.idEpisode = _TvSeriesDB.EpisodeCompositeID
+                                            _TvMovieProgram.local = True
 
-                                        'Episoden Image
-                                        If Not String.IsNullOrEmpty(_TvSeriesDB.EpisodeImage) = True Then
-                                            _TvMovieProgram.EpisodeImage = _TvSeriesDB.EpisodeImage
-                                        End If
+                                            'Episoden Image
+                                            If Not String.IsNullOrEmpty(_TvSeriesDB.EpisodeImage) = True Then
+                                                _TvMovieProgram.EpisodeImage = _TvSeriesDB.EpisodeImage
+                                            End If
 
-                                        'Serien Poster Image
-                                        If Not String.IsNullOrEmpty(_TvSeriesDB(i).SeriesPosterImage) = True Then
-                                            _TvMovieProgram.SeriesPosterImage = _TvSeriesDB(i).SeriesPosterImage
-                                        End If
+                                            'Serien Poster Image
+                                            If Not String.IsNullOrEmpty(_TvSeriesDB(i).SeriesPosterImage) = True Then
+                                                _TvMovieProgram.SeriesPosterImage = _TvSeriesDB(i).SeriesPosterImage
+                                            End If
 
-                                        'FanArt
-                                        If Not String.IsNullOrEmpty(_TvSeriesDB(i).FanArt) = True Then
-                                            _TvMovieProgram.FanArt = _TvSeriesDB(i).FanArt
-                                        End If
+                                            'FanArt
+                                            If Not String.IsNullOrEmpty(_TvSeriesDB(i).FanArt) = True Then
+                                                _TvMovieProgram.FanArt = _TvSeriesDB(i).FanArt
+                                            End If
 
-                                        If _TvSeriesDB.EpisodeExistLocal = False Then
-                                            _TvMovieProgram.local = False
-                                        End If
+                                            If _TvSeriesDB.EpisodeExistLocal = False Then
+                                                _TvMovieProgram.local = False
+                                            End If
 
-                                        _TvMovieProgram.Persist()
+                                            _TvMovieProgram.Persist()
 
-                                    Catch ex As Exception
+                                        Catch ex As Exception
 
-                                        'idProgram in TvMovieProgram nicht gefunden -> Daten neu anlegen
-                                        Dim _TvMovieProgram As New TVMovieProgram(_Result(d).IdProgram)
-                                        _TvMovieProgram.idSeries = _TvSeriesDB(i).SeriesID
-                                        _TvMovieProgram.idEpisode = _TvSeriesDB.EpisodeCompositeID
-                                        _TvMovieProgram.local = True
+                                            'idProgram in TvMovieProgram nicht gefunden -> Daten neu anlegen
+                                            Dim _TvMovieProgram As New TVMovieProgram(_Result(d).IdProgram)
+                                            _TvMovieProgram.idSeries = _TvSeriesDB(i).SeriesID
+                                            _TvMovieProgram.idEpisode = _TvSeriesDB.EpisodeCompositeID
+                                            _TvMovieProgram.local = True
 
-                                        'Episoden Image
-                                        If Not String.IsNullOrEmpty(_TvSeriesDB.EpisodeImage) = True Then
-                                            _TvMovieProgram.EpisodeImage = _TvSeriesDB.EpisodeImage
-                                        End If
+                                            'Episoden Image
+                                            If Not String.IsNullOrEmpty(_TvSeriesDB.EpisodeImage) = True Then
+                                                _TvMovieProgram.EpisodeImage = _TvSeriesDB.EpisodeImage
+                                            End If
 
-                                        'Serien Poster Image
-                                        If Not String.IsNullOrEmpty(_TvSeriesDB(i).SeriesPosterImage) = True Then
-                                            _TvMovieProgram.SeriesPosterImage = _TvSeriesDB(i).SeriesPosterImage
-                                        End If
+                                            'Serien Poster Image
+                                            If Not String.IsNullOrEmpty(_TvSeriesDB(i).SeriesPosterImage) = True Then
+                                                _TvMovieProgram.SeriesPosterImage = _TvSeriesDB(i).SeriesPosterImage
+                                            End If
 
-                                        'FanArt
-                                        If Not String.IsNullOrEmpty(_TvSeriesDB(i).FanArt) = True Then
-                                            _TvMovieProgram.FanArt = _TvSeriesDB(i).FanArt
-                                        End If
+                                            'FanArt
+                                            If Not String.IsNullOrEmpty(_TvSeriesDB(i).FanArt) = True Then
+                                                _TvMovieProgram.FanArt = _TvSeriesDB(i).FanArt
+                                            End If
 
 
-                                        If _TvSeriesDB.EpisodeExistLocal = False Then
-                                            _TvMovieProgram.local = False
-                                        End If
+                                            If _TvSeriesDB.EpisodeExistLocal = False Then
+                                                _TvMovieProgram.local = False
+                                            End If
 
-                                        _TvMovieProgram.Persist()
+                                            _TvMovieProgram.Persist()
 
-                                    End Try
-                                    'End If
+                                        End Try
+                                    End If
 
                                     _EpisodeFoundCounter = _EpisodeFoundCounter + 1
 
@@ -1279,6 +1279,7 @@ Namespace TvEngine
             Catch ex As Exception
                 Log.[Error]("TVMovie: [GetSeriesInfos]: exception err:{0} stack:{1}", ex.Message, ex.StackTrace)
             End Try
+
         End Sub
 
         Private Sub GetMovingPicturesInfos()

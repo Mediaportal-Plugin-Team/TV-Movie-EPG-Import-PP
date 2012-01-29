@@ -330,7 +330,7 @@ Click Next to continue or Cancel to exit Setup.</Value>
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>..\Grafiken\MPE1 Icon.png</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{1e93952b-290f-47bc-950b-e121e5168541}-MPE1 Icon.png</ZipFileName>
+        <ZipFileName>Installer{CopyFile}\{c6cba0b2-1f75-488c-84c6-f5111e92c1e0}-MPE1 Icon.png</ZipFileName>
         <DestinationFilename />
       </FileItem>
     </Items>

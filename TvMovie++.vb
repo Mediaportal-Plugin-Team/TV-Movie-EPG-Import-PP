@@ -46,7 +46,7 @@ Namespace TvEngine
         Private _stateTimer As System.Timers.Timer
         Private _isImporting As Boolean = False
         Private Const _timerIntervall As Long = 1800000
-        Private Const _localMachineRegSubKey As String = "HKEY_CURRENT_USER\Software\Ewe\TVGhost\Gemeinsames"
+        Private Const _localMachineRegSubKey As String = "HKEY_LOCAL_MACHINE\SOFTWARE\Ewe\TVGhost\Gemeinsames"
 
         Private Const _virtualStoreRegSubKey32b As String = "HKEY_CURRENT_USER\Software\Classes\VirtualStore\MACHINE\SOFTWARE\Ewe\TVGhost\Gemeinsames"
 
@@ -60,10 +60,19 @@ Namespace TvEngine
             Dim value As String = String.Empty
 
             Try
-                If OS.GetOSType = OS.OSType.Is32Bit Then
-                    value = My.Computer.Registry.GetValue(_virtualStoreRegSubKey32b, valueName, Nothing).ToString
-                Else
-                    value = My.Computer.Registry.GetValue(_virtualStoreRegSubKey64b, valueName, Nothing).ToString
+
+                Try
+                    value = My.Computer.Registry.GetValue(_localMachineRegSubKey, valueName, String.Empty).ToString
+                Catch ex As Exception
+                    value = String.Empty
+                End Try
+
+                If String.IsNullOrEmpty(value) Then
+                    If OS.GetOSType = OS.OSType.Is32Bit Then
+                        value = My.Computer.Registry.GetValue(_virtualStoreRegSubKey32b, valueName, String.Empty).ToString
+                    Else
+                        value = My.Computer.Registry.GetValue(_virtualStoreRegSubKey64b, valueName, String.Empty).ToString
+                    End If
                 End If
 
             Catch ex As Exception
@@ -74,7 +83,7 @@ Namespace TvEngine
                 Log.Info("TVMovie: Registry setting {1} has no value", valueName)
             End If
 
-            Return value
+            Return Replace(value, "\\", "\")
         End Function
 
         Public Shared ReadOnly Property TVMovieProgramPath() As String
@@ -260,7 +269,7 @@ Namespace TvEngine
 
         Public ReadOnly Property Version() As String Implements ITvServerPlugin.Version
             Get
-                Return "1.0.5.2 beta"
+                Return "1.0.5.3 beta"
             End Get
         End Property
 

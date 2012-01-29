@@ -73,8 +73,8 @@ Public Class TVSeriesDB
     Public Sub LoadAllSeries()
 
         Try
-            _SeriesInfos = m_db.Execute("SELECT ID, Pretty_Name, PosterBannerFileName, CurrentBannerFileName, Rating FROM online_series WHERE ID > 0 ORDER BY Pretty_Name ASC")
-            Log.Info("TVMovie: [LoadAllSeries]: success")
+            _SeriesInfos = m_db.Execute("SELECT * FROM online_series WHERE ID > 0 ORDER BY Pretty_Name ASC")
+            Log.Info("TVMovie: [LoadAllSeries]: success - {0} Series found", _SeriesInfos.Rows.Count)
         Catch ex As Exception
             Log.[Error]("TVMovie: [LoadAllSeries]: exception err:{0} stack:{1}", ex.Message, ex.StackTrace)
             OpenTvSeriesDB()
