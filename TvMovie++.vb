@@ -83,7 +83,7 @@ Namespace TvEngine
                 Log.Info("TVMovie: Registry setting {1} has no value", valueName)
             End If
 
-            Return Replace(value, "\\", "\")
+            Return value
         End Function
 
         Public Shared ReadOnly Property TVMovieProgramPath() As String
@@ -91,18 +91,19 @@ Namespace TvEngine
                 Dim setting As Setting = TvMovieDatabase.TvBLayer.GetSetting("TvMovieInstallPath", String.Empty)
                 Dim path As String = setting.Value
 
-                If Not File.Exists(path) Then
-                    Dim setting2 As Setting = TvMovieDatabase.TvBLayer.GetSetting("TvMovieDatabasepath", String.Empty)
-                    path = IO.Path.GetDirectoryName(setting2.Value) & "\"
+                'If Not File.Exists(path) Then
+                '    Dim setting2 As Setting = TvMovieDatabase.TvBLayer.GetSetting("TvMovieDatabasepath", String.Empty)
+                '    path = IO.Path.GetDirectoryName(setting2.Value) & "\"
 
-                    If Not IO.Directory.Exists(path) Then
-                        path = GetRegistryValueFromValueName("ProgrammPath")
-                    End If
-
+                If Not IO.Directory.Exists(path) Then
+                    path = GetRegistryValueFromValueName("ProgrammPath")
+                    setting.Value = path
+                    setting.Persist()
                 End If
 
-                setting.Value = path
-                setting.Persist()
+                'setting.Value = path
+                'setting.Persist()
+                'End If
 
                 Return path
             End Get
@@ -116,7 +117,6 @@ Namespace TvEngine
                 Dim path As String = TvMovieDatabase.TvBLayer.GetSetting("TvMoviedatabasepath", String.Empty).Value
 
                 If Not File.Exists(path) Then
-
                     path = GetRegistryValueFromValueName("DBDatei")
                 End If
 
@@ -269,7 +269,7 @@ Namespace TvEngine
 
         Public ReadOnly Property Version() As String Implements ITvServerPlugin.Version
             Get
-                Return "1.0.5.3 beta"
+                Return "1.0.5.4 beta"
             End Get
         End Property
 

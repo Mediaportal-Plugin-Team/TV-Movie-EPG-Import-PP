@@ -241,13 +241,13 @@ Click Next to continue or Cancel to exit Setup.</Value>
       <Major>1</Major>
       <Minor>0</Minor>
       <Build>5</Build>
-      <Revision>2</Revision>
+      <Revision>4</Revision>
     </Version>
     <ExtensionDescription />
     <VersionDescription />
     <DevelopmentStatus>Beta</DevelopmentStatus>
     <OnlineLocation />
-    <ReleaseDate>2012-01-21T17:12:10</ReleaseDate>
+    <ReleaseDate>2012-01-29T17:12:10</ReleaseDate>
     <Tags />
     <Location>Z:\Projekte\MediaPortal\TVMovie++\MPE1\Tv Movie EPG Import++.mpe1</Location>
     <Params>
@@ -330,7 +330,7 @@ Click Next to continue or Cancel to exit Setup.</Value>
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>..\Grafiken\MPE1 Icon.png</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{c6cba0b2-1f75-488c-84c6-f5111e92c1e0}-MPE1 Icon.png</ZipFileName>
+        <ZipFileName>Installer{CopyFile}\{d63e25f4-0528-46c3-ad67-49104b5b6962}-MPE1 Icon.png</ZipFileName>
         <DestinationFilename />
       </FileItem>
     </Items>
