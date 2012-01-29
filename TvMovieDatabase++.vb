@@ -1359,7 +1359,7 @@ Namespace TvEngine
             Try
                 Log.[Debug]("TVMovie: [GetTvMovieHighlights]: start import")
                 'Alle Sendungen mit Bewertung laden
-                Dim _ClickfinderDB As New ClickfinderDB("SELECT * FROM Sendungen WHERE Bewertung > 0 ORDER BY SenderKennung ASC", "\\MEDIASTATION\TV Movie\TV Movie ClickFinder\tvdaten.mdb")
+                Dim _ClickfinderDB As New ClickfinderDB("SELECT * FROM Sendungen WHERE Bewertung > 0 ORDER BY SenderKennung ASC", TvMovie.DatabasePath)
                 Dim _CounterFound As Integer = 0
 
                 For i As Integer = 0 To _ClickfinderDB.Count - 1
@@ -1422,7 +1422,7 @@ Namespace TvEngine
                         End If
 
                     Catch ex As Exception
-                        Log.[Error]("TVMovie: [GetTvMovieHighlights]: databasePath: {0} exception err:{1} stack:{2}", "\\MEDIASTATION\TV Movie\TV Movie ClickFinder\tvdaten.mdb", ex.Message, ex.StackTrace)
+                        Log.[Error]("TVMovie: [GetTvMovieHighlights]: databasePath: {0} exception err:{1} stack:{2}", TvMovie.DatabasePath, ex.Message, ex.StackTrace)
                         Log.[Error]("TVMovie: [GetTvMovieHighlights]: Titel: {0}, SenderKennung:{1}, DisplayName:{2}, Beginn:{3}", _ClickfinderDB(i).Titel, _ClickfinderDB(i).SenderKennung, _DebugchannelName, _ClickfinderDB(i).Beginn)
                     End Try
                 Next
@@ -1430,7 +1430,7 @@ Namespace TvEngine
                 Log.[Info]("TVMovie: [GetTvMovieHighlights]: Summary: Infos for {0}/{1} saved in TvMovieProgram", _CounterFound, _ClickfinderDB.Count)
 
             Catch ex As Exception
-                Log.[Error]("TVMovie: [GetTvMovieHighlights]: databasePath: {0} exception err:{1} stack:{2}", "\\MEDIASTATION\TV Movie\TV Movie ClickFinder\tvdaten.mdb", ex.Message, ex.StackTrace)
+                Log.[Error]("TVMovie: [GetTvMovieHighlights]: databasePath: {0} exception err:{1} stack:{2}", TvMovie.DatabasePath, ex.Message, ex.StackTrace)
             End Try
 
         End Sub

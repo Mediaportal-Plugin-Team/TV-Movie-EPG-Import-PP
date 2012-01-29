@@ -64,7 +64,6 @@ Public Class TVSeriesDB
 
         Catch ex As Exception
             Log.[Error]("TVMovie: [OpenTvSeriesDB]: TvSeries Database exception err:{0} stack:{1}", ex.Message, ex.StackTrace)
-            MsgBox(ex.Message)
             OpenTvSeriesDB()
         End Try
         'Log.Info("picture database opened")

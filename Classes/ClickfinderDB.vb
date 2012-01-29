@@ -28,6 +28,7 @@ Imports Gentle.Framework
 Imports TvDatabase
 Imports System.Data
 Imports System.Collections
+Imports TvLibrary.Log
 
 Public Class ClickfinderDB
 
@@ -69,7 +70,7 @@ Public Class ClickfinderDB
             _Table.PrimaryKey = New DataColumn() {_Table.Columns("Sendungen.Pos")}
 
         Catch ex As Exception
-            MsgBox(ex.Message)
+            Log.[Error]("TVMovie: [ClickfinderDB New()]: exception err:{0} stack:{1}", ex.Message, ex.StackTrace)
         End Try
 
     End Sub
