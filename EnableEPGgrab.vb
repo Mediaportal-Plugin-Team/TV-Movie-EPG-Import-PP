@@ -40,7 +40,7 @@ Public Class frmEPGgrab
             Next
 
         Catch ex As Exception
-            Log.[Error]("TVMovie: [FillEPGgrabData]: exception err:{0} stack:{1}", ex.Message, ex.StackTrace)
+            MyLog.[Error]("TVMovie: [FillEPGgrabData]: exception err:{0} stack:{1}", ex.Message, ex.StackTrace)
         End Try
 
     End Sub
@@ -71,7 +71,7 @@ Public Class frmEPGgrab
             MsgBox("Saving succesful ...", MsgBoxStyle.Information)
 
         Catch ex As Exception
-            Log.[Error]("TVMovie: [SaveEnableEPGgrabbing]: exception err:{0} stack:{1}", ex.Message, ex.StackTrace)
+            MyLog.[Error]("TVMovie: [SaveEnableEPGgrabbing]: exception err:{0} stack:{1}", ex.Message, ex.StackTrace)
         End Try
     End Sub
 

@@ -70,7 +70,9 @@
             <SectionParam Name="Description">
               <Value>This will install [Name] version [Version] on your computer.
 It is recommended that you close all other applications before continuing.
-Click Next to continue or Cancel to exit Setup.</Value>
+Click Next to continue or Cancel to exit Setup.
+
+</Value>
               <ValueType>String</ValueType>
               <Description />
             </SectionParam>
@@ -80,7 +82,7 @@ Click Next to continue or Cancel to exit Setup.</Value>
               <Description />
             </SectionParam>
             <SectionParam Name="Header image">
-              <Value />
+              <Value>..\Grafiken\MPE1 Icon.png</Value>
               <ValueType>File</ValueType>
               <Description>Image in upper right part</Description>
             </SectionParam>
@@ -97,17 +99,17 @@ Click Next to continue or Cancel to exit Setup.</Value>
         <Params>
           <Items>
             <SectionParam Name="Header Title">
-              <Value />
+              <Value>Installation</Value>
               <ValueType>String</ValueType>
               <Description>Header title</Description>
             </SectionParam>
             <SectionParam Name="Header description">
-              <Value />
+              <Value>Unpacking files...</Value>
               <ValueType>String</ValueType>
               <Description>Description of section, shown in under section title</Description>
             </SectionParam>
             <SectionParam Name="Header image">
-              <Value />
+              <Value>..\Grafiken\MPE1 Icon.png</Value>
               <ValueType>File</ValueType>
               <Description>Image in upper right part</Description>
             </SectionParam>
@@ -121,6 +123,41 @@ Click Next to continue or Cancel to exit Setup.</Value>
               </Params>
               <ExecuteLocation>AfterPanelShow</ExecuteLocation>
             </ActionItem>
+          </Items>
+        </Actions>
+        <IncludedGroups />
+        <PanelName>Install Section</PanelName>
+        <WizardButtonsEnum>NextCancel</WizardButtonsEnum>
+      </SectionItem>
+      <SectionItem Guid="fe03e956-7510-4dc5-b923-b2921f94beec" Name="Setup Complete" ConditionGroup="">
+        <Params>
+          <Items>
+            <SectionParam Name="Header text">
+              <Value>The Extension Installer Wizard has successfully installed [Name].
+After pressing the finish button, the TvServer
+Installer will start.</Value>
+              <ValueType>String</ValueType>
+              <Description />
+            </SectionParam>
+            <SectionParam Name="Left part image">
+              <Value />
+              <ValueType>File</ValueType>
+              <Description />
+            </SectionParam>
+            <SectionParam Name="Show radio buttons">
+              <Value>NO</Value>
+              <ValueType>Bool</ValueType>
+              <Description>Use radiobutton in place of combobox</Description>
+            </SectionParam>
+            <SectionParam Name="Header image">
+              <Value>..\Grafiken\MPE1 Icon.png</Value>
+              <ValueType>File</ValueType>
+              <Description>Image in upper right part</Description>
+            </SectionParam>
+          </Items>
+        </Params>
+        <Actions>
+          <Items>
             <ActionItem Name="RunApplication" ActionType="RunApplication" ConditionGroup="">
               <Params>
                 <Items>
@@ -162,41 +199,9 @@ Click Next to continue or Cancel to exit Setup.</Value>
                   </SectionParam>
                 </Items>
               </Params>
-              <ExecuteLocation>AfterPanelShow</ExecuteLocation>
+              <ExecuteLocation>AfterPanelHide</ExecuteLocation>
             </ActionItem>
           </Items>
-        </Actions>
-        <IncludedGroups />
-        <PanelName>Install Section</PanelName>
-        <WizardButtonsEnum>Next</WizardButtonsEnum>
-      </SectionItem>
-      <SectionItem Guid="fe03e956-7510-4dc5-b923-b2921f94beec" Name="Setup Complete" ConditionGroup="">
-        <Params>
-          <Items>
-            <SectionParam Name="Header text">
-              <Value>The Extension Installer Wizard has successfully installed [Name].</Value>
-              <ValueType>String</ValueType>
-              <Description />
-            </SectionParam>
-            <SectionParam Name="Left part image">
-              <Value />
-              <ValueType>File</ValueType>
-              <Description />
-            </SectionParam>
-            <SectionParam Name="Show radio buttons">
-              <Value />
-              <ValueType>Bool</ValueType>
-              <Description>Use radiobutton in place of combobox</Description>
-            </SectionParam>
-            <SectionParam Name="Header image">
-              <Value />
-              <ValueType>File</ValueType>
-              <Description>Image in upper right part</Description>
-            </SectionParam>
-          </Items>
-        </Params>
-        <Actions>
-          <Items />
         </Actions>
         <IncludedGroups />
         <PanelName>Setup Complete</PanelName>
@@ -239,14 +244,27 @@ Click Next to continue or Cancel to exit Setup.</Value>
     <UpdateUrl />
     <Version>
       <Major>1</Major>
-      <Minor>0</Minor>
-      <Build>5</Build>
-      <Revision>5</Revision>
+      <Minor>1</Minor>
+      <Build>0</Build>
+      <Revision>0</Revision>
     </Version>
-    <ExtensionDescription />
-    <VersionDescription />
-    <DevelopmentStatus>Beta</DevelopmentStatus>
-    <OnlineLocation />
+    <ExtensionDescription>TV Movie EPG Import++ plugin is a replacement for the Tv Movie EPG Import Plugin (Author: rtv) that comes as part of MediaPortal TvServer. The plugin use the Tv Movie Clickfinder Database to supplying you with EPG data for german TV channels. The Clickfinder Plugin maps this data to your MediaPortal TV channels.
+
+Compared to the original Tv Movie EPG Import plugin, it offers a lot of additional import features.
+
+New Features (Optional):
+- Easy enabling EPG grabbing for not mapped channels Calcualte rating from Tv Movie Clickfinder Database and import it into your EPG
+- Run an application after the import (e.g. Episodenscanner)
+- Import ratings, season- and episodenumbers form your MP-TvSeries into your EPG
+- Mark not existing episodes as “Neue Folge:” in EPG describtion (only works if you have enable the download for the whole Series (MP-TvSeries Wiki) in the MP-TvSeries Plugin Configuration Plugin Configuration
+- Imports ratings from your MovingPictures and Video databases and mark existing Movie as „Lokal verfügbar“ in EPG Describtion. An integration of MyFilms database will be supported in a feature version.
+- Imports addiotional Data that are needed for the MediaPortal Plugin Clickfinder ProgramGuide </ExtensionDescription>
+    <VersionDescription>Version 1.1.0.0
+
+- stable Version
+- own LOG-File - tvmovie++.log </VersionDescription>
+    <DevelopmentStatus>Stable</DevelopmentStatus>
+    <OnlineLocation>http://tv-movie-epg-import-plusplus.googlecode.com/files/Tv%20Movie%20EPG%20Import%2B%2B_v1.1.0.0.mpe1</OnlineLocation>
     <ReleaseDate>2012-01-29T17:12:10</ReleaseDate>
     <Tags />
     <Location>Z:\Projekte\MediaPortal\TVMovie++\MPE1\Tv Movie EPG Import++.mpe1</Location>
@@ -330,7 +348,7 @@ Click Next to continue or Cancel to exit Setup.</Value>
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>..\Grafiken\MPE1 Icon.png</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{d63e25f4-0528-46c3-ad67-49104b5b6962}-MPE1 Icon.png</ZipFileName>
+        <ZipFileName>Installer{CopyFile}\{206f23e1-8b07-45a5-946e-21df366e2133}-MPE1 Icon.png</ZipFileName>
         <DestinationFilename />
       </FileItem>
     </Items>
@@ -338,6 +356,9 @@ Click Next to continue or Cancel to exit Setup.</Value>
   <ProjectSettings>
     <FolderGroups />
     <ProjectFilename>Tv Movie EPG Import++.xmp2</ProjectFilename>
+    <UpdatePath1>update.xml</UpdatePath1>
+    <UpdatePath2 />
+    <UpdatePath3 />
   </ProjectSettings>
   <IsSkin>false</IsSkin>
 </PackageClass>

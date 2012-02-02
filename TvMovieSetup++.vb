@@ -350,7 +350,7 @@ Namespace SetupTv.Sections
                                 stationNode.Tag = channelInfo
                                 treeViewTvMStations.Nodes.Add(stationNode)
                             Catch exstat As Exception
-                                Log.Info("TvMovieSetup: Error loading TV Movie station - {0}", exstat.Message)
+                                MyLog.Info("TvMovieSetup: Error loading TV Movie station - {0}", exstat.Message)
                             End Try
                         Next
                     Finally
@@ -368,12 +368,12 @@ Namespace SetupTv.Sections
                             treeViewMpChannels.Nodes.Add(stationNode)
                         Next
                     Catch exdb As Exception
-                        Log.Info("TvMovieSetup: Error loading MP's channels from database - {0}", exdb.Message)
+                        MyLog.Info("TvMovieSetup: Error loading MP's channels from database - {0}", exdb.Message)
                     Finally
                         treeViewMpChannels.EndUpdate()
                     End Try
                 Catch ex As Exception
-                    Log.Info("TvMovieSetup: Unhandled error in  LoadStations - {0}" & vbLf & "{1}", ex.Message, ex.StackTrace)
+                    MyLog.Info("TvMovieSetup: Unhandled error in  LoadStations - {0}" & vbLf & "{1}", ex.Message, ex.StackTrace)
                 End Try
             End If
         End Sub
@@ -439,28 +439,28 @@ Namespace SetupTv.Sections
                     mapping.Remove()
                 Next
             Else
-                Log.Info("TvMovieSetup: SaveMapping - no mappingList items")
+                MyLog.Info("TvMovieSetup: SaveMapping - no mappingList items")
             End If
 
             Dim layer As New TvBusinessLayer()
 
             For Each channel As TreeNode In treeViewMpChannels.Nodes
-                'Log.Debug("TvMovieSetup: Processing channel {0}", channel.Text);
+                'Mylog.Debug("TvMovieSetup: Processing channel {0}", channel.Text);
                 For Each station As TreeNode In channel.Nodes
                     Dim channelInfo As ChannelInfo = DirectCast(station.Tag, ChannelInfo)
-                    'Log.Debug("TvMovieSetup: Processing channelInfo {0}", channelInfo.Name);
+                    'Mylog.Debug("TvMovieSetup: Processing channelInfo {0}", channelInfo.Name);
                     Dim mapping As TvMovieMapping = Nothing
                     Try
                         mapping = New TvMovieMapping(DirectCast(channel.Tag, Channel).IdChannel, channelInfo.Name, channelInfo.Start, channelInfo.[End])
                     Catch exm As Exception
-                        Log.[Error]("TvMovieSetup: Error on new TvMovieMapping for channel {0} - {1}", channel.Text, exm.Message)
+                        MyLog.[Error]("TvMovieSetup: Error on new TvMovieMapping for channel {0} - {1}", channel.Text, exm.Message)
                     End Try
-                    'Log.Write("TvMovieSetup: SaveMapping - new mapping for {0}/{1}", channel.Text, channelInfo.Name);
+                    'Mylog.Write("TvMovieSetup: SaveMapping - new mapping for {0}/{1}", channel.Text, channelInfo.Name);
                     Try
-                        Log.Debug("TvMovieSetup: Persisting TvMovieMapping for channel {0}", channel.Text)
+                        MyLog.Debug("TvMovieSetup: Persisting TvMovieMapping for channel {0}", channel.Text)
                         mapping.Persist()
                     Catch ex As Exception
-                        Log.[Error]("TvMovieSetup: Error on mapping.Persist() {0},{1}", ex.Message, ex.StackTrace)
+                        MyLog.[Error]("TvMovieSetup: Error on mapping.Persist() {0},{1}", ex.Message, ex.StackTrace)
                     End Try
                 Next
             Next
@@ -509,18 +509,18 @@ Namespace SetupTv.Sections
                                             channelNode.Expand()
                                         End If
                                     Else
-                                        Log.Debug("TVMovie plugin: Channel {0} no longer present in Database - ignoring", stationName)
+                                        MyLog.Debug("TVMovie plugin: Channel {0} no longer present in Database - ignoring", stationName)
                                     End If
                                 End If
                             Catch exInner As Exception
-                                Log.Debug("TVMovie plugin: Mapping of station {0} failed; maybe it has been deleted / changed ({1})", MpChannelName, exInner.Message)
+                                MyLog.Debug("TVMovie plugin: Mapping of station {0} failed; maybe it has been deleted / changed ({1})", MpChannelName, exInner.Message)
                             End Try
                         Next
                     Else
-                        Log.Debug("TVMovie plugin: LoadMapping did not find any mapped channels")
+                        MyLog.Debug("TVMovie plugin: LoadMapping did not find any mapped channels")
                     End If
                 Catch ex As Exception
-                    Log.Debug("TVMovie plugin: LoadMapping failed - {0},{1}", ex.Message, ex.StackTrace)
+                    MyLog.Debug("TVMovie plugin: LoadMapping failed - {0},{1}", ex.Message, ex.StackTrace)
                 End Try
                 ColorTree()
             Finally
@@ -537,7 +537,7 @@ Namespace SetupTv.Sections
                             Return MpNode
                         End If
                     Else
-                        Log.Debug("TVMovie plugin: FindChannel failed - no Channel in Node tag of {0}", MpNode.Text)
+                        MyLog.Debug("TVMovie plugin: FindChannel failed - no Channel in Node tag of {0}", MpNode.Text)
                     End If
                 End If
             Next
@@ -710,7 +710,7 @@ Namespace SetupTv.Sections
                 Catch ex1 As Exception
                     MessageBox.Show(Me, "Please make sure a supported TV Movie Clickfinder release has been successfully installed.", "Error loading TV Movie stations", MessageBoxButtons.OK, MessageBoxIcon.[Error])
                     checkBoxEnableImport.Checked = False
-                    Log.Info("TVMovie plugin: Error enabling TV Movie import in LoadStations() - {0},{1}", ex1.Message, ex1.StackTrace)
+                    MyLog.Info("TVMovie plugin: Error enabling TV Movie import in LoadStations() - {0},{1}", ex1.Message, ex1.StackTrace)
                     Return
                 End Try
 
@@ -719,7 +719,7 @@ Namespace SetupTv.Sections
                 Catch ex2 As Exception
                     MessageBox.Show(Me, "Please make sure your using a valid channel mapping.", "Error loading TVM <-> MP channel mapping", MessageBoxButtons.OK, MessageBoxIcon.[Error])
                     checkBoxEnableImport.Checked = False
-                    Log.Info("TVMovie plugin: Error enabling TV Movie import in LoadMapping() - {0},{1}", ex2.Message, ex2.StackTrace)
+                    MyLog.Info("TVMovie plugin: Error enabling TV Movie import in LoadMapping() - {0},{1}", ex2.Message, ex2.StackTrace)
                     Return
                 End Try
             Else
@@ -746,7 +746,7 @@ Namespace SetupTv.Sections
                 manualThread.IsBackground = False
                 manualThread.Start()
             Catch ex2 As Exception
-                Log.[Error]("TVMovie: Error spawing import thread - {0},{1}", ex2.Message, ex2.StackTrace)
+                MyLog.[Error]("TVMovie: Error spawing import thread - {0},{1}", ex2.Message, ex2.StackTrace)
                 buttonImportNow.Enabled = True
             End Try
         End Sub
@@ -761,8 +761,8 @@ Namespace SetupTv.Sections
                 End If
                 buttonImportNow.Enabled = True
             Catch ex As Exception
-                Log.Info("TvMovie plugin error:")
-                Log.Write(ex)
+                MyLog.Info("TvMovie plugin error:")
+                MyLog.Write(ex)
                 buttonImportNow.Enabled = True
             End Try
         End Sub
@@ -813,7 +813,7 @@ Namespace SetupTv.Sections
             ' Then use the following code to create the Dialog window
             ' Change the .SelectedPath property to the default location
             With FolderBrowserDialog1
-                ' Desktop is the root folder in the dialog.
+                ' Desktop is the root folder in the diaMylog.
                 .RootFolder = Environment.SpecialFolder.Desktop
                 ' Select the C:\Windows directory on entry.
                 .SelectedPath = Environment.GetFolderPath(Environment.SpecialFolder.MyComputer)

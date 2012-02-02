@@ -53,7 +53,7 @@ Public Class VideoDB
                 Try
                     m_db.Close()
                     m_db.Dispose()
-                    Log.Debug("TVMovie: [OpenVideoDB]: Disposing current instance..")
+                    MyLog.Debug("TVMovie: [OpenVideoDB]: Disposing current instance..")
                 Catch generatedExceptionName As Exception
                 End Try
             End If
@@ -71,26 +71,26 @@ Public Class VideoDB
 
                 DatabaseUtility.SetPragmas(m_db)
             Else
-                Log.[Error]("TVMovie: [OpenVideoDB]: VideoDatabase not found: {0}", layer.GetSetting("TvMovieMPDatabase", "%ProgramData%\Team MediaPortal\MediaPortal\database").Value & "\VideoDatabaseV5.db3")
+                MyLog.[Error]("TVMovie: [OpenVideoDB]: VideoDatabase not found: {0}", layer.GetSetting("TvMovieMPDatabase", "%ProgramData%\Team MediaPortal\MediaPortal\database").Value & "\VideoDatabaseV5.db3")
             End If
 
 
         Catch ex As Exception
-            Log.[Error]("TVMovie: [OpenVideoDB]: VideoDatabase exception err:{0} stack:{1}", ex.Message, ex.StackTrace)
+            MyLog.[Error]("TVMovie: [OpenVideoDB]: VideoDatabase exception err:{0} stack:{1}", ex.Message, ex.StackTrace)
             OpenVideoDB()
         End Try
-        'Log.Info("picture database opened")
+        'Mylog.Info("picture database opened")
     End Sub
 
     Public Sub LoadAllVideoDBFilms()
 
         Try
             _VideoDBInfos = m_db.Execute("SELECT idMovie, strTitle, fRating FROM movieinfo ORDER BY strTitle ASC")
-            Log.Info("TVMovie: [LoadAllVideoDBFilms]: success")
+            MyLog.Info("TVMovie: [LoadAllVideoDBFilms]: success")
 
 
         Catch ex As Exception
-            Log.[Error]("TVMovie: [LoadAllVideoDBFilms]: exception err:{0} stack:{1}", ex.Message, ex.StackTrace)
+            MyLog.[Error]("TVMovie: [LoadAllVideoDBFilms]: exception err:{0} stack:{1}", ex.Message, ex.StackTrace)
             OpenVideoDB()
         End Try
 

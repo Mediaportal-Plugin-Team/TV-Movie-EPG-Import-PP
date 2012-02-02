@@ -253,7 +253,7 @@ Namespace TvEngine
                     End If
                 Next
             Catch ex As Exception
-                Log.Info("TVMovie: Exception in GetChannels: {0}" & vbLf & "{1}", ex.Message, ex.StackTrace)
+                MyLog.Info("TVMovie: Exception in GetChannels: {0}" & vbLf & "{1}", ex.Message, ex.StackTrace)
             End Try
             Return tvChannels
         End Function
@@ -271,7 +271,7 @@ Namespace TvEngine
             Try
                 _databaseConnection = New OleDbConnection(dataProviderString)
             Catch connex As Exception
-                Log.Info("TVMovie: Exception creating OleDbConnection: {0}", connex.Message)
+                MyLog.Info("TVMovie: Exception creating OleDbConnection: {0}", connex.Message)
                 Return False
             End Try
 
@@ -286,18 +286,18 @@ Namespace TvEngine
                             databaseAdapter.FillSchema(tvMovieTable, SchemaType.Source, "Sender")
                             databaseAdapter.Fill(tvMovieTable)
                         Catch dsex As Exception
-                            Log.Info("TVMovie: Exception filling Sender DataSet - {0}" & vbLf & "{1}", dsex.Message, dsex.StackTrace)
+                            MyLog.Info("TVMovie: Exception filling Sender DataSet - {0}" & vbLf & "{1}", dsex.Message, dsex.StackTrace)
                             Return False
                         End Try
                     End Using
                 End Using
             Catch ex As System.Data.OleDb.OleDbException
-                Log.Info("TVMovie: Error accessing TV Movie Clickfinder database while reading stations: {0}", ex.Message)
-                Log.Info("TVMovie: Exception: {0}", ex.StackTrace)
+                MyLog.Info("TVMovie: Error accessing TV Movie Clickfinder database while reading stations: {0}", ex.Message)
+                MyLog.Info("TVMovie: Exception: {0}", ex.StackTrace)
                 _canceled = True
                 Return False
             Catch ex2 As Exception
-                Log.Info("TVMovie: Exception: {0}, {1}", ex2.Message, ex2.StackTrace)
+                MyLog.Info("TVMovie: Exception: {0}, {1}", ex2.Message, ex2.StackTrace)
                 _canceled = True
                 Return False
             Finally
@@ -332,7 +332,7 @@ Namespace TvEngine
                     _tvmEpgChannels.Add(current)
                 Next
             Catch ex As Exception
-                Log.Info("TVMovie: Exception: {0}, {1}", ex.Message, ex.StackTrace)
+                MyLog.Info("TVMovie: Exception: {0}, {1}", ex.Message, ex.StackTrace)
             End Try
 
             _channelList = GetChannels()
@@ -348,12 +348,12 @@ Namespace TvEngine
                     If lastUpdated >= (DateTime.Now - restTime) Then
                         Return False
                     Else
-                        Log.Debug("TVMovie: Last update was at {0} - new import scheduled", Convert.ToString(lastUpdated))
+                        MyLog.Debug("TVMovie: Last update was at {0} - new import scheduled", Convert.ToString(lastUpdated))
                         Return True
                     End If
                 Catch ex As Exception
-                    Log.Info("TVMovie: An error occured checking the last import time {0}", ex.Message)
-                    Log.Write(ex)
+                    MyLog.Info("TVMovie: An error occured checking the last import time {0}", ex.Message)
+                    MyLog.Write(ex)
                     Return True
                 End Try
             End Get
@@ -369,12 +369,12 @@ Namespace TvEngine
 
             Dim mappingList As List(Of Mapping) = GetMappingList()
             If mappingList Is Nothing OrElse mappingList.Count < 1 Then
-                Log.Info("TVMovie: Cannot import from TV Movie database - no mappings found")
+                MyLog.Info("TVMovie: Cannot import from TV Movie database - no mappings found")
                 Return
             End If
 
             Dim ImportStartTime As DateTime = DateTime.Now
-            Log.Debug("TVMovie: Importing database")
+            MyLog.Debug("TVMovie: Importing database")
             Dim maximum As Integer = 0
 
             For Each tvmChan As TVMChannel In _tvmEpgChannels
@@ -386,7 +386,7 @@ Namespace TvEngine
                 Next
             Next
 
-            Log.Debug("TVMovie: Calculating stations done")
+            MyLog.Debug("TVMovie: Calculating stations done")
 
             ' setting update time of epg import to avoid that the background thread triggers another import
             ' if the process lasts longer than the timer's update check interval
@@ -394,7 +394,7 @@ Namespace TvEngine
             setting.Value = DateTime.Now.ToString()
             setting.Persist()
 
-            Log.Debug("TVMovie: Mapped {0} stations for EPG import", Convert.ToString(maximum))
+            MyLog.Debug("TVMovie: Mapped {0} stations for EPG import", Convert.ToString(maximum))
             Dim counter As Integer = 0
 
             _tvmEpgProgs.Clear()
@@ -407,7 +407,7 @@ Namespace TvEngine
                     Return
                 End If
 
-                Log.Info("TVMovie: Searching time share mappings for station: {0}", station.TvmEpgDescription)
+                MyLog.Info("TVMovie: Searching time share mappings for station: {0}", station.TvmEpgDescription)
                 ' get all tv movie channels
                 Dim channelNames As New List(Of Mapping)()
 
@@ -428,7 +428,7 @@ Namespace TvEngine
                         RaiseEvent OnStationsChanged(counter, maximum, display)
                         counter += 1
 
-                        Log.Info("TVMovie: Importing {3} time frame(s) for MP channel [{0}/{1}] - {2}", Convert.ToString(counter), Convert.ToString(maximum), display, Convert.ToString(channelNames.Count))
+                        MyLog.Info("TVMovie: Importing {3} time frame(s) for MP channel [{0}/{1}] - {2}", Convert.ToString(counter), Convert.ToString(maximum), display, Convert.ToString(channelNames.Count))
 
                         _tvmEpgProgs.Clear()
 
@@ -442,17 +442,17 @@ Namespace TvEngine
                         ' make a copy of this list because Insert it done in syncronized threads - therefore the object reference would cause multiple/missing entries
                         Dim InsertCopy As New List(Of Program)(_tvmEpgProgs)
                         Dim debugCount As Integer = TvBLayer.InsertPrograms(InsertCopy, DeleteBeforeImportOption.OverlappingPrograms, importPrio)
-                        Log.Info("TVMovie: Inserted {0} programs", debugCount)
+                        MyLog.Info("TVMovie: Inserted {0} programs", debugCount)
 
                     Catch ex As Exception
-                        Log.Info("TVMovie: Error inserting programs - {0}", ex.StackTrace)
+                        MyLog.Info("TVMovie: Error inserting programs - {0}", ex.StackTrace)
                     End Try
                 End If
             Next
 
-            Log.Debug("TVMovie: Waiting for database to be updated...")
+            MyLog.Debug("TVMovie: Waiting for database to be updated...")
             TvBLayer.WaitForInsertPrograms()
-            Log.Debug("TVMovie: Database update finished.")
+            MyLog.Debug("TVMovie: Database update finished.")
 
 
             RaiseEvent OnStationsChanged(maximum, maximum, "Import done")
@@ -464,13 +464,13 @@ Namespace TvEngine
                     setting.Persist()
 
                     Dim ImportDuration As System.TimeSpan = (DateTime.Now - ImportStartTime)
-                    Log.Debug("TVMovie: Imported {0} database entries for {1} stations in {2} seconds", _programsCounter, counter, Convert.ToString(ImportDuration.TotalSeconds))
+                    MyLog.Debug("TVMovie: Imported {0} database entries for {1} stations in {2} seconds", _programsCounter, counter, Convert.ToString(ImportDuration.TotalSeconds))
 
                     'TV Movie++ Enhancement by Scrounger
                     StartTVMoviePlus()
 
                 Catch generatedExceptionName As Exception
-                    Log.Info("TVMovie: Error updating the database with last import date")
+                    MyLog.Info("TVMovie: Error updating the database with last import date")
                 End Try
             End If
             GC.Collect()
@@ -530,15 +530,15 @@ Namespace TvEngine
                     End Using
                 Catch ex As OleDbException
                     databaseTransaction.Rollback()
-                    Log.Info("TVMovie: Error accessing TV Movie Clickfinder database - import of current station canceled")
-                    Log.[Error]("TVMovie: Exception: {0}", ex)
+                    MyLog.Info("TVMovie: Error accessing TV Movie Clickfinder database - import of current station canceled")
+                    MyLog.[Error]("TVMovie: Exception: {0}", ex)
                     Return 0
                 Catch ex1 As Exception
                     Try
                         databaseTransaction.Rollback()
                     Catch generatedExceptionName As Exception
                     End Try
-                    Log.Info("TVMovie: Exception: {0}", ex1)
+                    MyLog.Info("TVMovie: Exception: {0}", ex1)
                     Return 0
                 Finally
                     _databaseConnection.Close()
@@ -582,7 +582,7 @@ Namespace TvEngine
                 live__3 = Convert.ToBoolean(Live__2)
                 repeating = Convert.ToBoolean(Wiederholung)
             Catch ex2 As Exception
-                Log.Info("TVMovie: Error parsing EPG time data - {0}", ex2.ToString())
+                MyLog.Info("TVMovie: Error parsing EPG time data - {0}", ex2.ToString())
             End Try
 
             Dim title As String = Sendung
@@ -703,7 +703,7 @@ Namespace TvEngine
                         Try
                             OnAirDate = DateTime.Parse([String].Format("01.01.{0} 00:00:00", [date]))
                         Catch generatedExceptionName As Exception
-                            Log.Info("TVMovie: Invalid year for OnAirDate - {0}", [date])
+                            MyLog.Info("TVMovie: Invalid year for OnAirDate - {0}", [date])
                         End Try
                     End If
 
@@ -814,11 +814,11 @@ Namespace TvEngine
 
                         mappingList.Add(New Mapping(newChannel, newIdChannel, newStation, newStart, newEnd))
                     Catch generatedExceptionName As Exception
-                        Log.Info("TVMovie: Error loading mappings - make sure tv channel: {0} (ID: {1}) still exists!", mapping.StationName, mapping.IdChannel)
+                        MyLog.Info("TVMovie: Error loading mappings - make sure tv channel: {0} (ID: {1}) still exists!", mapping.StationName, mapping.IdChannel)
                     End Try
                 Next
             Catch ex As Exception
-                Log.Info("TVMovie: Error in GetMappingList - {0}" & vbLf & "{1}", ex.Message, ex.StackTrace)
+                MyLog.Info("TVMovie: Error in GetMappingList - {0}" & vbLf & "{1}", ex.Message, ex.StackTrace)
             End Try
             Return mappingList
         End Function
@@ -1059,7 +1059,7 @@ Namespace TvEngine
                         processes(0).WaitForExit(1200000)
                         BenchClock.[Stop]()
                         UpdateDuration = (BenchClock.ElapsedMilliseconds \ 1000)
-                        Log.Info("TVMovie: tvuptodate was already running - waited {0} seconds for internet update to finish", Convert.ToString(UpdateDuration))
+                        MyLog.Info("TVMovie: tvuptodate was already running - waited {0} seconds for internet update to finish", Convert.ToString(UpdateDuration))
                         Return UpdateDuration
                     End If
 
@@ -1078,14 +1078,14 @@ Namespace TvEngine
                     ' do not wait longer than 20 minutes for the internet update
                     BenchClock.[Stop]()
                     UpdateDuration = (BenchClock.ElapsedMilliseconds \ 1000)
-                    Log.Info("TVMovie: tvuptodate finished internet update in {0} seconds", Convert.ToString(UpdateDuration))
+                    MyLog.Info("TVMovie: tvuptodate finished internet update in {0} seconds", Convert.ToString(UpdateDuration))
                 Catch ex As Exception
                     BenchClock.[Stop]()
                     UpdateDuration = (BenchClock.ElapsedMilliseconds \ 1000)
-                    Log.Info("TVMovie: LaunchTVMUpdater failed: {0}", ex.Message)
+                    MyLog.Info("TVMovie: LaunchTVMUpdater failed: {0}", ex.Message)
                 End Try
             Else
-                Log.Info("TVMovie: tvuptodate.exe not found in default location: {0}", UpdaterPath)
+                MyLog.Info("TVMovie: tvuptodate.exe not found in default location: {0}", UpdaterPath)
                 ' workaround for systems without tvuptodate
                 UpdateDuration = 30
             End If
@@ -1099,10 +1099,10 @@ Namespace TvEngine
 
         Private Sub StartTVMoviePlus()
 
-            Log.[Debug]("TVMovie: [TvMovie++ Settings]: TvMovieRunAppAfter = " & _tvbLayer.GetSetting("TvMovieRunAppAfter").Value)
-            Log.[Debug]("TVMovie: [TvMovie++ Settings]: TvMovieImportTvSeriesInfos = " & _tvbLayer.GetSetting("TvMovieImportTvSeriesInfos").Value)
-            Log.[Debug]("TVMovie: [TvMovie++ Settings]: TvMovieImportMovingPicturesInfos = " & _tvbLayer.GetSetting("TvMovieImportMovingPicturesInfos").Value)
-            Log.[Debug]("TVMovie: [TvMovie++ Settings]: ClickfinderDataAvailable = " & _tvbLayer.GetSetting("ClickfinderDataAvailable").Value)
+            MyLog.[Debug]("TVMovie: [TvMovie++ Settings]: TvMovieRunAppAfter = " & _tvbLayer.GetSetting("TvMovieRunAppAfter").Value)
+            MyLog.[Debug]("TVMovie: [TvMovie++ Settings]: TvMovieImportTvSeriesInfos = " & _tvbLayer.GetSetting("TvMovieImportTvSeriesInfos").Value)
+            MyLog.[Debug]("TVMovie: [TvMovie++ Settings]: TvMovieImportMovingPicturesInfos = " & _tvbLayer.GetSetting("TvMovieImportMovingPicturesInfos").Value)
+            MyLog.[Debug]("TVMovie: [TvMovie++ Settings]: ClickfinderDataAvailable = " & _tvbLayer.GetSetting("ClickfinderDataAvailable").Value)
 
             'Reset TvMovieProgram Table
             Try
@@ -1142,7 +1142,7 @@ Namespace TvEngine
 
         Private Sub GetSeriesInfos()
             Try
-                Log.[Debug]("TVMovie: [GetSeriesInfos]: start import")
+                MyLog.[Debug]("TVMovie: [GetSeriesInfos]: start import")
 
                 Dim _Counter As Integer = 0
                 Dim _CounterFound As Integer = 0
@@ -1257,34 +1257,34 @@ Namespace TvEngine
                                 End If
 
                             Catch ex As Exception
-                                Log.[Error]("TVMovie: [GetSeriesInfos]: Loop :Result exception err:{0} stack:{1}", ex.Message, ex.StackTrace)
-                                Log.[Error]("TVMovie: [GetSeriesInfos]: title:{0} idchannel:{1} startTime: {2}", _Result(d).Title, _Result(d).ReferencedChannel.DisplayName, _Result(d).StartTime)
+                                MyLog.[Error]("TVMovie: [GetSeriesInfos]: Loop :Result exception err:{0} stack:{1}", ex.Message, ex.StackTrace)
+                                MyLog.[Error]("TVMovie: [GetSeriesInfos]: title:{0} idchannel:{1} startTime: {2}", _Result(d).Title, _Result(d).ReferencedChannel.DisplayName, _Result(d).StartTime)
                             End Try
                         Next
 
-                        Log.[Info]("TVMovie: {0}: {1}/{2} episodes found", _TvSeriesDB(i).SeriesName, _EpisodeFoundCounter, _Result.Count)
+                        MyLog.[Info]("TVMovie: {0}: {1}/{2} episodes found", _TvSeriesDB(i).SeriesName, _EpisodeFoundCounter, _Result.Count)
                         _CounterFound = _CounterFound + _EpisodeFoundCounter
                         _Counter = _Counter + _Result.Count
 
                     Catch ex As Exception
-                        Log.[Error]("TVMovie: [GetSeriesInfos]: Loop _TvSeriesDB - exception err:{0} stack:{1}", ex.Message, ex.StackTrace)
+                        MyLog.[Error]("TVMovie: [GetSeriesInfos]: Loop _TvSeriesDB - exception err:{0} stack:{1}", ex.Message, ex.StackTrace)
                     End Try
                 Next
 
                 _TvSeriesDB.Dispose()
 
-                Log.Info("")
-                Log.[Info]("TVMovie: [GetSeriesInfos]: Summary: Infos for {0}/{1} episodes found, {2} new episodes identify", _CounterFound, _Counter, _CounterNewEpisode)
+                MyLog.Info("")
+                MyLog.[Info]("TVMovie: [GetSeriesInfos]: Summary: Infos for {0}/{1} episodes found, {2} new episodes identify", _CounterFound, _Counter, _CounterNewEpisode)
 
             Catch ex As Exception
-                Log.[Error]("TVMovie: [GetSeriesInfos]: exception err:{0} stack:{1}", ex.Message, ex.StackTrace)
+                MyLog.[Error]("TVMovie: [GetSeriesInfos]: exception err:{0} stack:{1}", ex.Message, ex.StackTrace)
             End Try
 
         End Sub
 
         Private Sub GetMovingPicturesInfos()
             Try
-                Log.[Debug]("TVMovie: [GetMovingPicturesInfos]: start import")
+                MyLog.[Debug]("TVMovie: [GetMovingPicturesInfos]: start import")
 
                 Dim _MovingPicturesDB As New MovingPicturesDB
                 _MovingPicturesDB.LoadAllMovingPicturesFilms()
@@ -1339,25 +1339,25 @@ Namespace TvEngine
                                 EPGCounter = EPGCounter + 1
 
                             Catch ex As Exception
-                                Log.[Error]("TVMovie: [GetMovingPicturesInfos]: Loop _Result exception err:{0} stack:{1}", ex.Message, ex.StackTrace)
-                                Log.[Error]("TVMovie: [GetMovingPicturesInfos]: title:{0} idchannel:{1} startTime: {2}", _Result(d).Title, _Result(d).ReferencedChannel.DisplayName, _Result(d).StartTime)
+                                MyLog.[Error]("TVMovie: [GetMovingPicturesInfos]: Loop _Result exception err:{0} stack:{1}", ex.Message, ex.StackTrace)
+                                MyLog.[Error]("TVMovie: [GetMovingPicturesInfos]: title:{0} idchannel:{1} startTime: {2}", _Result(d).Title, _Result(d).ReferencedChannel.DisplayName, _Result(d).StartTime)
                             End Try
                         Next
 
                     Catch ex As Exception
-                        Log.[Error]("TVMovie: [GetMovingPicturesInfos]: Loop _MovingPicturesDB - exception err:{0} stack:{1}", ex.Message, ex.StackTrace)
+                        MyLog.[Error]("TVMovie: [GetMovingPicturesInfos]: Loop _MovingPicturesDB - exception err:{0} stack:{1}", ex.Message, ex.StackTrace)
                     End Try
                 Next
 
-                Log.[Info]("TVMovie: [GetMovingPicturesInfos]: Summary: {0} MovingPictures Films found in {1} EPG entries", MovieCounter, EPGCounter)
+                MyLog.[Info]("TVMovie: [GetMovingPicturesInfos]: Summary: {0} MovingPictures Films found in {1} EPG entries", MovieCounter, EPGCounter)
             Catch ex As Exception
-                Log.[Error]("TVMovie: [GetMovingPicturesInfos]: exception err:{0} stack:{1}", ex.Message, ex.StackTrace)
+                MyLog.[Error]("TVMovie: [GetMovingPicturesInfos]: exception err:{0} stack:{1}", ex.Message, ex.StackTrace)
             End Try
         End Sub
 
         Private Sub GetTvMovieHighlights()
             Try
-                Log.[Debug]("TVMovie: [GetTvMovieHighlights]: start import")
+                MyLog.[Debug]("TVMovie: [GetTvMovieHighlights]: start import")
                 'Alle Sendungen mit Bewertung laden
                 Dim _ClickfinderDB As New ClickfinderDB("SELECT * FROM Sendungen WHERE Bewertung > 0 ORDER BY SenderKennung ASC", TvMovie.DatabasePath)
                 Dim _CounterFound As Integer = 0
@@ -1411,26 +1411,26 @@ Namespace TvEngine
                                     _CounterFound = _CounterFound + 1
 
                                 ElseIf _Program.Count > 1 Then
-                                    Log.[Debug]("Program found in {0} EPG Entries (Start: {1}, Ende: {2}, Titel: {3}, Channel: {4}", _
+                                    MyLog.[Debug]("Program found in {0} EPG Entries (Start: {1}, Ende: {2}, Titel: {3}, Channel: {4}", _
                                                 _Program.Count, _ClickfinderDB(i).Beginn, _ClickfinderDB(i).Ende, _ClickfinderDB(i).Titel, _channel.DisplayName)
                                 Else
                                     'Nur alte Sendungen < 2 Tage sind nicht im EPG enthalten
-                                    'Log.[Debug]("Start: {0}, Ende: {1}, Titel: {2}, Channel: {3}", _ClickfinderDB(i).Beginn, _ClickfinderDB(i).Ende, _ClickfinderDB(i).Titel, _channel.DisplayName)
+                                    'Mylog.[Debug]("Start: {0}, Ende: {1}, Titel: {2}, Channel: {3}", _ClickfinderDB(i).Beginn, _ClickfinderDB(i).Ende, _ClickfinderDB(i).Titel, _channel.DisplayName)
                                 End If
 
                             Next
                         End If
 
                     Catch ex As Exception
-                        Log.[Error]("TVMovie: [GetTvMovieHighlights]: databasePath: {0} exception err:{1} stack:{2}", TvMovie.DatabasePath, ex.Message, ex.StackTrace)
-                        Log.[Error]("TVMovie: [GetTvMovieHighlights]: Titel: {0}, SenderKennung:{1}, DisplayName:{2}, Beginn:{3}", _ClickfinderDB(i).Titel, _ClickfinderDB(i).SenderKennung, _DebugchannelName, _ClickfinderDB(i).Beginn)
+                        MyLog.[Error]("TVMovie: [GetTvMovieHighlights]: databasePath: {0} exception err:{1} stack:{2}", TvMovie.DatabasePath, ex.Message, ex.StackTrace)
+                        MyLog.[Error]("TVMovie: [GetTvMovieHighlights]: Titel: {0}, SenderKennung:{1}, DisplayName:{2}, Beginn:{3}", _ClickfinderDB(i).Titel, _ClickfinderDB(i).SenderKennung, _DebugchannelName, _ClickfinderDB(i).Beginn)
                     End Try
                 Next
 
-                Log.[Info]("TVMovie: [GetTvMovieHighlights]: Summary: Infos for {0}/{1} saved in TvMovieProgram", _CounterFound, _ClickfinderDB.Count)
+                MyLog.[Info]("TVMovie: [GetTvMovieHighlights]: Summary: Infos for {0}/{1} saved in TvMovieProgram", _CounterFound, _ClickfinderDB.Count)
 
             Catch ex As Exception
-                Log.[Error]("TVMovie: [GetTvMovieHighlights]: databasePath: {0} exception err:{1} stack:{2}", TvMovie.DatabasePath, ex.Message, ex.StackTrace)
+                MyLog.[Error]("TVMovie: [GetTvMovieHighlights]: databasePath: {0} exception err:{1} stack:{2}", TvMovie.DatabasePath, ex.Message, ex.StackTrace)
             End Try
 
         End Sub
@@ -1438,7 +1438,7 @@ Namespace TvEngine
         Private Sub GetVideoDatabaseInfos()
 
             Try
-                Log.[Debug]("TVMovie: [GetVideoInfos]: start import")
+                MyLog.[Debug]("TVMovie: [GetVideoInfos]: start import")
 
                 Dim _VideoDB As New VideoDB
                 _VideoDB.LoadAllVideoDBFilms()
@@ -1499,19 +1499,19 @@ Namespace TvEngine
                                 EPGCounter = EPGCounter + 1
 
                             Catch ex As Exception
-                                Log.[Error]("TVMovie: [GetVideoInfos]: Loop _Result exception err:{0} stack:{1}", ex.Message, ex.StackTrace)
-                                Log.[Error]("TVMovie: [GetVideoInfos]: title:{0} idchannel:{1} startTime: {2}", _Result(d).Title, _Result(d).ReferencedChannel.DisplayName, _Result(d).StartTime)
+                                MyLog.[Error]("TVMovie: [GetVideoInfos]: Loop _Result exception err:{0} stack:{1}", ex.Message, ex.StackTrace)
+                                MyLog.[Error]("TVMovie: [GetVideoInfos]: title:{0} idchannel:{1} startTime: {2}", _Result(d).Title, _Result(d).ReferencedChannel.DisplayName, _Result(d).StartTime)
                             End Try
                         Next
 
                     Catch ex As Exception
-                        Log.[Error]("TVMovie: [GetVideoInfos]: Loop _VideoDB - exception err:{0} stack:{1}", ex.Message, ex.StackTrace)
+                        MyLog.[Error]("TVMovie: [GetVideoInfos]: Loop _VideoDB - exception err:{0} stack:{1}", ex.Message, ex.StackTrace)
                     End Try
                 Next
 
-                Log.[Info]("TVMovie: [GetMovingPicturesInfos]: Summary: {0} Video Films found in {1} EPG entries", MovieCounter, EPGCounter)
+                MyLog.[Info]("TVMovie: [GetMovingPicturesInfos]: Summary: {0} Video Films found in {1} EPG entries", MovieCounter, EPGCounter)
             Catch ex As Exception
-                Log.[Error]("TVMovie: [GetVideoInfos]: exception err:{0} stack:{1}", ex.Message, ex.StackTrace)
+                MyLog.[Error]("TVMovie: [GetVideoInfos]: exception err:{0} stack:{1}", ex.Message, ex.StackTrace)
             End Try
 
         End Sub
@@ -1530,9 +1530,9 @@ Namespace TvEngine
                 End If
 
                 Process.Start(Application)
-                Log.Debug("TVMovie: Application {0} started", _tvbLayer.GetSetting("TvMovieRunAppAfter").Value)
+                MyLog.Debug("TVMovie: Application {0} started", _tvbLayer.GetSetting("TvMovieRunAppAfter").Value)
             Else
-                Log.Error("TVMovie: Error - RunApplicationAfter not found")
+                MyLog.Error("TVMovie: Error - RunApplicationAfter not found")
             End If
         End Sub
 #End Region

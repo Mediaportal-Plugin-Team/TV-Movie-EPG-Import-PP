@@ -106,6 +106,7 @@
       <Private>False</Private>
     </Reference>
     <Compile Include="Classes\ClickfinderDB.vb" />
+    <Compile Include="Classes\MyLog.vb" />
     <Compile Include="Classes\TVMovieProgram.vb" />
     <Compile Include="Classes\TVSeriesDB.vb" />
     <Compile Include="EnableEPGgrab.Designer.vb">

@@ -40,7 +40,7 @@ Public Class TVSeriesDB
                 Try
                     m_db.Close()
                     m_db.Dispose()
-                    Log.Debug("TVMovie: [OpenTvSeriesDB]: Disposing current instance..")
+                    MyLog.Debug("TVMovie: [OpenTvSeriesDB]: Disposing current instance..")
                 Catch generatedExceptionName As Exception
                 End Try
             End If
@@ -58,24 +58,24 @@ Public Class TVSeriesDB
 
                 DatabaseUtility.SetPragmas(m_db)
             Else
-                Log.[Error]("TVMovie: [OpenTvSeriesDB]: TvSeries Database not found: {0}", layer.GetSetting("TvMovieMPDatabase", "%ProgramData%\Team MediaPortal\MediaPortal\database").Value & "\TVSeriesDatabase4.db3")
+                MyLog.[Error]("TVMovie: [OpenTvSeriesDB]: TvSeries Database not found: {0}", layer.GetSetting("TvMovieMPDatabase", "%ProgramData%\Team MediaPortal\MediaPortal\database").Value & "\TVSeriesDatabase4.db3")
             End If
 
 
         Catch ex As Exception
-            Log.[Error]("TVMovie: [OpenTvSeriesDB]: TvSeries Database exception err:{0} stack:{1}", ex.Message, ex.StackTrace)
+            MyLog.[Error]("TVMovie: [OpenTvSeriesDB]: TvSeries Database exception err:{0} stack:{1}", ex.Message, ex.StackTrace)
             OpenTvSeriesDB()
         End Try
-        'Log.Info("picture database opened")
+        'Mylog.Info("picture database opened")
     End Sub
 
     Public Sub LoadAllSeries()
 
         Try
             _SeriesInfos = m_db.Execute("SELECT * FROM online_series WHERE ID > 0 ORDER BY Pretty_Name ASC")
-            Log.Info("TVMovie: [LoadAllSeries]: success - {0} Series found", _SeriesInfos.Rows.Count)
+            MyLog.Info("TVMovie: [LoadAllSeries]: success - {0} Series found", _SeriesInfos.Rows.Count)
         Catch ex As Exception
-            Log.[Error]("TVMovie: [LoadAllSeries]: exception err:{0} stack:{1}", ex.Message, ex.StackTrace)
+            MyLog.[Error]("TVMovie: [LoadAllSeries]: exception err:{0} stack:{1}", ex.Message, ex.StackTrace)
             OpenTvSeriesDB()
         End Try
 
@@ -97,7 +97,7 @@ Public Class TVSeriesDB
             End If
 
         Catch ex As Exception
-            Log.[Error]("TVMovie: [EpisodeFound]: exception err:{0} stack:{1}", ex.Message, ex.StackTrace)
+            MyLog.[Error]("TVMovie: [EpisodeFound]: exception err:{0} stack:{1}", ex.Message, ex.StackTrace)
             OpenTvSeriesDB()
         End Try
 
@@ -238,7 +238,7 @@ Public Class TVSeriesDB
                     End If
                 End If
             Catch ex As Exception
-                Log.[Error]("TVMovie: [EpisodeExistLocal]: exception err:{0} stack:{1}", ex.Message, ex.StackTrace)
+                MyLog.[Error]("TVMovie: [EpisodeExistLocal]: exception err:{0} stack:{1}", ex.Message, ex.StackTrace)
                 OpenTvSeriesDB()
             End Try
         End Get

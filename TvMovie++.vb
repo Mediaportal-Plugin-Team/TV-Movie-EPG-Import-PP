@@ -76,11 +76,11 @@ Namespace TvEngine
                 End If
 
             Catch ex As Exception
-                Log.[Error]("TVMovie: Registry lookup for {1} failed: {0}", valueName, ex.Message)
+                MyLog.[Error]("TVMovie: Registry lookup for {1} failed: {0}", valueName, ex.Message)
             End Try
 
             If String.IsNullOrEmpty(value) Then
-                Log.Info("TVMovie: Registry setting {1} has no value", valueName)
+                MyLog.Info("TVMovie: Registry setting {1} has no value", valueName)
             End If
 
             Return value
@@ -144,7 +144,7 @@ Namespace TvEngine
             If GlobalServiceProvider.Instance.IsRegistered(Of IEpgHandler)() Then
                 GlobalServiceProvider.Instance.[Get](Of IEpgHandler)().SetStandbyAllowed(Me, allowed, 1800)
                 If Not allowed Then
-                    Log.Debug("TVMovie: Telling PowerScheduler standby is allowed: {0}, timeout is 30 minutes", allowed)
+                    MyLog.Debug("TVMovie: Telling PowerScheduler standby is allowed: {0}, timeout is 30 minutes", allowed)
                 End If
             End If
         End Sub
@@ -156,11 +156,11 @@ Namespace TvEngine
                 Dim handler As IEpgHandler = GlobalServiceProvider.Instance.[Get](Of IEpgHandler)()
                 If handler IsNot Nothing Then
                     AddHandler handler.EPGScheduleDue, New EPGScheduleHandler(AddressOf EPGScheduleDue)
-                    Log.Debug("TVMovie: registered with PowerScheduler EPG handler")
+                    MyLog.Debug("TVMovie: registered with PowerScheduler EPG handler")
                     Return
                 End If
             End If
-            Log.Debug("TVMovie: NOT registered with PowerScheduler EPG handler")
+            MyLog.Debug("TVMovie: NOT registered with PowerScheduler EPG handler")
         End Sub
 
         Private Sub EPGScheduleDue()
@@ -179,11 +179,11 @@ Namespace TvEngine
                     _database = New TvMovieDatabase()
                     _database.Connect()
                 Catch generatedExceptionName As Exception
-                    Log.[Error]("TVMovie: Import enabled but the ClickFinder database was not found.")
+                    MyLog.[Error]("TVMovie: Import enabled but the ClickFinder database was not found.")
                     Return
                 End Try
 
-                'Log.Debug("TVMovie: Checking database");
+                'Mylog.Debug("TVMovie: Checking database");
                 Try
                     If _database.NeedsImport Then
                         SetStandbyAllowed(False)
@@ -194,15 +194,15 @@ Namespace TvEngine
                             If updateDuration > 20 Then
                                 _database.Import()
                             Else
-                                Log.Info("TVMovie: Import skipped because there was no new data.")
+                                MyLog.Info("TVMovie: Import skipped because there was no new data.")
                             End If
                         Else
-                            Log.Info("TVMovie: Import skipped because the update process timed out / has been aborted.")
+                            MyLog.Info("TVMovie: Import skipped because the update process timed out / has been aborted.")
                         End If
                     End If
                 Catch ex As Exception
-                    Log.Info("TvMovie plugin error:")
-                    Log.Write(ex)
+                    MyLog.Info("TvMovie plugin error:")
+                    MyLog.Write(ex)
                 End Try
             Finally
                 _isImporting = False
@@ -222,7 +222,7 @@ Namespace TvEngine
                     Return
                 End If
             Catch ex1 As Exception
-                Log.[Error]("TVMovie: Error checking enabled status - {0},{1}", ex1.Message, ex1.StackTrace)
+                MyLog.[Error]("TVMovie: Error checking enabled status - {0},{1}", ex1.Message, ex1.StackTrace)
             End Try
 
             If Not _isImporting Then
@@ -233,7 +233,7 @@ Namespace TvEngine
                     importThread__1.Priority = ThreadPriority.Lowest
                     importThread__1.Start()
                 Catch ex2 As Exception
-                    Log.[Error]("TVMovie: Error spawing import thread - {0},{1}", ex2.Message, ex2.StackTrace)
+                    MyLog.[Error]("TVMovie: Error spawing import thread - {0},{1}", ex2.Message, ex2.StackTrace)
                 End Try
             End If
         End Sub
@@ -253,7 +253,7 @@ Namespace TvEngine
             Else
                 _stateTimer.Enabled = False
                 _stateTimer.[Stop]()
-                Log.Debug("TVMovie: background import timer stopped")
+                MyLog.Debug("TVMovie: background import timer stopped")
             End If
         End Sub
 
@@ -269,7 +269,7 @@ Namespace TvEngine
 
         Public ReadOnly Property Version() As String Implements ITvServerPlugin.Version
             Get
-                Return "1.0.5.5 beta"
+                Return "1.1.0.0"
             End Get
         End Property
 

@@ -70,7 +70,7 @@ Public Class ClickfinderDB
             _Table.PrimaryKey = New DataColumn() {_Table.Columns("Sendungen.Pos")}
 
         Catch ex As Exception
-            Log.[Error]("TVMovie: [ClickfinderDB New()]: exception err:{0} stack:{1}", ex.Message, ex.StackTrace)
+            MyLog.[Error]("TVMovie: [ClickfinderDB New()]: exception err:{0} stack:{1}", ex.Message, ex.StackTrace)
         End Try
 
     End Sub

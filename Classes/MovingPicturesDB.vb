@@ -53,7 +53,7 @@ Public Class MovingPicturesDB
                 Try
                     m_db.Close()
                     m_db.Dispose()
-                    Log.Debug("TVMovie: [OpenMovingPicturesDB]: Disposing current instance..")
+                    MyLog.Debug("TVMovie: [OpenMovingPicturesDB]: Disposing current instance..")
                 Catch generatedExceptionName As Exception
                 End Try
             End If
@@ -71,24 +71,24 @@ Public Class MovingPicturesDB
 
                 DatabaseUtility.SetPragmas(m_db)
             Else
-                Log.[Error]("TVMovie: [OpenMovingPicturesDB]: TvSeries Database not found: {0}", layer.GetSetting("TvMovieMPDatabase", "%ProgramData%\Team MediaPortal\MediaPortal\database").Value & "\movingpictures.db3")
+                MyLog.[Error]("TVMovie: [OpenMovingPicturesDB]: TvSeries Database not found: {0}", layer.GetSetting("TvMovieMPDatabase", "%ProgramData%\Team MediaPortal\MediaPortal\database").Value & "\movingpictures.db3")
             End If
 
 
         Catch ex As Exception
-            Log.[Error]("TVMovie: [OpenMovingPicturesDB]: TvSeries Database exception err:{0} stack:{1}", ex.Message, ex.StackTrace)
+            MyLog.[Error]("TVMovie: [OpenMovingPicturesDB]: TvSeries Database exception err:{0} stack:{1}", ex.Message, ex.StackTrace)
             OpenMovingPicturesDB()
         End Try
-        'Log.Info("picture database opened")
+        'Mylog.Info("picture database opened")
     End Sub
 
     Public Sub LoadAllMovingPicturesFilms()
 
         Try
             _MovingPicturesInfos = m_db.Execute("SELECT id, title, alternate_titles, score FROM movie_info ORDER BY title ASC")
-            Log.Info("TVMovie: [LoadAllMovingPicturesFilms]: success")
+            MyLog.Info("TVMovie: [LoadAllMovingPicturesFilms]: success")
         Catch ex As Exception
-            Log.[Error]("TVMovie: [LoadAllMovingPicturesFilms]: exception err:{0} stack:{1}", ex.Message, ex.StackTrace)
+            MyLog.[Error]("TVMovie: [LoadAllMovingPicturesFilms]: exception err:{0} stack:{1}", ex.Message, ex.StackTrace)
             OpenMovingPicturesDB()
         End Try
 
