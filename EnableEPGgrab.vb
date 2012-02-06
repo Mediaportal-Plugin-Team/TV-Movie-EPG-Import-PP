@@ -49,7 +49,7 @@ Public Class frmEPGgrab
                 Dim _Result As IList(Of TvMovieMapping) = ObjectFactory.GetCollection(GetType(TvMovieMapping), stmt2.Execute())
 
                 If _Result.Count = 0 Then
-                    If _channel(i).IsTv = True Then
+                    If _channel(i).IsTv = True And _channel(i).ReferringGroupMap.Count > 1 Then
                         If _channel(i).GrabEpg = True Then
                             EPGgrabData.Rows.Add(True, _channel(i).IdChannel, _channel(i).DisplayName, _channel(i).GrabEpg)
                         Else
