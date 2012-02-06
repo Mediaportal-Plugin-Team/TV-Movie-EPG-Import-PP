@@ -245,7 +245,7 @@ Installer will start.</Value>
     <Version>
       <Major>1</Major>
       <Minor>1</Minor>
-      <Build>0</Build>
+      <Build>1</Build>
       <Revision>0</Revision>
     </Version>
     <ExtensionDescription>TV Movie EPG Import++ plugin is a replacement for the Tv Movie EPG Import Plugin (Author: rtv) that comes as part of MediaPortal TvServer. The plugin use the Tv Movie Clickfinder Database to supplying you with EPG data for german TV channels. The Clickfinder Plugin maps this data to your MediaPortal TV channels.
@@ -265,7 +265,7 @@ New Features (Optional):
 - own LOG-File - tvmovie++.log </VersionDescription>
     <DevelopmentStatus>Stable</DevelopmentStatus>
     <OnlineLocation>http://tv-movie-epg-import-plusplus.googlecode.com/files/Tv%20Movie%20EPG%20Import%2B%2B_v1.1.0.0.mpe1</OnlineLocation>
-    <ReleaseDate>2012-01-29T17:12:10</ReleaseDate>
+    <ReleaseDate>2012-02-06T17:12:10</ReleaseDate>
     <Tags />
     <Location>Z:\Projekte\MediaPortal\TVMovie++\MPE1\Tv Movie EPG Import++.mpe1</Location>
     <Params>
@@ -348,7 +348,7 @@ New Features (Optional):
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>..\Grafiken\MPE1 Icon.png</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{9a138b3e-021a-445c-8293-f77bb9d506e4}-MPE1 Icon.png</ZipFileName>
+        <ZipFileName>Installer{CopyFile}\{d8bfb9c0-21ea-4725-ac11-b186d702a399}-MPE1 Icon.png</ZipFileName>
         <DestinationFilename />
       </FileItem>
     </Items>

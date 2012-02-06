@@ -210,7 +210,7 @@ Public Class ClickfinderDB
         Public ReadOnly Property Bilddateiname() As String
             Get
                 If Not IsDBNull(_Table.Rows(_Index).Item("Bilddateiname")) Then
-                    Return _Table.Rows(_Index).Item("Bilddateiname")
+                    Return CStr(_Table.Rows(_Index).Item("Bilddateiname"))
                 Else
                     Return ""
                 End If

@@ -34,7 +34,7 @@ Public Class MovingPicturesDB
 
 #Region "Members"
     Private disposed As Boolean = False
-    Private m_db As SQLiteClient = Nothing
+    Private Shared m_db As SQLiteClient = Nothing
     Private Shared _MovingPicturesInfos As SQLiteResultSet
     Private _MovingPicturesID As Integer
     Private Shared _Index As Integer
@@ -85,7 +85,7 @@ Public Class MovingPicturesDB
     Public Sub LoadAllMovingPicturesFilms()
 
         Try
-            _MovingPicturesInfos = m_db.Execute("SELECT id, title, alternate_titles, score FROM movie_info ORDER BY title ASC")
+            _MovingPicturesInfos = m_db.Execute("SELECT * FROM movie_info ORDER BY title ASC")
             MyLog.Info("TVMovie: [LoadAllMovingPicturesFilms]: success")
         Catch ex As Exception
             MyLog.[Error]("TVMovie: [LoadAllMovingPicturesFilms]: exception err:{0} stack:{1}", ex.Message, ex.StackTrace)
@@ -129,7 +129,7 @@ Public Class MovingPicturesDB
                 If _MovingPicturesInfos IsNot Nothing AndAlso _MovingPicturesInfos.Rows.Count > 0 Then
                     Return DatabaseUtility.[Get](_MovingPicturesInfos, _Index, "title")
                 Else
-                    Return ""
+                    Return String.Empty
                 End If
             End Get
         End Property
@@ -138,14 +138,34 @@ Public Class MovingPicturesDB
                 If _MovingPicturesInfos IsNot Nothing AndAlso _MovingPicturesInfos.Rows.Count > 0 Then
                     Return Replace(DatabaseUtility.[Get](_MovingPicturesInfos, _Index, "alternate_titles"), "|", "")
                 Else
-                    Return ""
+                    Return String.Empty
                 End If
             End Get
         End Property
+
+        Public ReadOnly Property TitlebyFilename() As String
+            Get
+                If _MovingPicturesInfos IsNot Nothing AndAlso _MovingPicturesInfos.Rows.Count > 0 Then
+                    Dim _idMovie_Info As Integer = CInt(DatabaseUtility.[Get](_MovingPicturesInfos, _Index, "id"))
+                    Dim _MovingPicturesTitleOverFilename As SQLiteResultSet
+
+
+                    _MovingPicturesTitleOverFilename = m_db.Execute("SELECT * FROM local_media INNER JOIN local_media__movie_info ON local_media.id = local_media__movie_info.local_media_id WHERE movie_info_id = " & _idMovie_Info)
+                    If _MovingPicturesTitleOverFilename IsNot Nothing AndAlso _MovingPicturesTitleOverFilename.Rows.Count > 0 Then
+                        Return IO.Path.GetFileNameWithoutExtension(DatabaseUtility.[Get](_MovingPicturesTitleOverFilename, 0, "fullpath"))
+                    Else
+                        Return String.Empty
+                    End If
+                Else
+                    Return String.Empty
+                End If
+            End Get
+        End Property
+
         Public ReadOnly Property Rating() As Integer
             Get
                 If _MovingPicturesInfos IsNot Nothing AndAlso _MovingPicturesInfos.Rows.Count > 0 Then
-                    Return CInt(Replace(DatabaseUtility.[Get](_MovingPicturesInfos, 0, "score"), ".", ","))
+                    Return CInt(Replace(DatabaseUtility.[Get](_MovingPicturesInfos, _Index, "score"), ".", ","))
                 Else
                     Return 0
                 End If
