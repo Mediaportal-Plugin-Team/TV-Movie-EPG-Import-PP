@@ -1571,7 +1571,7 @@ Namespace TvEngine
         End Sub
 
         Private Function allowedSigns(ByVal expression As String) As String
-            Return Replace(expression, "'", "''")
+            Return Replace(Replace(expression, "'", "''"), ":", "%")
         End Function
 
 #End Region
