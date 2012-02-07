@@ -34,7 +34,7 @@ Public Class VideoDB
 
 #Region "Members"
     Private disposed As Boolean = False
-    Private m_db As SQLiteClient = Nothing
+    Private Shared m_db As SQLiteClient = Nothing
     Private Shared _VideoDBInfos As SQLiteResultSet
     Private _VideoDBID As Integer
     Private Shared _Index As Integer
@@ -135,10 +135,30 @@ Public Class VideoDB
                 End If
             End Get
         End Property
+
+        Public ReadOnly Property TitlebyFileName() As String
+            Get
+                If _VideoDBInfos IsNot Nothing AndAlso _VideoDBInfos.Rows.Count > 0 Then
+                    Dim idMovie As Integer = CInt(DatabaseUtility.[Get](_VideoDBInfos, _Index, "idMovie"))
+                    Dim _VideoDBFileName As SQLiteResultSet
+
+                    _VideoDBFileName = m_db.Execute("SELECT strFilename FROM files WHERE idMovie = " & idMovie)
+
+                    If _VideoDBFileName IsNot Nothing AndAlso _VideoDBFileName.Rows.Count > 0 Then
+                        Return IO.Path.GetFileNameWithoutExtension(DatabaseUtility.[Get](_VideoDBFileName, 0, "strFilename"))
+                    Else
+                        Return String.Empty
+                    End If
+                Else
+                    Return ""
+                End If
+            End Get
+        End Property
+
         Public ReadOnly Property Rating() As Integer
             Get
                 If _VideoDBInfos IsNot Nothing AndAlso _VideoDBInfos.Rows.Count > 0 Then
-                    Return CInt(Replace(DatabaseUtility.[Get](_VideoDBInfos, 0, "fRating"), ".", ","))
+                    Return CInt(Replace(DatabaseUtility.[Get](_VideoDBInfos, _Index, "fRating"), ".", ","))
                 Else
                     Return 0
                 End If

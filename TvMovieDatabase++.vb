@@ -1467,16 +1467,26 @@ Namespace TvEngine
 
                 Dim EPGCounter As Integer = 0
                 Dim MovieCounter As Integer = 0
+                Dim _SQLString As String = String.Empty
 
                 For i As Integer = 0 To _VideoDB.Count - 1
 
                     Try
-                        Dim _titleAllowed As String = Replace(Replace(Replace(Replace(Replace(Replace(Replace("title", "'", "''"), "!", "%"), ".", "%"), " ", "_"), ":", "%"), "?", "%"), "-", "%")
+                        Dim _Result As New ArrayList
 
-                        Dim sb As New SqlBuilder(Gentle.Framework.StatementType.Select, GetType(Program))
-                        sb.AddConstraint([Operator].Equals, _titleAllowed, _VideoDB(i).Title)
-                        Dim stmt As SqlStatement = sb.GetStatement(True)
-                        Dim _Result As IList(Of Program) = ObjectFactory.GetCollection(GetType(Program), stmt.Execute())
+                        'nach Mov.Pic Titel suchen
+                        _SQLString = _
+                            "Select idProgram from program WHERE title LIKE '" & allowedSigns(_VideoDB(i).Title) & "' " & _
+                            "OR episodeName LIKE '" & allowedSigns(_VideoDB(i).Title) & "' "
+
+                        'nach Mov.Pic Titel über Dateiname suchen
+                        If Not String.IsNullOrEmpty(_VideoDB(i).TitlebyFileName) Then
+                            _SQLString = _SQLString & _
+                            "OR title LIKE '" & allowedSigns(_VideoDB(i).TitlebyFileName) & "' " & _
+                            "OR episodeName LIKE '" & allowedSigns(_VideoDB(i).TitlebyFileName) & "' "
+                        End If
+
+                        _Result.AddRange(Broker.Execute(_SQLString).TransposeToFieldList("idProgram", False))
 
                         If _Result.Count > 0 Then
                             MovieCounter = MovieCounter + 1
@@ -1484,25 +1494,27 @@ Namespace TvEngine
 
                         For d As Integer = 0 To _Result.Count - 1
 
+                            Dim _program As Program = Program.Retrieve(_Result.Item(d))
+
                             Try
                                 'Daten im EPG (program) updaten
 
                                 'Wenn TvMovieImportMovingPicturesInfos deaktiviert, dann Rating aus VideoDatabase nehmen
                                 If _tvbLayer.GetSetting("TvMovieImportMovingPicturesInfos").Value = "false" Then
-                                    _Result(d).StarRating = _VideoDB(i).Rating
+                                    _program.StarRating = _VideoDB(i).Rating
                                 End If
 
-                                If InStr(_Result(d).Description, "existiert lokal") = 0 Then
-                                    _Result(d).Description = "existiert lokal" & vbNewLine & _Result(d).Description
+                                If InStr(_program.Description, "existiert lokal") = 0 Then
+                                    _program.Description = "existiert lokal" & vbNewLine & _program.Description
                                 End If
 
-                                _Result(d).Persist()
+                                _program.Persist()
 
                                 'Clickfinder ProgramGuide Infos in TvMovieProgram schreiben, sofern aktiviert
                                 If _tvbLayer.GetSetting("ClickfinderDataAvailable").Value = "true" Then
                                     Try
                                         'idProgram in TvMovieProgram suchen & Daten aktualisieren
-                                        Dim _TvMovieProgram As TVMovieProgram = TVMovieProgram.Retrieve(_Result(d).IdProgram)
+                                        Dim _TvMovieProgram As TVMovieProgram = TVMovieProgram.Retrieve(_program.IdProgram)
                                         _TvMovieProgram.idVideo = _VideoDB(i).VideoID
                                         _TvMovieProgram.local = True
 
@@ -1510,7 +1522,7 @@ Namespace TvEngine
 
                                     Catch ex As Exception
                                         'idProgram in TvMovieProgram nicht gefunden -> Daten neu anlegen
-                                        Dim _TvMovieProgram As New TVMovieProgram(_Result(d).IdProgram)
+                                        Dim _TvMovieProgram As New TVMovieProgram(_program.IdProgram)
                                         _TvMovieProgram.idVideo = _VideoDB(i).VideoID
                                         _TvMovieProgram.local = True
 
@@ -1522,7 +1534,7 @@ Namespace TvEngine
 
                             Catch ex As Exception
                                 MyLog.[Error]("TVMovie: [GetVideoDatabaseInfos]: Loop _Result exception err:{0} stack:{1}", ex.Message, ex.StackTrace)
-                                MyLog.[Error]("TVMovie: [GetVideoDatabaseInfos]: title:{0} idchannel:{1} startTime: {2}", _Result(d).Title, _Result(d).ReferencedChannel.DisplayName, _Result(d).StartTime)
+                                MyLog.[Error]("TVMovie: [GetVideoDatabaseInfos]: title:{0} idchannel:{1} startTime: {2}", _program.Title, _program.ReferencedChannel.DisplayName, _program.StartTime)
                             End Try
                         Next
 
