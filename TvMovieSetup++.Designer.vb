@@ -57,6 +57,8 @@ Namespace SetupTv.Sections
             Me.linkLabelInfo = New System.Windows.Forms.LinkLabel
             Me.groupBoxEnableTvMovie = New MediaPortal.UserInterface.Controls.MPGroupBox
             Me.GroupBox1 = New System.Windows.Forms.GroupBox
+            Me.Linklabel_EpSc = New System.Windows.Forms.LinkLabel
+            Me.CheckBoxEpSc = New MediaPortal.UserInterface.Controls.MPCheckBox
             Me.checkBoxRunHidden = New MediaPortal.UserInterface.Controls.MPCheckBox
             Me.tbRunAppAfter = New System.Windows.Forms.TextBox
             Me.Label2 = New System.Windows.Forms.Label
@@ -79,6 +81,7 @@ Namespace SetupTv.Sections
             Me.checkBoxEnableImport = New MediaPortal.UserInterface.Controls.MPCheckBox
             Me.tabPageImportOptions = New System.Windows.Forms.TabPage
             Me.GroupBox2 = New System.Windows.Forms.GroupBox
+            Me.CheckBoxVideoDB = New MediaPortal.UserInterface.Controls.MPCheckBox
             Me.CheckBoxMyFilms = New MediaPortal.UserInterface.Controls.MPCheckBox
             Me.CheckBoxMovingPictures = New MediaPortal.UserInterface.Controls.MPCheckBox
             Me.CheckBoxTvSeries = New MediaPortal.UserInterface.Controls.MPCheckBox
@@ -117,7 +120,6 @@ Namespace SetupTv.Sections
             Me.Label4 = New System.Windows.Forms.Label
             Me.fileDialogDb = New System.Windows.Forms.OpenFileDialog
             Me.OpenFileDialog1 = New System.Windows.Forms.OpenFileDialog
-            Me.CheckBoxVideoDB = New MediaPortal.UserInterface.Controls.MPCheckBox
             Me.tabControlTvMovie.SuspendLayout()
             Me.tabPageSettings.SuspendLayout()
             Me.groupBoxEnableTvMovie.SuspendLayout()
@@ -202,6 +204,8 @@ Namespace SetupTv.Sections
             '
             'GroupBox1
             '
+            Me.GroupBox1.Controls.Add(Me.Linklabel_EpSc)
+            Me.GroupBox1.Controls.Add(Me.CheckBoxEpSc)
             Me.GroupBox1.Controls.Add(Me.checkBoxRunHidden)
             Me.GroupBox1.Controls.Add(Me.tbRunAppAfter)
             Me.GroupBox1.Controls.Add(Me.Label2)
@@ -212,6 +216,27 @@ Namespace SetupTv.Sections
             Me.GroupBox1.TabIndex = 67
             Me.GroupBox1.TabStop = False
             Me.GroupBox1.Text = "Run application after import"
+            '
+            'Linklabel_EpSc
+            '
+            Me.Linklabel_EpSc.AutoSize = True
+            Me.Linklabel_EpSc.Location = New System.Drawing.Point(186, 46)
+            Me.Linklabel_EpSc.Name = "Linklabel_EpSc"
+            Me.Linklabel_EpSc.Size = New System.Drawing.Size(91, 13)
+            Me.Linklabel_EpSc.TabIndex = 73
+            Me.Linklabel_EpSc.TabStop = True
+            Me.Linklabel_EpSc.Text = "EpisodenScanner"
+            '
+            'CheckBoxEpSc
+            '
+            Me.CheckBoxEpSc.AutoSize = True
+            Me.CheckBoxEpSc.FlatStyle = System.Windows.Forms.FlatStyle.Popup
+            Me.CheckBoxEpSc.Location = New System.Drawing.Point(159, 44)
+            Me.CheckBoxEpSc.Name = "CheckBoxEpSc"
+            Me.CheckBoxEpSc.Size = New System.Drawing.Size(32, 17)
+            Me.CheckBoxEpSc.TabIndex = 68
+            Me.CheckBoxEpSc.Text = "Is"
+            Me.CheckBoxEpSc.UseVisualStyleBackColor = True
             '
             'checkBoxRunHidden
             '
@@ -459,6 +484,17 @@ Namespace SetupTv.Sections
             Me.GroupBox2.TabIndex = 7
             Me.GroupBox2.TabStop = False
             Me.GroupBox2.Text = "Import additional Infos from MediaPortal databases"
+            '
+            'CheckBoxVideoDB
+            '
+            Me.CheckBoxVideoDB.AutoSize = True
+            Me.CheckBoxVideoDB.FlatStyle = System.Windows.Forms.FlatStyle.Popup
+            Me.CheckBoxVideoDB.Location = New System.Drawing.Point(129, 74)
+            Me.CheckBoxVideoDB.Name = "CheckBoxVideoDB"
+            Me.CheckBoxVideoDB.Size = New System.Drawing.Size(97, 17)
+            Me.CheckBoxVideoDB.TabIndex = 72
+            Me.CheckBoxVideoDB.Text = "VideoDatabase"
+            Me.CheckBoxVideoDB.UseVisualStyleBackColor = True
             '
             'CheckBoxMyFilms
             '
@@ -892,17 +928,6 @@ Namespace SetupTv.Sections
             Me.OpenFileDialog1.Filter = "Application (*.exe)|*.exe|All files (*.*)|*.*"
             Me.OpenFileDialog1.InitialDirectory = "Environment.GetFolderPath(Environment.SpecialFolder.MyComputer)"
             '
-            'CheckBoxVideoDB
-            '
-            Me.CheckBoxVideoDB.AutoSize = True
-            Me.CheckBoxVideoDB.FlatStyle = System.Windows.Forms.FlatStyle.Popup
-            Me.CheckBoxVideoDB.Location = New System.Drawing.Point(129, 74)
-            Me.CheckBoxVideoDB.Name = "CheckBoxVideoDB"
-            Me.CheckBoxVideoDB.Size = New System.Drawing.Size(97, 17)
-            Me.CheckBoxVideoDB.TabIndex = 72
-            Me.CheckBoxVideoDB.Text = "VideoDatabase"
-            Me.CheckBoxVideoDB.UseVisualStyleBackColor = True
-            '
             'TvMovieSetup
             '
             Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -1009,5 +1034,7 @@ Namespace SetupTv.Sections
         Friend WithEvents Label5 As System.Windows.Forms.Label
         Friend WithEvents Label4 As System.Windows.Forms.Label
         Private WithEvents CheckBoxVideoDB As MediaPortal.UserInterface.Controls.MPCheckBox
+        Friend WithEvents Linklabel_EpSc As System.Windows.Forms.LinkLabel
+        Private WithEvents CheckBoxEpSc As MediaPortal.UserInterface.Controls.MPCheckBox
     End Class
 End Namespace

@@ -15,42 +15,42 @@
               <UpdateOption>AlwaysOverwrite</UpdateOption>
               <LocalFileName>..\..\Installer\Installer\Installer\bin\Release\Installer.exe</LocalFileName>
               <ZipFileName>Installer{CopyFile}\{77486bc7-8261-48e0-98ca-fdce9e4af113}-Installer.exe</ZipFileName>
-              <DestinationFilename>%Temp%\Installer.exe</DestinationFilename>
+              <DestinationFilename>%Temp%\MPTvMovie++\Installer.exe</DestinationFilename>
             </FileItem>
-            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
               <Param1 />
               <UpdateOption>AlwaysOverwrite</UpdateOption>
               <LocalFileName>..\bin\Debug\Libaries\Core.dll</LocalFileName>
               <ZipFileName>Installer{CopyFile}\{786ee630-df08-4f0f-80ec-912b1db57ebc}-Core.dll</ZipFileName>
-              <DestinationFilename>%Temp%\TvServer\Core.dll</DestinationFilename>
+              <DestinationFilename>%Temp%\MPTvMovie++\TvServer\Core.dll</DestinationFilename>
             </FileItem>
-            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
               <Param1 />
               <UpdateOption>AlwaysOverwrite</UpdateOption>
               <LocalFileName>..\bin\Debug\Libaries\Databases.dll</LocalFileName>
               <ZipFileName>Installer{CopyFile}\{29a53d49-4b13-4816-81e5-5feb41b33e35}-Databases.dll</ZipFileName>
-              <DestinationFilename>%Temp%\TvServer\Databases.dll</DestinationFilename>
+              <DestinationFilename>%Temp%\MPTvMovie++\TvServer\Databases.dll</DestinationFilename>
             </FileItem>
-            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
               <Param1 />
               <UpdateOption>AlwaysOverwrite</UpdateOption>
               <LocalFileName>..\bin\Debug\Libaries\sqlite.dll</LocalFileName>
               <ZipFileName>Installer{CopyFile}\{a303953e-ca80-4a63-a09a-d507e48526c7}-sqlite.dll</ZipFileName>
-              <DestinationFilename>%Temp%\TvServer\sqlite.dll</DestinationFilename>
+              <DestinationFilename>%Temp%\MPTvMovie++\TvServer\sqlite.dll</DestinationFilename>
             </FileItem>
-            <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+            <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
               <Param1 />
               <UpdateOption>AlwaysOverwrite</UpdateOption>
               <LocalFileName>..\bin\Debug\Libaries\Utils.dll</LocalFileName>
               <ZipFileName>Installer{CopyFile}\{5ab533bf-b8ee-4d90-9d29-8b0b57ad9a68}-Utils.dll</ZipFileName>
-              <DestinationFilename>%Temp%\TvServer\Utils.dll</DestinationFilename>
+              <DestinationFilename>%Temp%\MPTvMovie++\TvServer\Utils.dll</DestinationFilename>
             </FileItem>
             <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
               <Param1 />
               <UpdateOption>AlwaysOverwrite</UpdateOption>
               <LocalFileName>..\bin\Debug\TvMovie++.dll</LocalFileName>
               <ZipFileName>Installer{CopyFile}\{9f26bc4e-1b89-4998-b9e8-a9eef5396f6e}-TvMovie++.dll</ZipFileName>
-              <DestinationFilename>%Temp%\TvServer\Plugins\TvMovie++.dll</DestinationFilename>
+              <DestinationFilename>%Temp%\MPTvMovie++\TvServer\Plugins\TvMovie++.dll</DestinationFilename>
             </FileItem>
           </Items>
         </Files>
@@ -123,46 +123,11 @@ Click Next to continue or Cancel to exit Setup.
               </Params>
               <ExecuteLocation>AfterPanelShow</ExecuteLocation>
             </ActionItem>
-          </Items>
-        </Actions>
-        <IncludedGroups />
-        <PanelName>Install Section</PanelName>
-        <WizardButtonsEnum>NextCancel</WizardButtonsEnum>
-      </SectionItem>
-      <SectionItem Guid="fe03e956-7510-4dc5-b923-b2921f94beec" Name="Setup Complete" ConditionGroup="">
-        <Params>
-          <Items>
-            <SectionParam Name="Header text">
-              <Value>The Extension Installer Wizard has successfully installed [Name].
-After pressing the finish button, the TvServer
-Installer will start.</Value>
-              <ValueType>String</ValueType>
-              <Description />
-            </SectionParam>
-            <SectionParam Name="Left part image">
-              <Value />
-              <ValueType>File</ValueType>
-              <Description />
-            </SectionParam>
-            <SectionParam Name="Show radio buttons">
-              <Value>NO</Value>
-              <ValueType>Bool</ValueType>
-              <Description>Use radiobutton in place of combobox</Description>
-            </SectionParam>
-            <SectionParam Name="Header image">
-              <Value>..\Grafiken\MPE1 Icon.png</Value>
-              <ValueType>File</ValueType>
-              <Description>Image in upper right part</Description>
-            </SectionParam>
-          </Items>
-        </Params>
-        <Actions>
-          <Items>
             <ActionItem Name="RunApplication" ActionType="RunApplication" ConditionGroup="">
               <Params>
                 <Items>
                   <SectionParam Name="Path to application">
-                    <Value>%Temp%\Installer.exe</Value>
+                    <Value>%Temp%\MPTvMovie++\Installer.exe</Value>
                     <ValueType>Template</ValueType>
                     <Description>Path to the application like 
  %Base%\MediaPortal.exe</Description>
@@ -199,9 +164,43 @@ Installer will start.</Value>
                   </SectionParam>
                 </Items>
               </Params>
-              <ExecuteLocation>AfterPanelHide</ExecuteLocation>
+              <ExecuteLocation>AfterPanelShow</ExecuteLocation>
             </ActionItem>
           </Items>
+        </Actions>
+        <IncludedGroups />
+        <PanelName>Install Section</PanelName>
+        <WizardButtonsEnum>NextCancel</WizardButtonsEnum>
+      </SectionItem>
+      <SectionItem Guid="fe03e956-7510-4dc5-b923-b2921f94beec" Name="Setup Complete" ConditionGroup="">
+        <Params>
+          <Items>
+            <SectionParam Name="Header text">
+              <Value>The Extension Installer Wizard has successfully installed [Name].
+After pressing the finish button, the TvServer
+Installer will start.</Value>
+              <ValueType>String</ValueType>
+              <Description />
+            </SectionParam>
+            <SectionParam Name="Left part image">
+              <Value />
+              <ValueType>File</ValueType>
+              <Description />
+            </SectionParam>
+            <SectionParam Name="Show radio buttons">
+              <Value>NO</Value>
+              <ValueType>Bool</ValueType>
+              <Description>Use radiobutton in place of combobox</Description>
+            </SectionParam>
+            <SectionParam Name="Header image">
+              <Value>..\Grafiken\MPE1 Icon.png</Value>
+              <ValueType>File</ValueType>
+              <Description>Image in upper right part</Description>
+            </SectionParam>
+          </Items>
+        </Params>
+        <Actions>
+          <Items />
         </Actions>
         <IncludedGroups />
         <PanelName>Setup Complete</PanelName>
@@ -245,28 +244,29 @@ Installer will start.</Value>
     <Version>
       <Major>1</Major>
       <Minor>1</Minor>
-      <Build>3</Build>
+      <Build>6</Build>
       <Revision>0</Revision>
     </Version>
-    <ExtensionDescription>TV Movie EPG Import++ plugin is a replacement for the Tv Movie EPG Import Plugin (Author: rtv) that comes as part of MediaPortal TvServer. The plugin use the Tv Movie Clickfinder Database to supplying you with EPG data for german TV channels. The Clickfinder Plugin maps this data to your MediaPortal TV channels.
-
-Compared to the original Tv Movie EPG Import plugin, it offers a lot of additional import features.
-
-New Features (Optional):
-- Easy enabling EPG grabbing for not mapped channels Calcualte rating from Tv Movie Clickfinder Database and import it into your EPG
-- Run an application after the import (e.g. Episodenscanner)
-- Import ratings, season- and episodenumbers form your MP-TvSeries into your EPG
-- Mark not existing episodes as “Neue Folge:” in EPG describtion (only works if you have enable the download for the whole Series (MP-TvSeries Wiki) in the MP-TvSeries Plugin Configuration Plugin Configuration
-- Imports ratings from your MovingPictures and Video databases and mark existing Movie as „Lokal verfügbar“ in EPG Describtion. An integration of MyFilms database will be supported in a feature version.
+    <ExtensionDescription>TV Movie EPG Import++ plugin is a replacement for the Tv Movie EPG Import Plugin (Author: rtv) that comes as part of MediaPortal TvServer. The plugin use the Tv Movie Clickfinder Database to supplying you with EPG data for german TV channels. The Clickfinder Plugin maps this data to your MediaPortal TV channels.
+
+Compared to the original Tv Movie EPG Import plugin, it offers a lot of additional import features.
+
+New Features (Optional):
+- Easy enabling EPG grabbing for not mapped channels Calcualte rating from Tv Movie Clickfinder Database and import it into your EPG
+- Run an application after the import (e.g. Episodenscanner)
+- Import ratings, season- and episodenumbers form your MP-TvSeries into your EPG
+- Mark not existing episodes as “Neue Folge:” in EPG describtion (only works if you have enable the download for the whole Series (MP-TvSeries Wiki) in the MP-TvSeries Plugin Configuration Plugin Configuration
+- Imports ratings from your MovingPictures and Video databases and mark existing Movie as „Lokal verfügbar“ in EPG Describtion. An integration of MyFilms database will be supported in a feature version.
 - Imports addiotional Data that are needed for the MediaPortal Plugin Clickfinder ProgramGuide </ExtensionDescription>
-    <VersionDescription>Version 1.1.3.0
-- "Enable EPG grabbing for not mapped channels" shows now only channels that are mapped in group
-- Import Rating from MovingPictures / VideoDatabase bug fixed
-- Identify MovingPictures movies also by alternate title and filename
-- Identify VideoDatabase movies also by filename</VersionDescription>
+    <VersionDescription>Version 1.1.4.0
+- import accuracy improved
+- small bug fixes
+
+- New Import Feature:
+If you use the Episodenscanner, the plugin now imports also the Series found by Episodenscanner, including mark as "Neue Folge" in EPG describtion. [Optional]</VersionDescription>
     <DevelopmentStatus>Stable</DevelopmentStatus>
-    <OnlineLocation>http://tv-movie-epg-import-plusplus.googlecode.com/files/Tv%20Movie%20EPG%20Import%2B%2B_v1.1.3.0.mpe1</OnlineLocation>
-    <ReleaseDate>2012-02-07T17:12:10</ReleaseDate>
+    <OnlineLocation>http://tv-movie-epg-import-plusplus.googlecode.com/files/Tv%20Movie%20EPG%20Import%2B%2B_v1.1.6.0.mpe1</OnlineLocation>
+    <ReleaseDate>2012-02-09T17:12:10</ReleaseDate>
     <Tags />
     <Location>Z:\Projekte\MediaPortal\TVMovie++\MPE1\Tv Movie EPG Import++.mpe1</Location>
     <Params>
@@ -308,48 +308,48 @@ New Features (Optional):
         <UpdateOption>AlwaysOverwrite</UpdateOption>
         <LocalFileName>..\..\Installer\Installer\Installer\bin\Release\Installer.exe</LocalFileName>
         <ZipFileName>Installer{CopyFile}\{77486bc7-8261-48e0-98ca-fdce9e4af113}-Installer.exe</ZipFileName>
-        <DestinationFilename>%Temp%\Installer.exe</DestinationFilename>
+        <DestinationFilename>%Temp%\MPTvMovie++\Installer.exe</DestinationFilename>
       </FileItem>
-      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
         <Param1 />
         <UpdateOption>AlwaysOverwrite</UpdateOption>
         <LocalFileName>..\bin\Debug\Libaries\Core.dll</LocalFileName>
         <ZipFileName>Installer{CopyFile}\{786ee630-df08-4f0f-80ec-912b1db57ebc}-Core.dll</ZipFileName>
-        <DestinationFilename>%Temp%\TvServer\Core.dll</DestinationFilename>
+        <DestinationFilename>%Temp%\MPTvMovie++\TvServer\Core.dll</DestinationFilename>
       </FileItem>
-      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
         <Param1 />
         <UpdateOption>AlwaysOverwrite</UpdateOption>
         <LocalFileName>..\bin\Debug\Libaries\Databases.dll</LocalFileName>
         <ZipFileName>Installer{CopyFile}\{29a53d49-4b13-4816-81e5-5feb41b33e35}-Databases.dll</ZipFileName>
-        <DestinationFilename>%Temp%\TvServer\Databases.dll</DestinationFilename>
+        <DestinationFilename>%Temp%\MPTvMovie++\TvServer\Databases.dll</DestinationFilename>
       </FileItem>
-      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
         <Param1 />
         <UpdateOption>AlwaysOverwrite</UpdateOption>
         <LocalFileName>..\bin\Debug\Libaries\sqlite.dll</LocalFileName>
         <ZipFileName>Installer{CopyFile}\{a303953e-ca80-4a63-a09a-d507e48526c7}-sqlite.dll</ZipFileName>
-        <DestinationFilename>%Temp%\TvServer\sqlite.dll</DestinationFilename>
+        <DestinationFilename>%Temp%\MPTvMovie++\TvServer\sqlite.dll</DestinationFilename>
       </FileItem>
-      <FileItem InstallType="CopyFile" SystemFile="false" Modified="false">
+      <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
         <Param1 />
         <UpdateOption>AlwaysOverwrite</UpdateOption>
         <LocalFileName>..\bin\Debug\Libaries\Utils.dll</LocalFileName>
         <ZipFileName>Installer{CopyFile}\{5ab533bf-b8ee-4d90-9d29-8b0b57ad9a68}-Utils.dll</ZipFileName>
-        <DestinationFilename>%Temp%\TvServer\Utils.dll</DestinationFilename>
+        <DestinationFilename>%Temp%\MPTvMovie++\TvServer\Utils.dll</DestinationFilename>
       </FileItem>
       <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
         <Param1 />
         <UpdateOption>AlwaysOverwrite</UpdateOption>
         <LocalFileName>..\bin\Debug\TvMovie++.dll</LocalFileName>
         <ZipFileName>Installer{CopyFile}\{9f26bc4e-1b89-4998-b9e8-a9eef5396f6e}-TvMovie++.dll</ZipFileName>
-        <DestinationFilename>%Temp%\TvServer\Plugins\TvMovie++.dll</DestinationFilename>
+        <DestinationFilename>%Temp%\MPTvMovie++\TvServer\Plugins\TvMovie++.dll</DestinationFilename>
       </FileItem>
       <FileItem InstallType="CopyFile" SystemFile="true" Modified="true">
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>..\Grafiken\MPE1 Icon.png</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{e6f9d6b8-86a3-4432-90b0-78594aa19218}-MPE1 Icon.png</ZipFileName>
+        <ZipFileName>Installer{CopyFile}\{bc6da71a-59de-4567-9b89-d73545b6800c}-MPE1 Icon.png</ZipFileName>
         <DestinationFilename />
       </FileItem>
     </Items>

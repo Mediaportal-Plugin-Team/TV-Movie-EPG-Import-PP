@@ -97,6 +97,9 @@ Namespace SetupTv.Sections
         Private Sub LinkClickfinderPG_LinkClicked(ByVal sender As System.Object, ByVal e As System.Windows.Forms.LinkLabelLinkClickedEventArgs) Handles LinkClickfinderPG.LinkClicked
             Process.Start("http://de.team-mediaportal.com/erweiterungen/fernsehen/clickfinder-programguide")
         End Sub
+        Private Sub Linklabel_EpSc_LinkClicked(ByVal sender As System.Object, ByVal e As System.Windows.Forms.LinkLabelLinkClickedEventArgs) Handles Linklabel_EpSc.LinkClicked
+            Process.Start("http://forum.team-mediaportal.com/electronic-program-guide-67/new-tool-episodescanner-adds-series-episodenumbers-your-mediaportal-4tr-epg-76220/")
+        End Sub
 #End Region
 
 #Region "Constructor"
@@ -218,6 +221,14 @@ Namespace SetupTv.Sections
             End If
             setting.Persist()
 
+            setting = layer.GetSetting("TvMovieIsEpisodenScanner", "false")
+            If CheckBoxEpSc.Checked Then
+                setting.Value = "true"
+            Else
+                setting.Value = "false"
+            End If
+            setting.Persist()
+
             setting = layer.GetSetting("TvMovieMPDatabase", "%ProgramData%\Team MediaPortal\MediaPortal\database")
             setting.Value = tbMPDatabasePath.Text
             setting.Persist()
@@ -298,6 +309,7 @@ Namespace SetupTv.Sections
             tbRunAppAfter.Text = layer.GetSetting("TvMovieRunAppAfter", String.Empty).Value
             tbMPDatabasePath.Text = layer.GetSetting("TvMovieMPDatabase", "%ProgramData%\Team MediaPortal\MediaPortal\database").Value
             checkBoxRunHidden.Checked = layer.GetSetting("TvMovieRunAppHidden", "true").Value = "true"
+            CheckBoxEpSc.Checked = layer.GetSetting("TvMovieIsEpisodenScanner", "false").Value = "true"
             CheckBoxTvSeries.Checked = layer.GetSetting("TvMovieImportTvSeriesInfos", "false").Value = "true"
             CheckBoxMovingPictures.Checked = layer.GetSetting("TvMovieImportMovingPicturesInfos", "false").Value = "true"
             CheckBoxMyFilms.Checked = layer.GetSetting("TvMovieImportMyFilmsInfos", "false").Value = "true"

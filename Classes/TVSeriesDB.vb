@@ -72,9 +72,9 @@ Public Class TVSeriesDB
 
                 m_db = New SQLiteClient(layer.GetSetting("TvMovieMPDatabase", "%ProgramData%\Team MediaPortal\MediaPortal\database").Value & "\TVSeriesDatabase4.db3")
                 ' Retry 10 times on busy (DB in use or system resources exhausted)
-                m_db.BusyRetries = 10
+                m_db.BusyRetries = 20
                 ' Wait 100 ms between each try (default 10)
-                m_db.BusyRetryDelay = 10
+                m_db.BusyRetryDelay = 1000
 
                 DatabaseUtility.SetPragmas(m_db)
             Else
@@ -96,6 +96,25 @@ Public Class TVSeriesDB
             MyLog.Info("TVMovie: [LoadAllSeries]: success - {0} Series found", _SeriesInfos.Rows.Count)
         Catch ex As Exception
             MyLog.[Error]("TVMovie: [LoadAllSeries]: exception err:{0} stack:{1}", ex.Message, ex.StackTrace)
+            OpenTvSeriesDB()
+        End Try
+
+    End Sub
+
+    Public Sub LoadEpisode(ByVal serieName As String, ByVal seriesNum As Integer, ByVal episodeNum As Integer)
+
+        Try
+
+            _SeriesInfos = m_db.Execute( _
+                                [String].Format("SELECT * FROM online_series WHERE Pretty_Name LIKE '{0}' OR SortName LIKE '{0}' OR origName LIKE '{0}'", _
+                                serieName))
+
+            _EpisodeInfos = m_db.Execute( _
+                                [String].Format("SELECT * FROM online_episodes WHERE SeriesID = '{0}' AND SeasonIndex = '{1}' AND EpisodeName = '{2}'", _
+                                                Me.Series(0).SeriesID, seriesNum, episodeNum))
+
+        Catch ex As Exception
+            MyLog.[Error]("TVMovie: [LoadEpisode]: exception err:{0} stack:{1}", ex.Message, ex.StackTrace)
             OpenTvSeriesDB()
         End Try
 
