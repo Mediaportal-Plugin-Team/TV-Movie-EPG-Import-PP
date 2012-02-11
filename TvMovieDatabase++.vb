@@ -1144,6 +1144,7 @@ Namespace TvEngine
 
         End Sub
 
+
         Private Sub GetSeriesInfos()
             Try
                 MyLog.[Debug]("TVMovie: [GetSeriesInfos]: start import")
@@ -1151,7 +1152,7 @@ Namespace TvEngine
                 Dim _Counter As Integer = 0
                 Dim _CounterFound As Integer = 0
                 Dim _CounterNewEpisode As Integer = 0
-
+                Dim _SQLString As String = String.Empty
                 'Alle Serien aus DB laden
                 Dim _TvSeriesDB As New TVSeriesDB
                 _TvSeriesDB.LoadAllSeries()
@@ -1163,40 +1164,41 @@ Namespace TvEngine
 
                         Dim _EpisodeFoundCounter As Integer = 0
 
-                        Dim _titleAllowed As String = Replace(Replace(Replace(Replace(Replace(Replace(Replace("title", "'", "''"), "!", "%"), ".", "%"), " ", "_"), ":", "%"), "?", "%"), "-", "%")
+                        Dim _Result As New ArrayList
 
-                        Dim sb As New SqlBuilder(Gentle.Framework.StatementType.Select, GetType(Program))
-                        sb.AddConstraint([Operator].Like, _titleAllowed, _TvSeriesDB(i).SeriesName & "%")
-                        sb.AddConstraint([Operator].Like, _titleAllowed, _TvSeriesDB(i).SeriesorigName & "%")
-                        Dim stmt As SqlStatement = sb.GetStatement(True)
-                        Dim _Result As IList(Of Program) = ObjectFactory.GetCollection(GetType(Program), stmt.Execute())
+                        'nach Mov.Pic Titel suchen
+                        _SQLString = _
+                            "Select idProgram from program WHERE title LIKE '" & allowedSigns(_TvSeriesDB(i).SeriesName) & "'"
+
+                        _Result.AddRange(Broker.Execute(_SQLString).TransposeToFieldList("idProgram", False))
 
                         For d As Integer = 0 To _Result.Count - 1
+                            Dim _program As Program = Program.Retrieve(_Result.Item(d))
                             Try
 
                                 'Falls Episode gefunden wurde
-                                If _TvSeriesDB.EpisodeFound(_TvSeriesDB(i).SeriesID, _Result(d).EpisodeName) = True Then
+                                If _TvSeriesDB.EpisodeFound(_TvSeriesDB(i).SeriesID, allowedSigns(_program.EpisodeName)) = True Then
 
                                     'Daten im EPG (program) updaten
-                                    _Result(d).SeriesNum = CStr(_TvSeriesDB.SeasonIndex)
-                                    _Result(d).EpisodeNum = CStr(_TvSeriesDB.EpisodeIndex)
-                                    _Result(d).StarRating = _TvSeriesDB.EpisodeRating
+                                    _program.SeriesNum = CStr(_TvSeriesDB.SeasonIndex)
+                                    _program.EpisodeNum = CStr(_TvSeriesDB.EpisodeIndex)
+                                    _program.StarRating = _TvSeriesDB.EpisodeRating
 
                                     'Falls Episode nicht lokal verfügbar -> im EPG Describtion kennzeichnen
                                     If _TvSeriesDB.EpisodeExistLocal = False Then
-                                        If InStr(_Result(d).Description, "Neue Folge: " & _Result(d).EpisodeName) = 0 Then
-                                            _Result(d).Description = Replace(_Result(d).Description, "Folge: " & _Result(d).EpisodeName, "Neue Folge: " & _Result(d).EpisodeName)
+                                        If InStr(_program.Description, "Neue Folge: " & _program.EpisodeName) = 0 Then
+                                            _program.Description = Replace(_program.Description, "Folge: " & _program.EpisodeName, "Neue Folge: " & _program.EpisodeName)
                                         End If
                                         _CounterNewEpisode = _CounterNewEpisode + 1
                                     End If
 
-                                    _Result(d).Persist()
+                                    _program.Persist()
 
                                     'Clickfinder ProgramGuide Infos in TvMovieProgram schreiben, sofern aktiviert
                                     If _tvbLayer.GetSetting("ClickfinderDataAvailable", "false").Value = "true" Then
 
                                         'idProgram in TvMovieProgram suchen & Daten aktualisieren
-                                        Dim _TvMovieProgram As TVMovieProgram = getTvMovieProgram(_Result(d).IdProgram)
+                                        Dim _TvMovieProgram As TVMovieProgram = getTvMovieProgram(_program.IdProgram)
                                         _TvMovieProgram.idSeries = _TvSeriesDB(i).SeriesID
                                         _TvMovieProgram.idEpisode = _TvSeriesDB.EpisodeCompositeID
                                         _TvMovieProgram.local = True
@@ -1230,7 +1232,7 @@ Namespace TvEngine
 
                             Catch ex As Exception
                                 MyLog.[Error]("TVMovie: [GetSeriesInfos]: Loop :Result exception err:{0} stack:{1}", ex.Message, ex.StackTrace)
-                                MyLog.[Error]("TVMovie: [GetSeriesInfos]: title:{0} idchannel:{1} startTime: {2}", _Result(d).Title, _Result(d).ReferencedChannel.DisplayName, _Result(d).StartTime)
+                                MyLog.[Error]("TVMovie: [GetSeriesInfos]: title:{0} idchannel:{1} startTime: {2}", _program.Title, _program.ReferencedChannel.DisplayName, _program.StartTime)
                             End Try
                         Next
 

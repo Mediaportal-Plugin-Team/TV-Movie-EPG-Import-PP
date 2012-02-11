@@ -122,8 +122,6 @@ Public Class TVSeriesDB
 
     Public Function EpisodeFound(ByVal SeriesID As Integer, ByVal EpisodeName As String) As Boolean
 
-        EpisodeName = Replace(Replace(Replace(Replace(Replace(Replace(EpisodeName, "'", "''"), "!", "%"), ".", "%"), " ", "%"), ":", "%"), "?", "%")
-
         Try
             _EpisodeInfos = m_db.Execute( _
                             [String].Format("SELECT * FROM online_episodes WHERE SeriesID = '{0}' AND EpisodeName LIKE '{1}'", _
