@@ -117,6 +117,7 @@ Namespace TvEngine
         Private Shared _xmlFile As String
         Private Shared _tvbLayer As TvBusinessLayer
 
+        Private _ImportStartTime As Date
 #End Region
 
 #Region "Events"
@@ -374,6 +375,7 @@ Namespace TvEngine
             End If
 
             Dim ImportStartTime As DateTime = DateTime.Now
+            _ImportStartTime = ImportStartTime
             MyLog.Debug("TVMovie: Importing database")
             Dim maximum As Integer = 0
 
@@ -468,6 +470,10 @@ Namespace TvEngine
 
                     'TV Movie++ Enhancement by Scrounger
                     StartTVMoviePlus()
+
+                    If _tvbLayer.GetSetting("TvMovieIsEpisodenScanner", "false").Value = "false" Then
+                        MyLog.Info("TVMovie: overall Import duration: {0}", (Date.Now - ImportStartTime).Minutes & "min " & (Date.Now - ImportStartTime).Seconds & "s")
+                    End If
 
                 Catch generatedExceptionName As Exception
                     MyLog.Info("TVMovie: Error updating the database with last import date")
@@ -1501,6 +1507,7 @@ Namespace TvEngine
         Private Sub RunApplicationAfterImport()
             If File.Exists(_tvbLayer.GetSetting("TvMovieRunAppAfter").Value) Then
 
+                Dim StartTime As Date = Date.Now
 
                 Dim App As New Process()
                 App.StartInfo.FileName = _tvbLayer.GetSetting("TvMovieRunAppAfter").Value
@@ -1518,8 +1525,9 @@ Namespace TvEngine
 
                     MyLog.Debug("TVMovie: Application: Wait for exit")
                     App.WaitForExit()
-
+                    MyLog.Debug("TVMovie: EpisodenScanner runtime: {0}", (Date.Now - StartTime).Minutes & "min " & (Date.Now - StartTime).Seconds & "s")
                     CheckEpisodenscannerImports()
+                    MyLog.Info("TVMovie: Import duration: {0}", (Date.Now - _ImportStartTime).Minutes & "min " & (Date.Now - _ImportStartTime).Seconds & "s")
                 End If
 
             Else
@@ -1547,6 +1555,7 @@ Namespace TvEngine
 
             MyLog.[Info]("TVMovie: [CheckEpisodenscannerImport]: Process start")
 
+            Dim _Counter As Integer = 0
             Try
                 'Alle Programme mit Series- & EpisodenNummer laden
                 Dim sb As New SqlBuilder(Gentle.Framework.StatementType.Select, GetType(Program))
@@ -1572,7 +1581,7 @@ Namespace TvEngine
                                 Dim _SeriesIsInTvMovieProgram As IList(Of TVMovieProgram) = ObjectFactory.GetCollection(GetType(TVMovieProgram), stmt2.Execute())
 
                                 If _SeriesIsInTvMovieProgram.Count = 0 Then
-
+                                    _Counter = _Counter + 1
                                     'Falls Episode nicht lokal verfügbar -> im EPG Describtion kennzeichnen
                                     If _TvSeriesDB.EpisodeExistLocal = False Then
                                         If InStr(_Result(i).Description, "Neue Folge: " & _Result(i).EpisodeName) = 0 Then
@@ -1608,13 +1617,19 @@ Namespace TvEngine
                                             _TvMovieProgram.local = False
                                         End If
 
-                                        _TvMovieProgram.Persist()                                       
+                                        _TvMovieProgram.Persist()
                                     End If
 
                                 End If
 
                             Else
-                                MyLog.[Debug]("TVMovie: [CheckEpisodenscannerImports]: Episode: {0} - S{1}E{2} not found in MP-TvSeries DB", _Result(i).Title, _Result(i).SeriesNum, _Result(i).EpisodeNum)
+                                'Episode nicht in TvSeries DB gefunden (=neue Aufnahme), dann als neu markieren
+                                If InStr(_Result(i).Description, "Neue Folge: " & _Result(i).EpisodeName) = 0 Then
+                                    _Result(i).Description = Replace(_Result(i).Description, "Folge: " & _Result(i).EpisodeName, "Neue Folge: " & _Result(i).EpisodeName)
+                                End If
+                                _Result(i).Persist()
+                                _Counter = _Counter + 1
+                                MyLog.[Debug]("TVMovie: [CheckEpisodenscannerImports]: Episode: {0} - S{1}E{2} not found in MP-TvSeries DB -> mark as Neue Folge", _Result(i).Title, _Result(i).SeriesNum, _Result(i).EpisodeNum)
                             End If
 
                             _TvSeriesDB.Dispose()
@@ -1625,12 +1640,14 @@ Namespace TvEngine
                     Next
                 End If
 
-                MyLog.[Info]("TVMovie: [CheckEpisodenscannerImports]: Process success")
+                MyLog.[Info]("TVMovie: [CheckEpisodenscannerImports]: Process success - {0} Series imported", _Counter)
 
             Catch ex As Exception
                 MyLog.[Error]("TVMovie: [CheckEpisodenscannerImports]: exception err:{0} stack:{1}", ex.Message, ex.StackTrace)
             End Try
         End Sub
+
+
 
 #End Region
     End Class
