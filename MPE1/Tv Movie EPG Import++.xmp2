@@ -177,8 +177,7 @@ Click Next to continue or Cancel to exit Setup.
           <Items>
             <SectionParam Name="Header text">
               <Value>The Extension Installer Wizard has successfully installed [Name].
-After pressing the finish button, the TvServer
-Installer will start.</Value>
+</Value>
               <ValueType>String</ValueType>
               <Description />
             </SectionParam>
@@ -243,8 +242,8 @@ Installer will start.</Value>
     <UpdateUrl>http://tv-movie-epg-import-plusplus.googlecode.com/git/MPE1/update.xml</UpdateUrl>
     <Version>
       <Major>1</Major>
-      <Minor>1</Minor>
-      <Build>8</Build>
+      <Minor>2</Minor>
+      <Build>0</Build>
       <Revision>0</Revision>
     </Version>
     <ExtensionDescription>TV Movie EPG Import++ plugin is a replacement for the Tv Movie EPG Import Plugin (Author: rtv) that comes as part of MediaPortal TvServer. The plugin use the Tv Movie Clickfinder Database to supplying you with EPG data for german TV channels. The Clickfinder Plugin maps this data to your MediaPortal TV channels.
@@ -256,14 +255,16 @@ New Features (Optional):
 - Mark not existing episodes as “Neue Folge:” in EPG describtion (only works if you have enable the download for the whole Series (MP-TvSeries Wiki) in the MP-TvSeries Plugin Configuration Plugin Configuration
 - Imports ratings from your MovingPictures and Video databases and mark existing Movie as „Lokal verfügbar“ in EPG Describtion. An integration of MyFilms database will be supported in a feature version.
 - Imports addiotional Data that are needed for the MediaPortal Plugin Clickfinder ProgramGuide </ExtensionDescription>
-    <VersionDescription>Version 1.1.8.0
+    <VersionDescription>Version 1.2.0.0
 - TvSeries import accuracy bug fixed
-- mark Series found by episodenscanner as "neue Folge"</VersionDescription>
+- mark Series found by episodenscanner as "neue Folge", if not exist in TvSeries database
+- Found Series by Season- &amp; Episodenumber bug fixed
+- small bug fixes</VersionDescription>
     <DevelopmentStatus>Stable</DevelopmentStatus>
-    <OnlineLocation>http://tv-movie-epg-import-plusplus.googlecode.com/files/Tv%20Movie%20EPG%20Import%2B%2B_v1.1.6.0.mpe1</OnlineLocation>
-    <ReleaseDate>2012-02-09T17:12:10</ReleaseDate>
+    <OnlineLocation>http://tv-movie-epg-import-plusplus.googlecode.com/files/Tv%20Movie%20EPG%20Import%2B%2B_v1.2.0.0.mpe1</OnlineLocation>
+    <ReleaseDate>2012-02-18T17:12:10</ReleaseDate>
     <Tags />
-    <Location>Z:\Projekte\MediaPortal\TVMovie++\MPE1\Tv Movie EPG Import++.mpe1</Location>
+    <Location>D:\Projekte\Tv Movie EPG Import++\MPE1\Tv Movie EPG Import++.mpe1</Location>
     <Params>
       <Items>
         <SectionParam Name="Icon">
@@ -344,7 +345,7 @@ New Features (Optional):
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>..\Grafiken\MPE1 Icon.png</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{bfcdf35f-fd99-4db0-be7b-d1b8de51068e}-MPE1 Icon.png</ZipFileName>
+        <ZipFileName>Installer{CopyFile}\{a2fa8a5f-c04a-4b58-a074-a132631eded9}-MPE1 Icon.png</ZipFileName>
         <DestinationFilename />
       </FileItem>
     </Items>

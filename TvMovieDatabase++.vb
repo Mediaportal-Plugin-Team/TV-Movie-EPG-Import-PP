@@ -1150,7 +1150,6 @@ Namespace TvEngine
 
         End Sub
 
-
         Private Sub GetSeriesInfos()
             Try
                 MyLog.[Debug]("TVMovie: [GetSeriesInfos]: start import")
@@ -1503,7 +1502,6 @@ Namespace TvEngine
 
         End Sub
 
-
         Private Sub RunApplicationAfterImport()
             If File.Exists(_tvbLayer.GetSetting("TvMovieRunAppAfter").Value) Then
 
@@ -1565,7 +1563,6 @@ Namespace TvEngine
 
                 If _Result.Count > 0 Then
 
-
                     For i As Integer = 0 To _Result.Count - 1
 
                         Try
@@ -1574,6 +1571,18 @@ Namespace TvEngine
 
                             If _TvSeriesDB.CountSeries = 1 Then
 
+
+                                'Falls Episode nicht lokal verfügbar -> im EPG Describtion kennzeichnen
+                                If _TvSeriesDB.EpisodeExistLocal = False Then
+                                    If InStr(_Result(i).Description, "Neue Folge: " & _Result(i).EpisodeName) = 0 Then
+                                        _Result(i).Description = Replace(_Result(i).Description, "Folge: " & _Result(i).EpisodeName, "Neue Folge: " & _Result(i).EpisodeName)
+                                        _Result(i).Persist()
+                                        MyLog.[Info]("TVMovie: [CheckEpisodenscannerImports]: New Episode: {0} - S{1}E{2}", _Result(i).Title, _Result(i).SeriesNum, _Result(i).EpisodeNum)
+                                    End If
+                                End If
+                                _Counter = _Counter + 1
+
+
                                 'Pürfen ob in TvMovieProgram existiert
                                 Dim sb2 As New SqlBuilder(Gentle.Framework.StatementType.Select, GetType(TVMovieProgram))
                                 sb2.AddConstraint([Operator].Equals, "idprogram", _Result(i).IdProgram)
@@ -1581,15 +1590,6 @@ Namespace TvEngine
                                 Dim _SeriesIsInTvMovieProgram As IList(Of TVMovieProgram) = ObjectFactory.GetCollection(GetType(TVMovieProgram), stmt2.Execute())
 
                                 If _SeriesIsInTvMovieProgram.Count = 0 Then
-                                    _Counter = _Counter + 1
-                                    'Falls Episode nicht lokal verfügbar -> im EPG Describtion kennzeichnen
-                                    If _TvSeriesDB.EpisodeExistLocal = False Then
-                                        If InStr(_Result(i).Description, "Neue Folge: " & _Result(i).EpisodeName) = 0 Then
-                                            _Result(i).Description = Replace(_Result(i).Description, "Folge: " & _Result(i).EpisodeName, "Neue Folge: " & _Result(i).EpisodeName)
-                                            MyLog.[Info]("TVMovie: [CheckEpisodenscannerImports]: New Episode: {0} - S{1}E{2}", _Result(i).Title, _Result(i).SeriesNum, _Result(i).EpisodeNum)
-                                        End If
-                                    End If
-                                    _Result(i).Persist()
 
                                     If _tvbLayer.GetSetting("ClickfinderDataAvailable", "false").Value = "true" Then
                                         'idProgram in TvMovieProgram nicht gefunden -> Daten neu anlegen
@@ -1626,8 +1626,8 @@ Namespace TvEngine
                                 'Episode nicht in TvSeries DB gefunden (=neue Aufnahme), dann als neu markieren
                                 If InStr(_Result(i).Description, "Neue Folge: " & _Result(i).EpisodeName) = 0 Then
                                     _Result(i).Description = Replace(_Result(i).Description, "Folge: " & _Result(i).EpisodeName, "Neue Folge: " & _Result(i).EpisodeName)
+                                    _Result(i).Persist()
                                 End If
-                                _Result(i).Persist()
                                 _Counter = _Counter + 1
                                 MyLog.[Debug]("TVMovie: [CheckEpisodenscannerImports]: Episode: {0} - S{1}E{2} not found in MP-TvSeries DB -> mark as Neue Folge", _Result(i).Title, _Result(i).SeriesNum, _Result(i).EpisodeNum)
                             End If

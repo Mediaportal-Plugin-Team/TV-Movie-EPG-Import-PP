@@ -110,7 +110,7 @@ Public Class TVSeriesDB
                                 serieName))
 
             _EpisodeInfos = m_db.Execute( _
-                                [String].Format("SELECT * FROM online_episodes WHERE SeriesID = '{0}' AND SeasonIndex = '{1}' AND EpisodeName = '{2}'", _
+                                [String].Format("SELECT * FROM online_episodes WHERE SeriesID = '{0}' AND SeasonIndex = '{1}' AND EpisodeIndex = '{2}'", _
                                                 Me.Series(0).SeriesID, seriesNum, episodeNum))
 
         Catch ex As Exception

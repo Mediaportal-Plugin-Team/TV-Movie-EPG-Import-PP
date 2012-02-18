@@ -11,3 +11,16 @@ Z:\Projekte\MediaPortal\TVMovie++\bin\Debug\Libaries\sqlite.dll
 Z:\Projekte\MediaPortal\TVMovie++\bin\Debug\Libaries\Databases.dll
 Z:\Projekte\MediaPortal\TVMovie++\obj\Debug\TvMovie.frmEPGgrab.resources
 Z:\Projekte\MediaPortal\TVMovie++\obj\Debug\TvMovie.Resources.resources
+D:\Projekte\Tv Movie EPG Import++\obj\Debug\ResolveAssemblyReference.cache
+D:\Projekte\Tv Movie EPG Import++\obj\Debug\TvMovie.frmEPGgrab.resources
+D:\Projekte\Tv Movie EPG Import++\obj\Debug\TvMovie.Resources.resources
+D:\Projekte\Tv Movie EPG Import++\obj\Debug\TvMovie.SetupTv.Sections.TvMovieSetup.resources
+D:\Projekte\Tv Movie EPG Import++\obj\Debug\TvMovie++.vbproj.GenerateResource.Cache
+D:\Projekte\Tv Movie EPG Import++\obj\Debug\TvMovie++.dll
+D:\Projekte\Tv Movie EPG Import++\obj\Debug\TvMovie++.pdb
+D:\Projekte\Tv Movie EPG Import++\bin\Debug\Libaries\Core.dll
+D:\Projekte\Tv Movie EPG Import++\bin\Debug\Libaries\Utils.dll
+D:\Projekte\Tv Movie EPG Import++\bin\Debug\Libaries\sqlite.dll
+D:\Projekte\Tv Movie EPG Import++\bin\Debug\Libaries\Databases.dll
+D:\Projekte\Tv Movie EPG Import++\bin\Debug\TvMovie++.dll
+D:\Projekte\Tv Movie EPG Import++\bin\Debug\TvMovie++.pdb
