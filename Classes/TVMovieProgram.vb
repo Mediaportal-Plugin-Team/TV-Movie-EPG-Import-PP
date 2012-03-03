@@ -74,6 +74,9 @@ Namespace TvDatabase
         <TableColumn("BildDateiname", NotNull:=True)> _
         Private m_BildDateiname As String
 
+        <TableColumn("Cover", NotNull:=True)> _
+        Private m_Cover As String
+
 #End Region
 
 #Region "Constructors"
@@ -261,6 +264,16 @@ Namespace TvDatabase
             Set(ByVal value As String)
                 m_isChanged = m_isChanged Or m_BildDateiname <> value
                 m_BildDateiname = value
+            End Set
+        End Property
+        Public Property Cover() As String
+            Get
+                Return m_Cover
+            End Get
+            Set(ByVal value As String)
+                m_isChanged = m_isChanged Or m_Cover <> value
+                '"\" am Anfang entfernen sofern vorhanden
+                m_Cover = value
             End Set
         End Property
 #End Region

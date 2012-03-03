@@ -1114,10 +1114,10 @@ Namespace TvEngine
             'Reset TvMovieProgram Table
             Try
                 Broker.Execute("drop table `mptvdb`.`tvmovieprogram`")
-                Broker.Execute("CREATE  TABLE `mptvdb`.`TVMovieProgram` ( `idTVMovieProgram` INT NOT NULL AUTO_INCREMENT , `idProgram` INT NOT NULL DEFAULT 0 , `TVMovieBewertung` INT NOT NULL DEFAULT 0 , `FanArt` VARCHAR(255) , `idSeries` INT NOT NULL DEFAULT 0 , `SeriesPosterImage` VARCHAR(255) , `idEpisode` VARCHAR(15) , `EpisodeImage` VARCHAR(255) , `local` BIT(1) NOT NULL DEFAULT 0 , `idMovingPictures` INT NOT NULL DEFAULT 0 , `idVideo` INT NOT NULL DEFAULT 0 , `KurzKritik` VARCHAR(255) , `BildDateiname` VARCHAR(32) , PRIMARY KEY (`idTVMovieProgram`) )")
+                Broker.Execute("CREATE  TABLE `mptvdb`.`TVMovieProgram` ( `idTVMovieProgram` INT NOT NULL AUTO_INCREMENT , `idProgram` INT NOT NULL DEFAULT 0 , `TVMovieBewertung` INT NOT NULL DEFAULT 0 , `FanArt` VARCHAR(255) , `idSeries` INT NOT NULL DEFAULT 0 , `SeriesPosterImage` VARCHAR(255) , `idEpisode` VARCHAR(15) , `EpisodeImage` VARCHAR(255) , `local` BIT(1) NOT NULL DEFAULT 0 , `idMovingPictures` INT NOT NULL DEFAULT 0 , `idVideo` INT NOT NULL DEFAULT 0 , `KurzKritik` VARCHAR(255) , `BildDateiname` VARCHAR(32) , `Cover` VARCHAR(512) , PRIMARY KEY (`idTVMovieProgram`) )")
             Catch ex As Exception
                 'Falls die Tabelle nicht existiert, abfangen & erstellen
-                Broker.Execute("CREATE  TABLE `mptvdb`.`TVMovieProgram` ( `idTVMovieProgram` INT NOT NULL AUTO_INCREMENT , `idProgram` INT NOT NULL DEFAULT 0 , `TVMovieBewertung` INT NOT NULL DEFAULT 0 , `FanArt` VARCHAR(255) , `idSeries` INT NOT NULL DEFAULT 0 , `SeriesPosterImage` VARCHAR(255) , `idEpisode` VARCHAR(15) , `EpisodeImage` VARCHAR(255) , `local` BIT(1) NOT NULL DEFAULT 0 , `idMovingPictures` INT NOT NULL DEFAULT 0 , `idVideo` INT NOT NULL DEFAULT 0 , `KurzKritik` VARCHAR(255) , `BildDateiname` VARCHAR(32) , PRIMARY KEY (`idTVMovieProgram`) )")
+                Broker.Execute("CREATE  TABLE `mptvdb`.`TVMovieProgram` ( `idTVMovieProgram` INT NOT NULL AUTO_INCREMENT , `idProgram` INT NOT NULL DEFAULT 0 , `TVMovieBewertung` INT NOT NULL DEFAULT 0 , `FanArt` VARCHAR(255) , `idSeries` INT NOT NULL DEFAULT 0 , `SeriesPosterImage` VARCHAR(255) , `idEpisode` VARCHAR(15) , `EpisodeImage` VARCHAR(255) , `local` BIT(1) NOT NULL DEFAULT 0 , `idMovingPictures` INT NOT NULL DEFAULT 0 , `idVideo` INT NOT NULL DEFAULT 0 , `KurzKritik` VARCHAR(255) , `BildDateiname` VARCHAR(32) , `Cover` VARCHAR(512) , PRIMARY KEY (`idTVMovieProgram`) )")
             End Try
 
             'TVSeries importieren
@@ -1311,7 +1311,7 @@ Namespace TvEngine
 
                                 'Daten im EPG (program) updaten
                                 _program.StarRating = _MovingPicturesDB(i).Rating
-                                If InStr(_program.Description, "existiert lokal") = 0 Then
+                                If InStr(_program.Description, "existiert lokal") = 0 And String.IsNullOrEmpty(_program.SeriesNum) Then
                                     _program.Description = "existiert lokal" & vbNewLine & _program.Description
                                 End If
 
@@ -1324,6 +1324,15 @@ Namespace TvEngine
                                     Dim _TvMovieProgram As TVMovieProgram = getTvMovieProgram(_program.IdProgram)
                                     _TvMovieProgram.idMovingPictures = _MovingPicturesDB(i).MovingPicturesID
                                     _TvMovieProgram.local = True
+
+                                    If Not String.IsNullOrEmpty(_MovingPicturesDB(i).Cover) And String.IsNullOrEmpty(_TvMovieProgram.Cover) Then
+                                        _TvMovieProgram.Cover = _MovingPicturesDB(i).Cover
+                                    End If
+
+                                    If Not String.IsNullOrEmpty(_MovingPicturesDB(i).FanArt) And String.IsNullOrEmpty(_TvMovieProgram.FanArt) Then
+                                        _TvMovieProgram.FanArt = _MovingPicturesDB(i).FanArt
+                                    End If
+
                                     _TvMovieProgram.Persist()
 
                                 End If
@@ -1464,7 +1473,7 @@ Namespace TvEngine
                                     _program.StarRating = _VideoDB(i).Rating
                                 End If
 
-                                If InStr(_program.Description, "existiert lokal") = 0 Then
+                                If InStr(_program.Description, "existiert lokal") = 0 And String.IsNullOrEmpty(_program.SeriesNum) Then
                                     _program.Description = "existiert lokal" & vbNewLine & _program.Description
                                 End If
 
@@ -1532,6 +1541,9 @@ Namespace TvEngine
                 MyLog.Error("TVMovie: Error - RunApplicationAfter not found")
             End If
         End Sub
+
+
+
 
         Private Function allowedSigns(ByVal expression As String) As String
             Return Replace(Replace(expression, "'", "''"), ":", "%")

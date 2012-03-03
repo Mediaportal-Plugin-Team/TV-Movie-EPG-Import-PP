@@ -133,6 +133,39 @@ Public Class MovingPicturesDB
                 End If
             End Get
         End Property
+
+        Public ReadOnly Property Cover() As String
+            Get
+                If _MovingPicturesInfos IsNot Nothing AndAlso _MovingPicturesInfos.Rows.Count > 0 Then
+
+                    Dim _Cover As String = DatabaseUtility.[Get](_MovingPicturesInfos, _Index, "coverfullpath")
+                    If _Cover.Length > 0 Then
+                        Return Strings.Right(_Cover, _Cover.Length - Strings.InStr(_Cover, "\Thumbs\") - ("Thumbs\").Length)
+                    Else
+                        Return String.Empty
+                    End If
+
+                Else
+                    Return String.Empty
+                End If
+            End Get
+        End Property
+
+        Public ReadOnly Property FanArt() As String
+            Get
+                If _MovingPicturesInfos IsNot Nothing AndAlso _MovingPicturesInfos.Rows.Count > 0 Then
+                    Dim _FanArt As String = DatabaseUtility.[Get](_MovingPicturesInfos, _Index, "backdropfullpath")
+                    If _FanArt.Length > 0 Then
+                        Return Strings.Right(_FanArt, _FanArt.Length - Strings.InStr(_FanArt, "\Thumbs\") - ("Thumbs\").Length)
+                    Else
+                        Return String.Empty
+                    End If
+                Else
+                    Return String.Empty
+                End If
+            End Get
+        End Property
+
         Public ReadOnly Property AlternateTitle() As String
             Get
                 If _MovingPicturesInfos IsNot Nothing AndAlso _MovingPicturesInfos.Rows.Count > 0 Then
