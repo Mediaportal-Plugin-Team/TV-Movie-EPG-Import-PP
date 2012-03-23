@@ -368,9 +368,19 @@ Namespace TvEngine
                 Return
             End If
 
+            'TvMovie++: In Setting speichern das Import gerade läuft
+            Dim setting As Setting = TvBLayer.GetSetting("TvMovieImportIsRunning", "false")
+            setting.Value = "true"
+            setting.Persist()
+
+
             Dim mappingList As List(Of Mapping) = GetMappingList()
             If mappingList Is Nothing OrElse mappingList.Count < 1 Then
                 MyLog.Info("TVMovie: Cannot import from TV Movie database - no mappings found")
+                'TvMovie++: In Setting speichern das Import beendet ist
+                setting = TvBLayer.GetSetting("TvMovieImportIsRunning", "false")
+                setting.Value = "false"
+                setting.Persist()
                 Return
             End If
 
@@ -392,7 +402,7 @@ Namespace TvEngine
 
             ' setting update time of epg import to avoid that the background thread triggers another import
             ' if the process lasts longer than the timer's update check interval
-            Dim setting As Setting = TvBLayer.GetSetting("TvMovieLastUpdate")
+            setting = TvBLayer.GetSetting("TvMovieLastUpdate")
             setting.Value = DateTime.Now.ToString()
             setting.Persist()
 
@@ -474,6 +484,11 @@ Namespace TvEngine
                     If _tvbLayer.GetSetting("TvMovieIsEpisodenScanner", "false").Value = "false" Then
                         MyLog.Info("TVMovie: overall Import duration: {0}", (Date.Now - ImportStartTime).Minutes & "min " & (Date.Now - ImportStartTime).Seconds & "s")
                     End If
+
+                    'TvMovie++: In Setting speichern das Import beendet ist
+                    setting = TvBLayer.GetSetting("TvMovieImportIsRunning", "false")
+                    setting.Value = "false"
+                    setting.Persist()
 
                 Catch generatedExceptionName As Exception
                     MyLog.Info("TVMovie: Error updating the database with last import date")
@@ -1148,6 +1163,11 @@ Namespace TvEngine
 
             End If
 
+            'Am Ende nochmal TvMovieLastUpdate in Settings speichern -> Abschlusszeit
+            Dim setting As Setting = TvBLayer.GetSetting("TvMovieLastUpdate")
+            setting.Value = DateTime.Now.ToString()
+            setting.Persist()
+
         End Sub
 
         Private Sub GetSeriesInfos()
@@ -1280,21 +1300,18 @@ Namespace TvEngine
 
                         'nach Mov.Pic Titel suchen
                         _SQLString = _
-                            "Select idProgram from program WHERE title LIKE '" & allowedSigns(_MovingPicturesDB(i).Title) & "' " & _
-                            "OR episodeName LIKE '" & allowedSigns(_MovingPicturesDB(i).Title) & "' "
+                            "Select idProgram from program WHERE title LIKE '" & allowedSigns(_MovingPicturesDB(i).Title) & "' "
 
                         'nach Mov.Pic Titel über Dateiname suchen
                         If Not String.IsNullOrEmpty(_MovingPicturesDB(i).TitlebyFilename) Then
                             _SQLString = _SQLString & _
-                            "OR title LIKE '" & allowedSigns(_MovingPicturesDB(i).TitlebyFilename) & "' " & _
-                            "OR episodeName LIKE '" & allowedSigns(_MovingPicturesDB(i).TitlebyFilename) & "' "
+                            "OR title LIKE '" & allowedSigns(_MovingPicturesDB(i).TitlebyFilename) & "' "
                         End If
 
                         'nach Mov.Pic alternateTitel 
                         If Not String.IsNullOrEmpty(_MovingPicturesDB(i).AlternateTitle) Then
                             _SQLString = _SQLString & _
-                            "OR title LIKE '" & allowedSigns(_MovingPicturesDB(i).AlternateTitle) & "' " & _
-                            "OR episodeName LIKE '" & allowedSigns(_MovingPicturesDB(i).AlternateTitle) & "' "
+                            "OR title LIKE '" & allowedSigns(_MovingPicturesDB(i).AlternateTitle) & "' "
                         End If
 
                         _Result.AddRange(Broker.Execute(_SQLString).TransposeToFieldList("idProgram", False))
@@ -1445,8 +1462,7 @@ Namespace TvEngine
 
                         'nach Mov.Pic Titel suchen
                         _SQLString = _
-                            "Select idProgram from program WHERE title LIKE '" & allowedSigns(_VideoDB(i).Title) & "' " & _
-                            "OR episodeName LIKE '" & allowedSigns(_VideoDB(i).Title) & "' "
+                            "Select idProgram from program WHERE title LIKE '" & allowedSigns(_VideoDB(i).Title) & "' "
 
                         'nach Mov.Pic Titel über Dateiname suchen
                         If Not String.IsNullOrEmpty(_VideoDB(i).TitlebyFileName) Then
@@ -1583,7 +1599,6 @@ Namespace TvEngine
 
                             If _TvSeriesDB.CountSeries = 1 Then
 
-
                                 'Falls Episode nicht lokal verfügbar -> im EPG Describtion kennzeichnen
                                 If _TvSeriesDB.EpisodeExistLocal = False Then
                                     If InStr(_Result(i).Description, "Neue Folge: " & _Result(i).EpisodeName) = 0 Then
@@ -1594,16 +1609,16 @@ Namespace TvEngine
                                 End If
                                 _Counter = _Counter + 1
 
+                                If _tvbLayer.GetSetting("ClickfinderDataAvailable", "false").Value = "true" Then
 
-                                'Pürfen ob in TvMovieProgram existiert
-                                Dim sb2 As New SqlBuilder(Gentle.Framework.StatementType.Select, GetType(TVMovieProgram))
-                                sb2.AddConstraint([Operator].Equals, "idprogram", _Result(i).IdProgram)
-                                Dim stmt2 As SqlStatement = sb2.GetStatement(True)
-                                Dim _SeriesIsInTvMovieProgram As IList(Of TVMovieProgram) = ObjectFactory.GetCollection(GetType(TVMovieProgram), stmt2.Execute())
+                                    'Pürfen ob in TvMovieProgram existiert
+                                    Dim sb2 As New SqlBuilder(Gentle.Framework.StatementType.Select, GetType(TVMovieProgram))
+                                    sb2.AddConstraint([Operator].Equals, "idprogram", _Result(i).IdProgram)
+                                    Dim stmt2 As SqlStatement = sb2.GetStatement(True)
+                                    Dim _SeriesIsInTvMovieProgram As IList(Of TVMovieProgram) = ObjectFactory.GetCollection(GetType(TVMovieProgram), stmt2.Execute())
 
-                                If _SeriesIsInTvMovieProgram.Count = 0 Then
+                                    If _SeriesIsInTvMovieProgram.Count = 0 Then
 
-                                    If _tvbLayer.GetSetting("ClickfinderDataAvailable", "false").Value = "true" Then
                                         'idProgram in TvMovieProgram nicht gefunden -> Daten neu anlegen
                                         Dim _TvMovieProgram As TVMovieProgram = getTvMovieProgram(_Result(i).IdProgram)
                                         _TvMovieProgram.idSeries = _TvSeriesDB(0).SeriesID
@@ -1640,6 +1655,14 @@ Namespace TvEngine
                                     _Result(i).Description = Replace(_Result(i).Description, "Folge: " & _Result(i).EpisodeName, "Neue Folge: " & _Result(i).EpisodeName)
                                     _Result(i).Persist()
                                 End If
+
+                                If _tvbLayer.GetSetting("ClickfinderDataAvailable", "false").Value = "true" Then
+                                    Dim _TvMovieProgram As TVMovieProgram = getTvMovieProgram(_Result(i).IdProgram)
+                                    _TvMovieProgram.idSeries = 1
+                                    _TvMovieProgram.local = False
+                                    _TvMovieProgram.Persist()
+                                End If
+
                                 _Counter = _Counter + 1
                                 MyLog.[Debug]("TVMovie: [CheckEpisodenscannerImports]: Episode: {0} - S{1}E{2} not found in MP-TvSeries DB -> mark as Neue Folge", _Result(i).Title, _Result(i).SeriesNum, _Result(i).EpisodeNum)
                             End If

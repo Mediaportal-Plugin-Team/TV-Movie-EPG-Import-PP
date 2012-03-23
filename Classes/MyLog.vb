@@ -51,7 +51,7 @@ Public Class MyLog
     ''' <summary>
     ''' Configure after how many days the log file shall be rotated when a new line is added
     ''' </summary>
-    Private Shared ReadOnly _logDaysToKeep As New TimeSpan(1, 0, 0, 0)
+    Private Shared ReadOnly _logDaysToKeep As New TimeSpan(14, 0, 0, 0)
 
     ''' <summary>
     ''' The maximum size of each log file in Megabytes
