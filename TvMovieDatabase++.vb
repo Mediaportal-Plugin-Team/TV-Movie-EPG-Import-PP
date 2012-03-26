@@ -1126,14 +1126,7 @@ Namespace TvEngine
             MyLog.[Debug]("TVMovie: [TvMovie++ Settings]: ClickfinderDataAvailable = " & _tvbLayer.GetSetting("ClickfinderDataAvailable").Value)
             MyLog.[Debug]("TVMovie: [TvMovie++ Settings]: ClickfinderDataAvailable = " & _tvbLayer.GetSetting("TvMovieIsEpisodenScanner").Value)
 
-            'Reset TvMovieProgram Table
-            Try
-                Broker.Execute("drop table `mptvdb`.`tvmovieprogram`")
-                Broker.Execute("CREATE  TABLE `mptvdb`.`TVMovieProgram` ( `idTVMovieProgram` INT NOT NULL AUTO_INCREMENT , `idProgram` INT NOT NULL DEFAULT 0 , `TVMovieBewertung` INT NOT NULL DEFAULT 0 , `FanArt` VARCHAR(255) , `idSeries` INT NOT NULL DEFAULT 0 , `SeriesPosterImage` VARCHAR(255) , `idEpisode` VARCHAR(15) , `EpisodeImage` VARCHAR(255) , `local` BIT(1) NOT NULL DEFAULT 0 , `idMovingPictures` INT NOT NULL DEFAULT 0 , `idVideo` INT NOT NULL DEFAULT 0 , `KurzKritik` VARCHAR(255) , `BildDateiname` VARCHAR(32) , `Cover` VARCHAR(512) , PRIMARY KEY (`idTVMovieProgram`) )")
-            Catch ex As Exception
-                'Falls die Tabelle nicht existiert, abfangen & erstellen
-                Broker.Execute("CREATE  TABLE `mptvdb`.`TVMovieProgram` ( `idTVMovieProgram` INT NOT NULL AUTO_INCREMENT , `idProgram` INT NOT NULL DEFAULT 0 , `TVMovieBewertung` INT NOT NULL DEFAULT 0 , `FanArt` VARCHAR(255) , `idSeries` INT NOT NULL DEFAULT 0 , `SeriesPosterImage` VARCHAR(255) , `idEpisode` VARCHAR(15) , `EpisodeImage` VARCHAR(255) , `local` BIT(1) NOT NULL DEFAULT 0 , `idMovingPictures` INT NOT NULL DEFAULT 0 , `idVideo` INT NOT NULL DEFAULT 0 , `KurzKritik` VARCHAR(255) , `BildDateiname` VARCHAR(32) , `Cover` VARCHAR(512) , PRIMARY KEY (`idTVMovieProgram`) )")
-            End Try
+            PrepareTvMovieProgramTable()
 
             'TVSeries importieren
             If _tvbLayer.GetSetting("TvMovieImportTvSeriesInfos").Value = "true" Then
@@ -1198,7 +1191,7 @@ Namespace TvEngine
                         _Result.AddRange(Broker.Execute(_SQLString).TransposeToFieldList("idProgram", False))
 
                         For d As Integer = 0 To _Result.Count - 1
-                            Dim _program As Program = Program.Retrieve(_Result.Item(d))
+                            Dim _program As Program = Program.Retrieve(CInt(_Result.Item(d)))
                             Try
 
                                 'Falls Episode gefunden wurde
@@ -1559,6 +1552,72 @@ Namespace TvEngine
         End Sub
 
 
+        Private Sub PrepareTvMovieProgramTable()
+            'Reset TvMovieProgram Table
+            Try
+                Dim _tmp As New TVMovieProgram(1)
+                _tmp.Delete()
+                MyLog.Info("TVMovie: [PrepareTvMovieProgramTable]: TvMovieProgram table cleared")
+
+            Catch ex As Exception
+                'Falls die Tabelle nicht existiert, abfangen & erstellen
+                Broker.Execute("CREATE  TABLE `mptvdb`.`TVMovieProgram` ( `idTVMovieProgram` INT NOT NULL AUTO_INCREMENT , `idProgram` INT NOT NULL DEFAULT 0 , `TVMovieBewertung` INT NOT NULL DEFAULT 0 , `FanArt` VARCHAR(255) , `idSeries` INT NOT NULL DEFAULT 0 , `SeriesPosterImage` VARCHAR(255) , `idEpisode` VARCHAR(15) , `EpisodeImage` VARCHAR(255) , `local` BIT(1) NOT NULL DEFAULT 0 , `idMovingPictures` INT NOT NULL DEFAULT 0 , `idVideo` INT NOT NULL DEFAULT 0 , `KurzKritik` VARCHAR(255) , `BildDateiname` VARCHAR(32) , `Cover` VARCHAR(512) , PRIMARY KEY (`idTVMovieProgram`) )")
+                MyLog.Info("TVMovie: [PrepareTvMovieProgramTable]: TvMovieProgram not exist -> create new")
+            End Try
+
+
+            'If _tvbLayer.GetSetting("ClickfinderDataAvailable", "false").Value = "true" Then
+
+            '    Dim _tableExist As Boolean = False
+
+            '    'Prüfen ob TvMovieProgram table existiert, falls nicht erstellen
+            '    Try
+            '        Dim _TestResult As New ArrayList
+            '        Dim sqlstring As String
+            '        sqlstring = "Select * from TvMovieProgram LIMIT 1"
+            '        _TestResult.AddRange(Broker.Execute(sqlstring).TransposeToFieldList("idProgram", False))
+            '        _tableExist = True
+            '    Catch gentle As GentleException
+            '        'gentle Fehler abfangen und tabelle erstellen
+            '        Broker.Execute("CREATE  TABLE `mptvdb`.`TVMovieProgram` ( `idTVMovieProgram` INT NOT NULL AUTO_INCREMENT , `idProgram` INT NOT NULL DEFAULT 0 , `TVMovieBewertung` INT NOT NULL DEFAULT 0 , `FanArt` VARCHAR(255) , `idSeries` INT NOT NULL DEFAULT 0 , `SeriesPosterImage` VARCHAR(255) , `idEpisode` VARCHAR(15) , `EpisodeImage` VARCHAR(255) , `local` BIT(1) NOT NULL DEFAULT 0 , `idMovingPictures` INT NOT NULL DEFAULT 0 , `idVideo` INT NOT NULL DEFAULT 0 , `KurzKritik` VARCHAR(255) , `BildDateiname` VARCHAR(32) , `Cover` VARCHAR(512) , PRIMARY KEY (`idTVMovieProgram`) )")
+
+            '        MyLog.Info("TVMovie: [PrepareTvMovieProgramTable]: TvMovieProgram not exist -> create new")
+            '    Catch ex As Exception
+            '        MyLog.[Error]("TVMovie: [PrepareTvMovieProgramTable]: exception err:{0} stack:{1}", ex.Message, ex.StackTrace)
+            '    End Try
+
+            '    'Wenn existiert, dann alte Sendungen löschen
+            '    If _tableExist = True Then
+            '        Try
+            '            Dim timer As Date = Date.Now
+            '            Dim _Result As New ArrayList
+            '            Dim _sqlstring As String = String.Empty
+
+            '            'Alle Sendungen in TvMovieProgram finden, die nicht in program table existieren
+            '            _sqlstring = "SELECT * From TvMovieProgram AS a LEFT JOIN program AS b ON a.idProgram = b.idProgram WHERE b.idProgram IS NULL"
+            '            _Result.AddRange(Broker.Execute(_sqlstring).TransposeToFieldList("idProgram", False))
+
+            '            'Alle Sendungen in TvMovieProgram finden, die Älter sind als gestern
+            '            _sqlstring = "Select * from TvMovieProgram INNER JOIN program ON TvMovieProgram.idprogram = program.idProgram " & _
+            '                                                        "WHERE startTime <= " & MySqlDate(Date.Today.AddDays(-1))
+            '            _Result.AddRange(Broker.Execute(_sqlstring).TransposeToFieldList("idProgram", False))
+
+
+            '            For i As Integer = 0 To _Result.Count - 1
+            '                Dim _TvMovieProgram As TVMovieProgram = TVMovieProgram.Retrieve(CInt(_Result.Item(i)))
+            '                _TvMovieProgram.Remove()
+            '            Next
+
+            '            MyLog.Info("TVMovie: [PrepareTvMovieProgramTable]: {0} programs deleted from TvMovieProgram in {1}s", _Result.Count, DateDiff(DateInterval.Second, timer, Date.Now))
+
+            '        Catch ex2 As Exception
+            '            'Broker.Execute("CREATE  TABLE `mptvdb`.`TVMovieProgram` ( `idTVMovieProgram` INT NOT NULL AUTO_INCREMENT , `idProgram` INT NOT NULL DEFAULT 0 , `TVMovieBewertung` INT NOT NULL DEFAULT 0 , `FanArt` VARCHAR(255) , `idSeries` INT NOT NULL DEFAULT 0 , `SeriesPosterImage` VARCHAR(255) , `idEpisode` VARCHAR(15) , `EpisodeImage` VARCHAR(255) , `local` BIT(1) NOT NULL DEFAULT 0 , `idMovingPictures` INT NOT NULL DEFAULT 0 , `idVideo` INT NOT NULL DEFAULT 0 , `KurzKritik` VARCHAR(255) , `BildDateiname` VARCHAR(32) , `Cover` VARCHAR(512) , PRIMARY KEY (`idTVMovieProgram`) )")
+            '            MyLog.[Error]("TVMovie: [PrepareTvMovieProgramTable]: exception err:{0} stack:{1}", ex2.Message, ex2.StackTrace)
+            '        End Try
+            '    End If
+            'End If
+        End Sub
+
 
 
         Private Function allowedSigns(ByVal expression As String) As String
@@ -1682,7 +1741,9 @@ Namespace TvEngine
             End Try
         End Sub
 
-
+        Private Function MySqlDate(ByVal Datum As Date) As String
+            Return "'" & Datum.Year & "-" & Format(Datum.Month, "00") & "-" & Format(Datum.Day, "00") & " " & Format(Datum.Hour, "00") & ":" & Format(Datum.Minute, "00") & ":00'"
+        End Function
 
 #End Region
     End Class

@@ -243,7 +243,7 @@ Click Next to continue or Cancel to exit Setup.
     <Version>
       <Major>1</Major>
       <Minor>2</Minor>
-      <Build>5</Build>
+      <Build>6</Build>
       <Revision>0</Revision>
     </Version>
     <ExtensionDescription>TV Movie EPG Import++ plugin is a replacement for the Tv Movie EPG Import Plugin (Author: rtv) that comes as part of MediaPortal TvServer. The plugin use the Tv Movie Clickfinder Database to supplying you with EPG data for german TV channels. The Clickfinder Plugin maps this data to your MediaPortal TV channels.
@@ -255,13 +255,14 @@ New Features (Optional):
 - Mark not existing episodes as “Neue Folge:” in EPG describtion (only works if you have enable the download for the whole Series (MP-TvSeries Wiki) in the MP-TvSeries Plugin Configuration Plugin Configuration
 - Imports ratings from your MovingPictures and Video databases and mark existing Movie as „Lokal verfügbar“ in EPG Describtion. An integration of MyFilms database will be supported in a feature version.
 - Imports addiotional Data that are needed for the MediaPortal Plugin Clickfinder ProgramGuide </ExtensionDescription>
-    <VersionDescription>Version 1.2.5.0
+    <VersionDescription>Version 1.2.6.0
 - Series found by episodenscanner -&gt; not in SeriesDB -&gt; TvMovieProgram as Series speicerhn (idSeries = 1)
 - nach episodennamen (org.Titel) suchen entfernt
-- Prüfen ob Import gerade läuft -&gt; wird vom Clickfinder PG benötigt</VersionDescription>
+- Prüfen ob Import gerade läuft -&gt; wird vom Clickfinder PG benötigt
+- TvMovieProgram table wird bei jedem Import geleert, anstatt gelöscht.</VersionDescription>
     <DevelopmentStatus>Stable</DevelopmentStatus>
     <OnlineLocation>http://tv-movie-epg-import-plusplus.googlecode.com/files/Tv%20Movie%20EPG%20Import%2B%2B_v1.2.2.0.mpe1</OnlineLocation>
-    <ReleaseDate>2012-03-23T17:12:10</ReleaseDate>
+    <ReleaseDate>2012-03-24T17:12:10</ReleaseDate>
     <Tags />
     <Location>D:\Projekte\Tv Movie EPG Import++\MPE1\Tv Movie EPG Import++.mpe1</Location>
     <Params>
@@ -344,7 +345,7 @@ New Features (Optional):
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>..\Grafiken\MPE1 Icon.png</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{49b5f2a6-6405-4d2f-83aa-3bb46b58ef47}-MPE1 Icon.png</ZipFileName>
+        <ZipFileName>Installer{CopyFile}\{f2b0aaaf-df19-4e6f-b0f7-da835e6f24c2}-MPE1 Icon.png</ZipFileName>
         <DestinationFilename />
       </FileItem>
     </Items>
