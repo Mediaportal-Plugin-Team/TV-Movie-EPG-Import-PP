@@ -478,21 +478,22 @@ Namespace TvEngine
                     Dim ImportDuration As System.TimeSpan = (DateTime.Now - ImportStartTime)
                     MyLog.Debug("TVMovie: Imported {0} database entries for {1} stations in {2} seconds", _programsCounter, counter, Convert.ToString(ImportDuration.TotalSeconds))
 
-                    'TV Movie++ Enhancement by Scrounger
-                    StartTVMoviePlus()
-
-                    If _tvbLayer.GetSetting("TvMovieIsEpisodenScanner", "false").Value = "false" Then
-                        MyLog.Info("TVMovie: overall Import duration: {0}", (Date.Now - ImportStartTime).Minutes & "min " & (Date.Now - ImportStartTime).Seconds & "s")
-                    End If
-
-                    'TvMovie++: In Setting speichern das Import beendet ist
-                    setting = TvBLayer.GetSetting("TvMovieImportIsRunning", "false")
-                    setting.Value = "false"
-                    setting.Persist()
-
                 Catch generatedExceptionName As Exception
-                    MyLog.Info("TVMovie: Error updating the database with last import date")
+                    MyLog.Error("TVMovie: Error updating the database with last import date")
                 End Try
+
+                'TV Movie++ Enhancement by Scrounger
+                StartTVMoviePlus()
+
+                If _tvbLayer.GetSetting("TvMovieIsEpisodenScanner", "false").Value = "false" Then
+                    MyLog.Info("TVMovie: overall Import duration: {0}", (Date.Now - ImportStartTime).Minutes & "min " & (Date.Now - ImportStartTime).Seconds & "s")
+                End If
+
+                'TvMovie++: In Setting speichern das Import beendet ist
+                setting = TvBLayer.GetSetting("TvMovieImportIsRunning", "false")
+                setting.Value = "false"
+                setting.Persist()
+
             End If
             GC.Collect()
         End Sub
@@ -1119,48 +1120,67 @@ Namespace TvEngine
 #Region "TVMovie++ enhancement"
 
         Private Sub StartTVMoviePlus()
+            Try
 
-            MyLog.[Debug]("TVMovie: [TvMovie++ Settings]: TvMovieRunAppAfter = " & _tvbLayer.GetSetting("TvMovieRunAppAfter").Value)
-            MyLog.[Debug]("TVMovie: [TvMovie++ Settings]: TvMovieImportTvSeriesInfos = " & _tvbLayer.GetSetting("TvMovieImportTvSeriesInfos").Value)
-            MyLog.[Debug]("TVMovie: [TvMovie++ Settings]: TvMovieImportMovingPicturesInfos = " & _tvbLayer.GetSetting("TvMovieImportMovingPicturesInfos").Value)
-            MyLog.[Debug]("TVMovie: [TvMovie++ Settings]: ClickfinderDataAvailable = " & _tvbLayer.GetSetting("ClickfinderDataAvailable").Value)
-            MyLog.[Debug]("TVMovie: [TvMovie++ Settings]: ClickfinderDataAvailable = " & _tvbLayer.GetSetting("TvMovieIsEpisodenScanner").Value)
+                MyLog.[Debug]("TVMovie: [TvMovie++ Settings]: TvMovieRunAppAfter = " & _tvbLayer.GetSetting("TvMovieRunAppAfter").Value)
+                MyLog.[Debug]("TVMovie: [TvMovie++ Settings]: TvMovieImportTvSeriesInfos = " & _tvbLayer.GetSetting("TvMovieImportTvSeriesInfos").Value)
+                MyLog.[Debug]("TVMovie: [TvMovie++ Settings]: TvMovieImportMovingPicturesInfos = " & _tvbLayer.GetSetting("TvMovieImportMovingPicturesInfos").Value)
+                MyLog.[Debug]("TVMovie: [TvMovie++ Settings]: ClickfinderDataAvailable = " & _tvbLayer.GetSetting("ClickfinderDataAvailable").Value)
+                MyLog.[Debug]("TVMovie: [TvMovie++ Settings]: ClickfinderDataAvailable = " & _tvbLayer.GetSetting("TvMovieIsEpisodenScanner").Value)
 
-            PrepareTvMovieProgramTable()
+                Try
+                    Broker.Execute("drop table `mptvdb`.`tvmovieprogram`")
+                    Broker.Execute("CREATE  TABLE `mptvdb`.`TVMovieProgram` ( `idTVMovieProgram` INT NOT NULL AUTO_INCREMENT , `idProgram` INT NOT NULL DEFAULT 0 , `TVMovieBewertung` INT NOT NULL DEFAULT 0 , `FanArt` VARCHAR(255) , `idSeries` INT NOT NULL DEFAULT 0 , `SeriesPosterImage` VARCHAR(255) , `idEpisode` VARCHAR(15) , `EpisodeImage` VARCHAR(255) , `local` BIT(1) NOT NULL DEFAULT 0 , `idMovingPictures` INT NOT NULL DEFAULT 0 , `idVideo` INT NOT NULL DEFAULT 0 , `KurzKritik` VARCHAR(255) , `BildDateiname` VARCHAR(32) , `Cover` VARCHAR(512) , PRIMARY KEY (`idTVMovieProgram`) )")
+                Catch ex As Exception
+                    'Falls die Tabelle nicht existiert, abfangen & erstellen
+                    Broker.Execute("CREATE  TABLE `mptvdb`.`TVMovieProgram` ( `idTVMovieProgram` INT NOT NULL AUTO_INCREMENT , `idProgram` INT NOT NULL DEFAULT 0 , `TVMovieBewertung` INT NOT NULL DEFAULT 0 , `FanArt` VARCHAR(255) , `idSeries` INT NOT NULL DEFAULT 0 , `SeriesPosterImage` VARCHAR(255) , `idEpisode` VARCHAR(15) , `EpisodeImage` VARCHAR(255) , `local` BIT(1) NOT NULL DEFAULT 0 , `idMovingPictures` INT NOT NULL DEFAULT 0 , `idVideo` INT NOT NULL DEFAULT 0 , `KurzKritik` VARCHAR(255) , `BildDateiname` VARCHAR(32) , `Cover` VARCHAR(512) , PRIMARY KEY (`idTVMovieProgram`) )")
+                End Try
 
-            'TVSeries importieren
-            If _tvbLayer.GetSetting("TvMovieImportTvSeriesInfos").Value = "true" Then
-                GetSeriesInfos()
-            End If
+                Try
+                    'Table TvMovieSeriesMapping anlegen
+                    Broker.Execute("CREATE  TABLE `mptvdb`.`TvMovieSeriesMapping` ( `idSeries` INT NOT NULL , `EpgTitle` VARCHAR(255) , PRIMARY KEY (`idSeries`) )")
+                    MyLog.[Debug]("TVMovie: [TvMovie++ Settings]: TvMovieSeriesMapping table created")
+                Catch ex As Exception
+                    'existiert bereits
+                    MyLog.[Debug]("TVMovie: [TvMovie++ Settings]: TvMovieSeriesMapping table exist")
+                End Try
 
-            'MovingPictures importieren
-            If _tvbLayer.GetSetting("TvMovieImportMovingPicturesInfos").Value = "true" Then
-                getMovingPicturesInfos()
-            End If
+                'TVSeries importieren
+                If _tvbLayer.GetSetting("TvMovieImportTvSeriesInfos").Value = "true" Then
+                    GetSeriesInfos()
+                End If
 
-            'MP VideoDatabase importieren
-            If _tvbLayer.GetSetting("TvMovieImportVideoDatabaseInfos").Value = "true" Then
-                GetVideoDatabaseInfos()
-            End If
+                'MovingPictures importieren
+                If _tvbLayer.GetSetting("TvMovieImportMovingPicturesInfos").Value = "true" Then
+                    GetMovingPicturesInfos()
+                End If
 
-            'Tv Movie Highlight und Suchoptionen für Clickfinder ProgramGuide importieren
-            If _tvbLayer.GetSetting("ClickfinderDataAvailable").Value = "true" Then
-                GetTvMovieHighlights()
-            End If
+                'MP VideoDatabase importieren
+                If _tvbLayer.GetSetting("TvMovieImportVideoDatabaseInfos").Value = "true" Then
+                    GetVideoDatabaseInfos()
+                End If
 
-            'Run App after import
-            If _tvbLayer.GetSetting("TvMovieRunAppAfter").Value IsNot String.Empty Then
+                'Tv Movie Highlight und Suchoptionen für Clickfinder ProgramGuide importieren
+                If _tvbLayer.GetSetting("ClickfinderDataAvailable").Value = "true" Then
+                    GetTvMovieHighlights()
+                End If
 
-                Dim _Thread As New Thread(AddressOf RunApplicationAfterImport)
-                _Thread.Start()
+                'Run App after import
+                If _tvbLayer.GetSetting("TvMovieRunAppAfter").Value IsNot String.Empty Then
 
-            End If
+                    Dim _Thread As New Thread(AddressOf RunApplicationAfterImport)
+                    _Thread.Start()
 
-            'Am Ende nochmal TvMovieLastUpdate in Settings speichern -> Abschlusszeit
-            Dim setting As Setting = TvBLayer.GetSetting("TvMovieLastUpdate")
-            setting.Value = DateTime.Now.ToString()
-            setting.Persist()
+                End If
 
+                'Am Ende nochmal TvMovieLastUpdate in Settings speichern -> Abschlusszeit
+                Dim setting As Setting = TvBLayer.GetSetting("TvMovieLastUpdate")
+                setting.Value = DateTime.Now.ToString()
+                setting.Persist()
+
+            Catch ex As Exception
+                MyLog.Error("TVMovie: [StartTVMoviePlus]: error: {0} stack: {1}", ex.Message, ex.StackTrace)
+            End Try
         End Sub
 
         Private Sub GetSeriesInfos()
@@ -1184,9 +1204,23 @@ Namespace TvEngine
 
                         Dim _Result As New ArrayList
 
-                        'nach Mov.Pic Titel suchen
-                        _SQLString = _
+                        Try
+                            Dim _TvMovieSeriesMapping As TvMovieSeriesMapping = TvMovieSeriesMapping.Retrieve(_TvSeriesDB(i).SeriesID)
+
+                            If Not String.IsNullOrEmpty(_TvMovieSeriesMapping.EpgTitle) Then
+                                _SQLString = _
+                                            "Select idProgram from program WHERE title LIKE '" & allowedSigns(_TvMovieSeriesMapping.EpgTitle) & "'"
+                                MyLog.[Info]("TVMovie: [GetSeriesInfos]: manuel mapping found: {0} -> {1}", _TvSeriesDB(i).SeriesName, _TvMovieSeriesMapping.EpgTitle)
+                            Else
+                                _SQLString = _
+                                    "Select idProgram from program WHERE title LIKE '" & allowedSigns(_TvSeriesDB(i).SeriesName)
+                                MyLog.Warn("TVMovie: [GetSeriesInfos]: EpgTitle is empty for idseries = {0}", _TvSeriesDB(i).SeriesID)
+                            End If
+
+                        Catch ex As Exception
+                            _SQLString = _
                             "Select idProgram from program WHERE title LIKE '" & allowedSigns(_TvSeriesDB(i).SeriesName) & "'"
+                        End Try
 
                         _Result.AddRange(Broker.Execute(_SQLString).TransposeToFieldList("idProgram", False))
 
@@ -1254,7 +1288,7 @@ Namespace TvEngine
                             End Try
                         Next
 
-                        MyLog.[Info]("TVMovie: {0}: {1}/{2} episodes found", _TvSeriesDB(i).SeriesName, _EpisodeFoundCounter, _Result.Count)
+                        MyLog.[Info]("TVMovie: [GetSeriesInfos]: {0}: {1}/{2} episodes found", _TvSeriesDB(i).SeriesName, _EpisodeFoundCounter, _Result.Count)
                         _CounterFound = _CounterFound + _EpisodeFoundCounter
                         _Counter = _Counter + _Result.Count
 
@@ -1273,6 +1307,7 @@ Namespace TvEngine
             End Try
 
         End Sub
+
 
         Private Sub GetMovingPicturesInfos()
             Try
@@ -1399,21 +1434,25 @@ Namespace TvEngine
                                 Dim _Program As IList(Of Program) = ObjectFactory.GetCollection(GetType(Program), stmt2.Execute())
 
                                 'Wenn Program gefunden dann in TvMovieProgram schreiben
-                                If _Program.Count = 1 Then
+                                If _Program.Count >= 1 Then
 
-                                    'idProgram in TvMovieProgram suchen & Daten aktualisieren
-                                    Dim _TvMovieProgram As TVMovieProgram = getTvMovieProgram(_Program(0).IdProgram)
+                                    For y As Integer = 0 To _Program.Count - 1
+                                        'idProgram in TvMovieProgram suchen & Daten aktualisieren
+                                        Dim _TvMovieProgram As TVMovieProgram = getTvMovieProgram(_Program(y).IdProgram)
 
-                                    _TvMovieProgram.TVMovieBewertung = _ClickfinderDB(i).Bewertung
-                                    _TvMovieProgram.KurzKritik = _ClickfinderDB(i).Kurzkritik
-                                    _TvMovieProgram.BildDateiname = _ClickfinderDB(i).Bilddateiname
-                                    _TvMovieProgram.Persist()
+                                        _TvMovieProgram.TVMovieBewertung = _ClickfinderDB(i).Bewertung
+                                        _TvMovieProgram.KurzKritik = _ClickfinderDB(i).Kurzkritik
+                                        _TvMovieProgram.BildDateiname = _ClickfinderDB(i).Bilddateiname
+                                        _TvMovieProgram.Persist()
 
-                                    _CounterFound = _CounterFound + 1
+                                        _CounterFound = _CounterFound + 1
+                                    Next
 
-                                ElseIf _Program.Count > 1 Then
-                                    MyLog.[Debug]("Program found in {0} EPG Entries (Start: {1}, Ende: {2}, Titel: {3}, Channel: {4}", _
+                                    If _Program.Count > 1 Then
+                                        MyLog.Info("Program found in {0} EPG Entries (Start: {1}, Ende: {2}, Titel: {3}, Channel: {4}", _
                                                 _Program.Count, _ClickfinderDB(i).Beginn, _ClickfinderDB(i).Ende, _ClickfinderDB(i).Titel, _channel.DisplayName)
+                                    End If
+                                    
                                 Else
                                     'Nur alte Sendungen < 2 Tage sind nicht im EPG enthalten
                                     'Mylog.[Debug]("Start: {0}, Ende: {1}, Titel: {2}, Channel: {3}", _ClickfinderDB(i).Beginn, _ClickfinderDB(i).Ende, _ClickfinderDB(i).Titel, _channel.DisplayName)
@@ -1555,8 +1594,8 @@ Namespace TvEngine
         Private Sub PrepareTvMovieProgramTable()
             'Reset TvMovieProgram Table
             Try
-                Dim _tmp As New TVMovieProgram(1)
-                _tmp.Delete()
+                StartTVMoviePlus()
+
                 MyLog.Info("TVMovie: [PrepareTvMovieProgramTable]: TvMovieProgram table cleared")
 
             Catch ex As Exception
@@ -1650,13 +1689,16 @@ Namespace TvEngine
 
                 If _Result.Count > 0 Then
 
+                    'gefunden durchlaufen
                     For i As Integer = 0 To _Result.Count - 1
 
                         Try
                             Dim _TvSeriesDB As New TVSeriesDB
                             _TvSeriesDB.LoadEpisode(allowedSigns(_Result(i).Title), CInt(_Result(i).SeriesNum), CInt(_Result(i).EpisodeNum))
 
-                            If _TvSeriesDB.CountSeries = 1 Then
+
+                            'Serie in TvSeries gefunden
+                            If _TvSeriesDB.CountSeries > 0 Then
 
                                 'Falls Episode nicht lokal verfügbar -> im EPG Describtion kennzeichnen
                                 If _TvSeriesDB.EpisodeExistLocal = False Then
@@ -1668,6 +1710,7 @@ Namespace TvEngine
                                 End If
                                 _Counter = _Counter + 1
 
+
                                 If _tvbLayer.GetSetting("ClickfinderDataAvailable", "false").Value = "true" Then
 
                                     'Pürfen ob in TvMovieProgram existiert
@@ -1676,10 +1719,18 @@ Namespace TvEngine
                                     Dim stmt2 As SqlStatement = sb2.GetStatement(True)
                                     Dim _SeriesIsInTvMovieProgram As IList(Of TVMovieProgram) = ObjectFactory.GetCollection(GetType(TVMovieProgram), stmt2.Execute())
 
-                                    If _SeriesIsInTvMovieProgram.Count = 0 Then
+                                    'TvMovieProgram laden / neu anlegen
+                                    Dim _TvMovieProgram As TVMovieProgram = getTvMovieProgram(_Result(i).IdProgram)
 
-                                        'idProgram in TvMovieProgram nicht gefunden -> Daten neu anlegen
-                                        Dim _TvMovieProgram As TVMovieProgram = getTvMovieProgram(_Result(i).IdProgram)
+                                    'Sofern idSeries = 0 -> Daten updaten & speichern
+                                    If _TvMovieProgram.idSeries = 0 Then
+
+                                        If _SeriesIsInTvMovieProgram.Count = 0 Then
+                                            MyLog.[Info]("TVMovie: [CheckEpisodenscannerImports]: New entry in TvMovieProgram table")
+                                        Else
+                                            MyLog.[Info]("TVMovie: [CheckEpisodenscannerImports]: Updated entry in TvMovieProgram table")
+                                        End If
+
                                         _TvMovieProgram.idSeries = _TvSeriesDB(0).SeriesID
                                         _TvMovieProgram.idEpisode = _TvSeriesDB.EpisodeCompositeID
                                         _TvMovieProgram.local = True
@@ -1704,6 +1755,7 @@ Namespace TvEngine
                                         End If
 
                                         _TvMovieProgram.Persist()
+
                                     End If
 
                                 End If

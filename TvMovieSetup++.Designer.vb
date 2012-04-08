@@ -120,6 +120,7 @@ Namespace SetupTv.Sections
             Me.Label4 = New System.Windows.Forms.Label
             Me.fileDialogDb = New System.Windows.Forms.OpenFileDialog
             Me.OpenFileDialog1 = New System.Windows.Forms.OpenFileDialog
+            Me.ButtonSeriesMapping = New System.Windows.Forms.Button
             Me.tabControlTvMovie.SuspendLayout()
             Me.tabPageSettings.SuspendLayout()
             Me.groupBoxEnableTvMovie.SuspendLayout()
@@ -471,6 +472,7 @@ Namespace SetupTv.Sections
             '
             'GroupBox2
             '
+            Me.GroupBox2.Controls.Add(Me.ButtonSeriesMapping)
             Me.GroupBox2.Controls.Add(Me.CheckBoxVideoDB)
             Me.GroupBox2.Controls.Add(Me.CheckBoxMyFilms)
             Me.GroupBox2.Controls.Add(Me.CheckBoxMovingPictures)
@@ -489,7 +491,7 @@ Namespace SetupTv.Sections
             '
             Me.CheckBoxVideoDB.AutoSize = True
             Me.CheckBoxVideoDB.FlatStyle = System.Windows.Forms.FlatStyle.Popup
-            Me.CheckBoxVideoDB.Location = New System.Drawing.Point(129, 74)
+            Me.CheckBoxVideoDB.Location = New System.Drawing.Point(16, 110)
             Me.CheckBoxVideoDB.Name = "CheckBoxVideoDB"
             Me.CheckBoxVideoDB.Size = New System.Drawing.Size(97, 17)
             Me.CheckBoxVideoDB.TabIndex = 72
@@ -500,7 +502,7 @@ Namespace SetupTv.Sections
             '
             Me.CheckBoxMyFilms.AutoSize = True
             Me.CheckBoxMyFilms.FlatStyle = System.Windows.Forms.FlatStyle.Popup
-            Me.CheckBoxMyFilms.Location = New System.Drawing.Point(129, 107)
+            Me.CheckBoxMyFilms.Location = New System.Drawing.Point(279, 110)
             Me.CheckBoxMyFilms.Name = "CheckBoxMyFilms"
             Me.CheckBoxMyFilms.Size = New System.Drawing.Size(148, 17)
             Me.CheckBoxMyFilms.TabIndex = 71
@@ -511,7 +513,7 @@ Namespace SetupTv.Sections
             '
             Me.CheckBoxMovingPictures.AutoSize = True
             Me.CheckBoxMovingPictures.FlatStyle = System.Windows.Forms.FlatStyle.Popup
-            Me.CheckBoxMovingPictures.Location = New System.Drawing.Point(16, 107)
+            Me.CheckBoxMovingPictures.Location = New System.Drawing.Point(158, 110)
             Me.CheckBoxMovingPictures.Name = "CheckBoxMovingPictures"
             Me.CheckBoxMovingPictures.Size = New System.Drawing.Size(97, 17)
             Me.CheckBoxMovingPictures.TabIndex = 70
@@ -928,6 +930,15 @@ Namespace SetupTv.Sections
             Me.OpenFileDialog1.Filter = "Application (*.exe)|*.exe|All files (*.*)|*.*"
             Me.OpenFileDialog1.InitialDirectory = "Environment.GetFolderPath(Environment.SpecialFolder.MyComputer)"
             '
+            'ButtonSeriesMapping
+            '
+            Me.ButtonSeriesMapping.Location = New System.Drawing.Point(116, 70)
+            Me.ButtonSeriesMapping.Name = "ButtonSeriesMapping"
+            Me.ButtonSeriesMapping.Size = New System.Drawing.Size(96, 21)
+            Me.ButtonSeriesMapping.TabIndex = 73
+            Me.ButtonSeriesMapping.Text = "SeriesMapping"
+            Me.ButtonSeriesMapping.UseVisualStyleBackColor = True
+            '
             'TvMovieSetup
             '
             Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -1036,5 +1047,6 @@ Namespace SetupTv.Sections
         Private WithEvents CheckBoxVideoDB As MediaPortal.UserInterface.Controls.MPCheckBox
         Friend WithEvents Linklabel_EpSc As System.Windows.Forms.LinkLabel
         Private WithEvents CheckBoxEpSc As MediaPortal.UserInterface.Controls.MPCheckBox
+        Friend WithEvents ButtonSeriesMapping As System.Windows.Forms.Button
     End Class
 End Namespace

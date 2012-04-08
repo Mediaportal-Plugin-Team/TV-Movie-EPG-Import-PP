@@ -108,6 +108,7 @@
     <Compile Include="Classes\ClickfinderDB.vb" />
     <Compile Include="Classes\MyLog.vb" />
     <Compile Include="Classes\TVMovieProgram.vb" />
+    <Compile Include="Classes\TvMovieSeriesMapping.vb" />
     <Compile Include="Classes\TVSeriesDB.vb" />
     <Compile Include="EnableEPGgrab.Designer.vb">
       <DependentUpon>EnableEPGgrab.vb</DependentUpon>
@@ -121,6 +122,12 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="SeriesMapping.Designer.vb">
+      <DependentUpon>SeriesMapping.vb</DependentUpon>
+    </Compile>
+    <Compile Include="SeriesMapping.vb">
+      <SubType>Form</SubType>
     </Compile>
     <Compile Include="SolutionInfo.vb" />
     <Compile Include="TvMovie++.vb" />
@@ -139,6 +146,9 @@
       <CustomToolNamespace>My.Resources</CustomToolNamespace>
       <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.vb</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SeriesMapping.resx">
+      <DependentUpon>SeriesMapping.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="TvMovieSetup++.resx">
       <SubType>Designer</SubType>

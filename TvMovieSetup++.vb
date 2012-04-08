@@ -316,6 +316,13 @@ Namespace SetupTv.Sections
             CheckBoxVideoDB.Checked = layer.GetSetting("TvMovieImportVideoDatabaseInfos", "false").Value = "true"
             CheckBoxClickfinderPG.Checked = layer.GetSetting("ClickfinderDataAvailable", "false").Value = "true"
 
+            If CheckBoxTvSeries.Checked = True Then
+                ButtonSeriesMapping.Enabled = True
+            Else
+                ButtonSeriesMapping.Enabled = False
+            End If
+
+
         End Sub
 
 #End Region
@@ -845,5 +852,28 @@ Namespace SetupTv.Sections
         End Sub
 #End Region
 
+        Private Sub CheckBoxTvSeries_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles CheckBoxTvSeries.CheckedChanged
+            Dim layer As New TvBusinessLayer()
+
+            If CheckBoxTvSeries.Checked Then
+                ButtonSeriesMapping.Enabled = True
+            Else
+                ButtonSeriesMapping.Enabled = False
+            End If
+
+        End Sub
+
+        Private Sub ButtonSeriesMapping_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonSeriesMapping.Click
+
+            If File.Exists(tbMPDatabasePath.Text & "\" & "TVSeriesDatabase4.db3") Then
+                SaveMapping()
+
+                Dim SeriesMapping As New frmSeriesMapping
+                SeriesMapping.ShowDialog()
+            Else
+                MsgBox("TvSeries Datenbank nicht gefunden !", MsgBoxStyle.Critical, "Fehler")
+            End If
+
+        End Sub
     End Class
 End Namespace

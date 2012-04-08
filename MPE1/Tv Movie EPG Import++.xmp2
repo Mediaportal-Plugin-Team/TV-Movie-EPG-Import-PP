@@ -244,27 +244,34 @@ Click Next to continue or Cancel to exit Setup.
       <Major>1</Major>
       <Minor>2</Minor>
       <Build>6</Build>
-      <Revision>0</Revision>
+      <Revision>5</Revision>
     </Version>
     <ExtensionDescription>TV Movie EPG Import++ plugin is a replacement for the Tv Movie EPG Import Plugin (Author: rtv) that comes as part of MediaPortal TvServer. The plugin use the Tv Movie Clickfinder Database to supplying you with EPG data for german TV channels. The Clickfinder Plugin maps this data to your MediaPortal TV channels.
+
 Compared to the original Tv Movie EPG Import plugin, it offers a lot of additional import features.
+
 New Features (Optional):
+
 - Easy enabling EPG grabbing for not mapped channels Calcualte rating from Tv Movie Clickfinder Database and import it into your EPG
+
 - Run an application after the import (e.g. Episodenscanner)
+
 - Import ratings, season- and episodenumbers form your MP-TvSeries into your EPG
+
 - Mark not existing episodes as “Neue Folge:” in EPG describtion (only works if you have enable the download for the whole Series (MP-TvSeries Wiki) in the MP-TvSeries Plugin Configuration Plugin Configuration
+
 - Imports ratings from your MovingPictures and Video databases and mark existing Movie as „Lokal verfügbar“ in EPG Describtion. An integration of MyFilms database will be supported in a feature version.
+
 - Imports addiotional Data that are needed for the MediaPortal Plugin Clickfinder ProgramGuide </ExtensionDescription>
-    <VersionDescription>=== Version 1.2.6.0 ===
-  * small bug fixes
-  * removed: identify Movies by "EpisodeName"
-  * Clickfinder ProgramGuide Import:
-   * Check: Import is running
-   * Clearing TvMovieProgram table instead of removing + creating
-   * Series found by Episodenscanner and Not in SeriesDB -&gt; mark as Series in TvMovieProgram table</VersionDescription>
+    <VersionDescription>=== Version 1.2.6.5 ===
+
+  * fixed issue: table delete
+  * Bug Fixed: CheckEpisodenscannerImports: TvMovie Highlight is identfy as Series -&gt; series ID
+  * Bug fixed: Import data for duplicy programs
+  * New Feature: TvSeriesImport is activated -&gt; manual map series (e.g. SeriesName: Star Wars - The Clone Wars, EPGName: StarWars: The Clone Wars)</VersionDescription>
     <DevelopmentStatus>Stable</DevelopmentStatus>
     <OnlineLocation>http://tv-movie-epg-import-plusplus.googlecode.com/files/Tv%20Movie%20EPG%20Import%2B%2B_v1.2.6.0.mpe1</OnlineLocation>
-    <ReleaseDate>2012-03-24T17:12:10</ReleaseDate>
+    <ReleaseDate>2012-04-08T17:12:10</ReleaseDate>
     <Tags />
     <Location>D:\Projekte\Tv Movie EPG Import++\MPE1\Tv Movie EPG Import++.mpe1</Location>
     <Params>
@@ -347,7 +354,7 @@ New Features (Optional):
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>..\Grafiken\MPE1 Icon.png</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{ab53a99b-5c3c-4b08-8f11-0c3aafa15a09}-MPE1 Icon.png</ZipFileName>
+        <ZipFileName>Installer{CopyFile}\{03b25c7f-7cc8-4eb4-9117-598c8e83a699}-MPE1 Icon.png</ZipFileName>
         <DestinationFilename />
       </FileItem>
     </Items>
