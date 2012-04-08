@@ -354,7 +354,7 @@ New Features (Optional):
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>..\Grafiken\MPE1 Icon.png</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{03b25c7f-7cc8-4eb4-9117-598c8e83a699}-MPE1 Icon.png</ZipFileName>
+        <ZipFileName>Installer{CopyFile}\{fce0b79e-73d8-499e-8f67-4a29d8688a2c}-MPE1 Icon.png</ZipFileName>
         <DestinationFilename />
       </FileItem>
     </Items>

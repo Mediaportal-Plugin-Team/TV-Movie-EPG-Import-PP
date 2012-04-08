@@ -1130,10 +1130,10 @@ Namespace TvEngine
 
                 Try
                     Broker.Execute("drop table `mptvdb`.`tvmovieprogram`")
-                    Broker.Execute("CREATE  TABLE `mptvdb`.`TVMovieProgram` ( `idTVMovieProgram` INT NOT NULL AUTO_INCREMENT , `idProgram` INT NOT NULL DEFAULT 0 , `TVMovieBewertung` INT NOT NULL DEFAULT 0 , `FanArt` VARCHAR(255) , `idSeries` INT NOT NULL DEFAULT 0 , `SeriesPosterImage` VARCHAR(255) , `idEpisode` VARCHAR(15) , `EpisodeImage` VARCHAR(255) , `local` BIT(1) NOT NULL DEFAULT 0 , `idMovingPictures` INT NOT NULL DEFAULT 0 , `idVideo` INT NOT NULL DEFAULT 0 , `KurzKritik` VARCHAR(255) , `BildDateiname` VARCHAR(32) , `Cover` VARCHAR(512) , PRIMARY KEY (`idTVMovieProgram`) )")
+                    Broker.Execute("CREATE  TABLE `mptvdb`.`TVMovieProgram` ( `idTVMovieProgram` INT NOT NULL AUTO_INCREMENT , `idProgram` INT NOT NULL DEFAULT 0 , `TVMovieBewertung` INT NOT NULL DEFAULT 0 , `FanArt` VARCHAR(255) , `idSeries` INT NOT NULL DEFAULT 0 , `SeriesPosterImage` VARCHAR(255) , `idEpisode` VARCHAR(15) , `EpisodeImage` VARCHAR(255) , `local` BIT(1) NOT NULL DEFAULT 0 , `idMovingPictures` INT NOT NULL DEFAULT 0 , `idVideo` INT NOT NULL DEFAULT 0 , `KurzKritik` VARCHAR(255) , `BildDateiname` VARCHAR(32) , `Cover` VARCHAR(512) , `Dolby` BIT(1) NOT NULL DEFAULT 0 , `HDTV` BIT(1) NOT NULL DEFAULT 0 , `RatingString` VARCHAR(512) , PRIMARY KEY (`idTVMovieProgram`) )")
                 Catch ex As Exception
                     'Falls die Tabelle nicht existiert, abfangen & erstellen
-                    Broker.Execute("CREATE  TABLE `mptvdb`.`TVMovieProgram` ( `idTVMovieProgram` INT NOT NULL AUTO_INCREMENT , `idProgram` INT NOT NULL DEFAULT 0 , `TVMovieBewertung` INT NOT NULL DEFAULT 0 , `FanArt` VARCHAR(255) , `idSeries` INT NOT NULL DEFAULT 0 , `SeriesPosterImage` VARCHAR(255) , `idEpisode` VARCHAR(15) , `EpisodeImage` VARCHAR(255) , `local` BIT(1) NOT NULL DEFAULT 0 , `idMovingPictures` INT NOT NULL DEFAULT 0 , `idVideo` INT NOT NULL DEFAULT 0 , `KurzKritik` VARCHAR(255) , `BildDateiname` VARCHAR(32) , `Cover` VARCHAR(512) , PRIMARY KEY (`idTVMovieProgram`) )")
+                    Broker.Execute("CREATE  TABLE `mptvdb`.`TVMovieProgram` ( `idTVMovieProgram` INT NOT NULL AUTO_INCREMENT , `idProgram` INT NOT NULL DEFAULT 0 , `TVMovieBewertung` INT NOT NULL DEFAULT 0 , `FanArt` VARCHAR(255) , `idSeries` INT NOT NULL DEFAULT 0 , `SeriesPosterImage` VARCHAR(255) , `idEpisode` VARCHAR(15) , `EpisodeImage` VARCHAR(255) , `local` BIT(1) NOT NULL DEFAULT 0 , `idMovingPictures` INT NOT NULL DEFAULT 0 , `idVideo` INT NOT NULL DEFAULT 0 , `KurzKritik` VARCHAR(255) , `BildDateiname` VARCHAR(32) , `Cover` VARCHAR(512) , `Dolby` BIT(1) NOT NULL DEFAULT 0 , `HDTV` BIT(1) NOT NULL DEFAULT 0 , `RatingString` VARCHAR(512) , PRIMARY KEY (`idTVMovieProgram`) )")
                 End Try
 
                 Try
@@ -1443,6 +1443,14 @@ Namespace TvEngine
                                         _TvMovieProgram.TVMovieBewertung = _ClickfinderDB(i).Bewertung
                                         _TvMovieProgram.KurzKritik = _ClickfinderDB(i).Kurzkritik
                                         _TvMovieProgram.BildDateiname = _ClickfinderDB(i).Bilddateiname
+                                        _TvMovieProgram.Dolby = _ClickfinderDB(i).Dolby
+                                        If InStr(_TvMovieProgram.ReferencedProgram.ReferencedChannel.DisplayName, " HD") > 0 Then
+                                            _TvMovieProgram.HDTV = True
+                                        Else
+                                            _TvMovieProgram.HDTV = _ClickfinderDB(i).KzHDTV
+                                        End If
+                                        _TvMovieProgram.RatingString = _ClickfinderDB(i).Bewertungen
+
                                         _TvMovieProgram.Persist()
 
                                         _CounterFound = _CounterFound + 1
