@@ -121,6 +121,13 @@ Namespace TvDatabase
         <TableColumn("Year", NotNull:=True)> _
        Private m_Year As Date
 
+        <TableColumn("Describtion", NotNull:=True)> _
+       Private m_Describtion As String
+
+
+        <TableColumn("ShortDescribtion", NotNull:=True)> _
+       Private m_ShortDescribtion As String
+
         '<TableColumn("RatingString", NotNull:=True)> _
         'Private m_RatingString As String
 
@@ -451,15 +458,26 @@ Namespace TvDatabase
             End Set
         End Property
 
-        'Public Property RatingString() As String
-        '    Get
-        '        Return m_RatingString
-        '    End Get
-        '    Set(ByVal value As String)
-        '        m_isChanged = m_isChanged Or m_RatingString <> value
-        '        m_RatingString = value
-        '    End Set
-        'End Property
+
+        Public Property Describtion() As String
+            Get
+                Return m_Describtion
+            End Get
+            Set(ByVal value As String)
+                m_isChanged = m_isChanged Or m_Describtion <> value
+                m_Describtion = value
+            End Set
+        End Property
+        Public Property ShortDescribtion() As String
+            Get
+                Return m_ShortDescribtion
+            End Get
+            Set(ByVal value As String)
+                m_isChanged = m_isChanged Or m_ShortDescribtion <> value
+                m_ShortDescribtion = value
+            End Set
+        End Property
+
 
 #End Region
 

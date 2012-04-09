@@ -272,7 +272,7 @@ New Features (Optional):
   * New Feature: TvSeriesImport is activated -&gt; manual map series (e.g. SeriesName: Star Wars - The Clone Wars, EPGName: StarWars: The Clone Wars)
   * ClickfinderImport - import single TvMovie Bewertungen (Spaß, Action, etc.)
   * ClickfinderImport - needsupdate col
-  * added Regie, Actors, Year, Country</VersionDescription>
+  * added Regie, Actors, Year, Country, Describtion, ShortDescribtion, </VersionDescription>
     <DevelopmentStatus>Stable</DevelopmentStatus>
     <OnlineLocation>http://tv-movie-epg-import-plusplus.googlecode.com/files/Tv%20Movie%20EPG%20Import%2B%2B_v1.2.6.0.mpe1</OnlineLocation>
     <ReleaseDate>2012-04-09T17:12:10</ReleaseDate>
@@ -358,7 +358,7 @@ New Features (Optional):
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>..\Grafiken\MPE1 Icon.png</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{e37806ac-eaaf-4787-a8f9-b70ae24bcfc5}-MPE1 Icon.png</ZipFileName>
+        <ZipFileName>Installer{CopyFile}\{d550aefd-dadf-4eac-99ed-8be3da7c5349}-MPE1 Icon.png</ZipFileName>
         <DestinationFilename />
       </FileItem>
     </Items>
