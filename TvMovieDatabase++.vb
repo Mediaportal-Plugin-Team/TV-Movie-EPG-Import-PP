@@ -1440,16 +1440,35 @@ Namespace TvEngine
                                         'idProgram in TvMovieProgram suchen & Daten aktualisieren
                                         Dim _TvMovieProgram As TVMovieProgram = getTvMovieProgram(_Program(y).IdProgram)
 
-                                        _TvMovieProgram.TVMovieBewertung = _ClickfinderDB(i).Bewertung
-                                        _TvMovieProgram.KurzKritik = _ClickfinderDB(i).Kurzkritik
-                                        _TvMovieProgram.BildDateiname = _ClickfinderDB(i).Bilddateiname
+                                        'BildDateiname aus Clickfinder DB holen, sofern vorhanden
+                                        If CBool(_ClickfinderDB(i).KzBilddateiHeruntergeladen) = True And Not String.IsNullOrEmpty(_ClickfinderDB(i).Bilddateiname) Then
+                                            _TvMovieProgram.BildDateiname = _ClickfinderDB(i).Bilddateiname
+                                        End If
+
+                                        'TvMovie Bewertung aus Clickfinder DB holen, sofern vorhanden
+                                        If Not _ClickfinderDB(i).Bewertung = 0 Then
+                                            _TvMovieProgram.TVMovieBewertung = _ClickfinderDB(i).Bewertung
+                                        End If
+
+                                        'KurzKritik aus Clickfinder DB holen, sofern vorhanden
+                                        If Not String.IsNullOrEmpty(_ClickfinderDB(i).Kurzkritik) Then
+                                            _TvMovieProgram.KurzKritik = _ClickfinderDB(i).Kurzkritik
+                                        End If
+
+                                        'Audio Format aus Clickfinder DB holen
                                         _TvMovieProgram.Dolby = _ClickfinderDB(i).Dolby
+
+                                        'HD Format über Sender Bezeichnung oder aus Clickfinder DB holen
                                         If InStr(_TvMovieProgram.ReferencedProgram.ReferencedChannel.DisplayName, " HD") > 0 Then
                                             _TvMovieProgram.HDTV = True
                                         Else
                                             _TvMovieProgram.HDTV = _ClickfinderDB(i).KzHDTV
                                         End If
-                                        _TvMovieProgram.RatingString = _ClickfinderDB(i).Bewertungen
+
+                                        'Bewertungen String aus Clickfinder DB holen
+                                        If Not String.IsNullOrEmpty(_ClickfinderDB(i).Bewertungen) Then
+                                            _TvMovieProgram.RatingString = _ClickfinderDB(i).Bewertungen
+                                        End If
 
                                         _TvMovieProgram.Persist()
 

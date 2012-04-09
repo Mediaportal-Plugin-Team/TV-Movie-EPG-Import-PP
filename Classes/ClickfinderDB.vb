@@ -184,6 +184,16 @@ Public Class ClickfinderDB
                 End If
             End Get
         End Property
+        Public ReadOnly Property KzBilddateiHeruntergeladen() As Boolean
+            Get
+                If Not IsDBNull(_Table.Rows(_Index).Item("KzBilddateiHeruntergeladen")) Then
+                    Return CBool(_Table.Rows(_Index).Item("KzBilddateiHeruntergeladen"))
+                Else
+                    Return False
+                End If
+            End Get
+        End Property
+
 
 
 

@@ -244,7 +244,7 @@ Click Next to continue or Cancel to exit Setup.
       <Major>1</Major>
       <Minor>2</Minor>
       <Build>6</Build>
-      <Revision>5</Revision>
+      <Revision>6</Revision>
     </Version>
     <ExtensionDescription>TV Movie EPG Import++ plugin is a replacement for the Tv Movie EPG Import Plugin (Author: rtv) that comes as part of MediaPortal TvServer. The plugin use the Tv Movie Clickfinder Database to supplying you with EPG data for german TV channels. The Clickfinder Plugin maps this data to your MediaPortal TV channels.
 
@@ -263,15 +263,16 @@ New Features (Optional):
 - Imports ratings from your MovingPictures and Video databases and mark existing Movie as „Lokal verfügbar“ in EPG Describtion. An integration of MyFilms database will be supported in a feature version.
 
 - Imports addiotional Data that are needed for the MediaPortal Plugin Clickfinder ProgramGuide </ExtensionDescription>
-    <VersionDescription>=== Version 1.2.6.5 ===
+    <VersionDescription>=== Version 1.2.6.6 ===
 
   * fixed issue: table delete
   * Bug Fixed: CheckEpisodenscannerImports: TvMovie Highlight is identfy as Series -&gt; series ID
   * Bug fixed: Import data for duplicy programs
+  * Bug fixed: GetTvMovieHighlights - value = NULL
   * New Feature: TvSeriesImport is activated -&gt; manual map series (e.g. SeriesName: Star Wars - The Clone Wars, EPGName: StarWars: The Clone Wars)</VersionDescription>
     <DevelopmentStatus>Stable</DevelopmentStatus>
     <OnlineLocation>http://tv-movie-epg-import-plusplus.googlecode.com/files/Tv%20Movie%20EPG%20Import%2B%2B_v1.2.6.0.mpe1</OnlineLocation>
-    <ReleaseDate>2012-04-08T17:12:10</ReleaseDate>
+    <ReleaseDate>2012-04-09T17:12:10</ReleaseDate>
     <Tags />
     <Location>D:\Projekte\Tv Movie EPG Import++\MPE1\Tv Movie EPG Import++.mpe1</Location>
     <Params>
