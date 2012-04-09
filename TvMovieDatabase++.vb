@@ -1130,10 +1130,10 @@ Namespace TvEngine
 
                 Try
                     Broker.Execute("drop table `mptvdb`.`tvmovieprogram`")
-                    Broker.Execute("CREATE  TABLE `mptvdb`.`TVMovieProgram` ( `idTVMovieProgram` INT NOT NULL AUTO_INCREMENT , `idProgram` INT NOT NULL DEFAULT 0 , `TVMovieBewertung` INT NOT NULL DEFAULT 0 , `FanArt` VARCHAR(255) , `idSeries` INT NOT NULL DEFAULT 0 , `SeriesPosterImage` VARCHAR(255) , `idEpisode` VARCHAR(15) , `EpisodeImage` VARCHAR(255) , `local` BIT(1) NOT NULL DEFAULT 0 , `idMovingPictures` INT NOT NULL DEFAULT 0 , `idVideo` INT NOT NULL DEFAULT 0 , `KurzKritik` VARCHAR(255) , `BildDateiname` VARCHAR(32) , `Cover` VARCHAR(512) , `Fun` INT NOT NULL DEFAULT 0 , `Action` INT NOT NULL DEFAULT 0 , `Feelings` INT NOT NULL DEFAULT 0 , `Erotic` INT NOT NULL DEFAULT 0 , `Tension` INT NOT NULL DEFAULT 0 , `Requirement` INT NOT NULL DEFAULT 0 , `needsUpdate` BIT(1) NOT NULL DEFAULT 1 , `Dolby` BIT(1) NOT NULL DEFAULT 0 , `HDTV` BIT(1) NOT NULL DEFAULT 0 , PRIMARY KEY (`idTVMovieProgram`) )")
+                    Broker.Execute("CREATE  TABLE `mptvdb`.`TVMovieProgram` ( `idTVMovieProgram` INT NOT NULL AUTO_INCREMENT , `idProgram` INT NOT NULL DEFAULT 0 , `TVMovieBewertung` INT NOT NULL DEFAULT 0 , `FanArt` VARCHAR(255) , `idSeries` INT NOT NULL DEFAULT 0 , `SeriesPosterImage` VARCHAR(255) , `idEpisode` VARCHAR(15) , `EpisodeImage` VARCHAR(255) , `local` BIT(1) NOT NULL DEFAULT 0 , `idMovingPictures` INT NOT NULL DEFAULT 0 , `idVideo` INT NOT NULL DEFAULT 0 , `KurzKritik` VARCHAR(255) , `BildDateiname` VARCHAR(32) , `Cover` VARCHAR(512) , `Fun` INT NOT NULL DEFAULT 0 , `Action` INT NOT NULL DEFAULT 0 , `Feelings` INT NOT NULL DEFAULT 0 , `Erotic` INT NOT NULL DEFAULT 0 , `Tension` INT NOT NULL DEFAULT 0 , `Requirement` INT NOT NULL DEFAULT 0 , `Actors` VARCHAR(255) , `needsUpdate` BIT(1) NOT NULL DEFAULT 1 , `Dolby` BIT(1) NOT NULL DEFAULT 0 , `HDTV` BIT(1) NOT NULL DEFAULT 0 , `Country` VARCHAR(50) , `Regie` VARCHAR(50) , `Year` DATETIME NOT NULL , PRIMARY KEY (`idTVMovieProgram`) )")
                 Catch ex As Exception
                     'Falls die Tabelle nicht existiert, abfangen & erstellen
-                    Broker.Execute("CREATE  TABLE `mptvdb`.`TVMovieProgram` ( `idTVMovieProgram` INT NOT NULL AUTO_INCREMENT , `idProgram` INT NOT NULL DEFAULT 0 , `TVMovieBewertung` INT NOT NULL DEFAULT 0 , `FanArt` VARCHAR(255) , `idSeries` INT NOT NULL DEFAULT 0 , `SeriesPosterImage` VARCHAR(255) , `idEpisode` VARCHAR(15) , `EpisodeImage` VARCHAR(255) , `local` BIT(1) NOT NULL DEFAULT 0 , `idMovingPictures` INT NOT NULL DEFAULT 0 , `idVideo` INT NOT NULL DEFAULT 0 , `KurzKritik` VARCHAR(255) , `BildDateiname` VARCHAR(32) , `Cover` VARCHAR(512) , `Fun` INT NOT NULL DEFAULT 0 , `Action` INT NOT NULL DEFAULT 0 , `Feelings` INT NOT NULL DEFAULT 0 , `Erotic` INT NOT NULL DEFAULT 0 , `Tension` INT NOT NULL DEFAULT 0 , `Requirement` INT NOT NULL DEFAULT 0 , `needsUpdate` BIT(1) NOT NULL DEFAULT 1 , `Dolby` BIT(1) NOT NULL DEFAULT 0 , `HDTV` BIT(1) NOT NULL DEFAULT 0 , PRIMARY KEY (`idTVMovieProgram`) )")
+                    Broker.Execute("CREATE  TABLE `mptvdb`.`TVMovieProgram` ( `idTVMovieProgram` INT NOT NULL AUTO_INCREMENT , `idProgram` INT NOT NULL DEFAULT 0 , `TVMovieBewertung` INT NOT NULL DEFAULT 0 , `FanArt` VARCHAR(255) , `idSeries` INT NOT NULL DEFAULT 0 , `SeriesPosterImage` VARCHAR(255) , `idEpisode` VARCHAR(15) , `EpisodeImage` VARCHAR(255) , `local` BIT(1) NOT NULL DEFAULT 0 , `idMovingPictures` INT NOT NULL DEFAULT 0 , `idVideo` INT NOT NULL DEFAULT 0 , `KurzKritik` VARCHAR(255) , `BildDateiname` VARCHAR(32) , `Cover` VARCHAR(512) , `Fun` INT NOT NULL DEFAULT 0 , `Action` INT NOT NULL DEFAULT 0 , `Feelings` INT NOT NULL DEFAULT 0 , `Erotic` INT NOT NULL DEFAULT 0 , `Tension` INT NOT NULL DEFAULT 0 , `Requirement` INT NOT NULL DEFAULT 0 , `Actors` VARCHAR(255) , `needsUpdate` BIT(1) NOT NULL DEFAULT 1 , `Dolby` BIT(1) NOT NULL DEFAULT 0 , `HDTV` BIT(1) NOT NULL DEFAULT 0 , `Country` VARCHAR(50) , `Regie` VARCHAR(50) , `Year` DATETIME NOT NULL , PRIMARY KEY (`idTVMovieProgram`) )")
                 End Try
 
                 Try
@@ -1409,7 +1409,7 @@ Namespace TvEngine
             Try
                 MyLog.[Debug]("TVMovie: [GetTvMovieHighlights]: start import")
                 'Alle Sendungen mit Bewertung laden
-                Dim _ClickfinderDB As New ClickfinderDB("SELECT * FROM Sendungen WHERE Bewertung > 0 ORDER BY SenderKennung ASC", TvMovie.DatabasePath)
+                Dim _ClickfinderDB As New ClickfinderDB("SELECT * FROM Sendungen INNER JOIN SendungenDetails ON Sendungen.Pos = SendungenDetails.Pos WHERE Bewertung > 0 ORDER BY SenderKennung ASC", TvMovie.DatabasePath)
                 Dim _CounterFound As Integer = 0
 
                 For i As Integer = 0 To _ClickfinderDB.Count - 1
@@ -1462,8 +1462,6 @@ Namespace TvEngine
                                             _TvMovieProgram.KurzKritik = _ClickfinderDB(i).Kurzkritik
                                         End If
 
-                                        
-
                                         'Bewertungen String aus Clickfinder DB holen, zerlegen, einzel Bewertungen extrahieren
                                         If Not String.IsNullOrEmpty(_ClickfinderDB(i).Bewertungen) Then
                                             ' We want to split this input string
@@ -1496,6 +1494,11 @@ Namespace TvEngine
                                                 End Select
 
                                             Next
+                                        End If
+
+                                        'Actors aus Clickfinder DB holen, sofern vorhanden
+                                        If Not String.IsNullOrEmpty(_ClickfinderDB(i).Darsteller) Then
+                                            _TvMovieProgram.Actors = _ClickfinderDB(i).Darsteller
                                         End If
 
                                         _TvMovieProgram.needsUpdate = True

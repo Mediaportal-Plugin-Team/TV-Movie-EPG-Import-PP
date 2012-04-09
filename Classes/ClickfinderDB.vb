@@ -193,14 +193,10 @@ Public Class ClickfinderDB
                 End If
             End Get
         End Property
-
-
-
-
         Public ReadOnly Property Darsteller() As String
             Get
                 If Not IsDBNull(_Table.Rows(_Index).Item("Darsteller")) Then
-                    Return Replace(CStr(_Table.Rows(_Index).Item("Darsteller")), ";", " ")
+                    Return CStr(_Table.Rows(_Index).Item("Darsteller"))
                 Else
                     Return ""
                 End If

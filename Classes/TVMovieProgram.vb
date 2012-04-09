@@ -107,6 +107,20 @@ Namespace TvDatabase
         <TableColumn("HDTV", NotNull:=True)> _
         Private m_HDTV As Boolean
 
+
+        <TableColumn("Actors", NotNull:=True)> _
+        Private m_Actors As String
+
+
+        <TableColumn("Country", NotNull:=True)> _
+        Private m_Country As String
+
+        <TableColumn("Regie", NotNull:=True)> _
+        Private m_Regie As String
+
+        <TableColumn("Year", NotNull:=True)> _
+       Private m_Year As Date
+
         '<TableColumn("RatingString", NotNull:=True)> _
         'Private m_RatingString As String
 
@@ -377,7 +391,6 @@ Namespace TvDatabase
                 m_needsUpdate = value
             End Set
         End Property
-
         Public Property Dolby() As Boolean
             Get
                 Return m_Dolby
@@ -387,7 +400,6 @@ Namespace TvDatabase
                 m_Dolby = value
             End Set
         End Property
-
         Public Property HDTV() As Boolean
             Get
                 Return m_HDTV
@@ -395,6 +407,47 @@ Namespace TvDatabase
             Set(ByVal value As Boolean)
                 m_isChanged = m_isChanged Or m_HDTV <> value
                 m_HDTV = value
+            End Set
+        End Property
+
+
+        Public Property Actors() As String
+            Get
+                Return m_Actors
+            End Get
+            Set(ByVal value As String)
+                m_isChanged = m_isChanged Or m_Actors <> value
+                m_Actors = value
+            End Set
+        End Property
+
+        Public Property Country() As String
+            Get
+                Return m_Country
+            End Get
+            Set(ByVal value As String)
+                m_isChanged = m_isChanged Or m_Country <> value
+                m_Country = value
+            End Set
+        End Property
+
+        Public Property Regie() As String
+            Get
+                Return m_Regie
+            End Get
+            Set(ByVal value As String)
+                m_isChanged = m_isChanged Or m_Regie <> value
+                m_Regie = value
+            End Set
+        End Property
+
+        Public Property Year() As Date
+            Get
+                Return m_Year
+            End Get
+            Set(ByVal value As Date)
+                m_isChanged = m_isChanged Or m_Year <> value
+                m_Year = value
             End Set
         End Property
 
