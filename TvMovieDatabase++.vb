@@ -1130,10 +1130,10 @@ Namespace TvEngine
 
                 Try
                     Broker.Execute("drop table `mptvdb`.`tvmovieprogram`")
-                    Broker.Execute("CREATE  TABLE `mptvdb`.`TVMovieProgram` ( `idTVMovieProgram` INT NOT NULL AUTO_INCREMENT , `idProgram` INT NOT NULL DEFAULT 0 , `TVMovieBewertung` INT NOT NULL DEFAULT 0 , `FanArt` VARCHAR(255) , `idSeries` INT NOT NULL DEFAULT 0 , `SeriesPosterImage` VARCHAR(255) , `idEpisode` VARCHAR(15) , `EpisodeImage` VARCHAR(255) , `local` BIT(1) NOT NULL DEFAULT 0 , `idMovingPictures` INT NOT NULL DEFAULT 0 , `idVideo` INT NOT NULL DEFAULT 0 , `KurzKritik` VARCHAR(255) , `BildDateiname` VARCHAR(32) , `Cover` VARCHAR(512) , `Dolby` BIT(1) NOT NULL DEFAULT 0 , `HDTV` BIT(1) NOT NULL DEFAULT 0 , `RatingString` VARCHAR(512) , PRIMARY KEY (`idTVMovieProgram`) )")
+                    Broker.Execute("CREATE  TABLE `mptvdb`.`TVMovieProgram` ( `idTVMovieProgram` INT NOT NULL AUTO_INCREMENT , `idProgram` INT NOT NULL DEFAULT 0 , `TVMovieBewertung` INT NOT NULL DEFAULT 0 , `FanArt` VARCHAR(255) , `idSeries` INT NOT NULL DEFAULT 0 , `SeriesPosterImage` VARCHAR(255) , `idEpisode` VARCHAR(15) , `EpisodeImage` VARCHAR(255) , `local` BIT(1) NOT NULL DEFAULT 0 , `idMovingPictures` INT NOT NULL DEFAULT 0 , `idVideo` INT NOT NULL DEFAULT 0 , `KurzKritik` VARCHAR(255) , `BildDateiname` VARCHAR(32) , `Cover` VARCHAR(512) , `Fun` INT NOT NULL DEFAULT 0 , `Action` INT NOT NULL DEFAULT 0 , `Feelings` INT NOT NULL DEFAULT 0 , `Erotic` INT NOT NULL DEFAULT 0 , `Tension` INT NOT NULL DEFAULT 0 , `Requirement` INT NOT NULL DEFAULT 0 , `needsUpdate` BIT(1) NOT NULL DEFAULT 1 , `Dolby` BIT(1) NOT NULL DEFAULT 0 , `HDTV` BIT(1) NOT NULL DEFAULT 0 , PRIMARY KEY (`idTVMovieProgram`) )")
                 Catch ex As Exception
                     'Falls die Tabelle nicht existiert, abfangen & erstellen
-                    Broker.Execute("CREATE  TABLE `mptvdb`.`TVMovieProgram` ( `idTVMovieProgram` INT NOT NULL AUTO_INCREMENT , `idProgram` INT NOT NULL DEFAULT 0 , `TVMovieBewertung` INT NOT NULL DEFAULT 0 , `FanArt` VARCHAR(255) , `idSeries` INT NOT NULL DEFAULT 0 , `SeriesPosterImage` VARCHAR(255) , `idEpisode` VARCHAR(15) , `EpisodeImage` VARCHAR(255) , `local` BIT(1) NOT NULL DEFAULT 0 , `idMovingPictures` INT NOT NULL DEFAULT 0 , `idVideo` INT NOT NULL DEFAULT 0 , `KurzKritik` VARCHAR(255) , `BildDateiname` VARCHAR(32) , `Cover` VARCHAR(512) , `Dolby` BIT(1) NOT NULL DEFAULT 0 , `HDTV` BIT(1) NOT NULL DEFAULT 0 , `RatingString` VARCHAR(512) , PRIMARY KEY (`idTVMovieProgram`) )")
+                    Broker.Execute("CREATE  TABLE `mptvdb`.`TVMovieProgram` ( `idTVMovieProgram` INT NOT NULL AUTO_INCREMENT , `idProgram` INT NOT NULL DEFAULT 0 , `TVMovieBewertung` INT NOT NULL DEFAULT 0 , `FanArt` VARCHAR(255) , `idSeries` INT NOT NULL DEFAULT 0 , `SeriesPosterImage` VARCHAR(255) , `idEpisode` VARCHAR(15) , `EpisodeImage` VARCHAR(255) , `local` BIT(1) NOT NULL DEFAULT 0 , `idMovingPictures` INT NOT NULL DEFAULT 0 , `idVideo` INT NOT NULL DEFAULT 0 , `KurzKritik` VARCHAR(255) , `BildDateiname` VARCHAR(32) , `Cover` VARCHAR(512) , `Fun` INT NOT NULL DEFAULT 0 , `Action` INT NOT NULL DEFAULT 0 , `Feelings` INT NOT NULL DEFAULT 0 , `Erotic` INT NOT NULL DEFAULT 0 , `Tension` INT NOT NULL DEFAULT 0 , `Requirement` INT NOT NULL DEFAULT 0 , `needsUpdate` BIT(1) NOT NULL DEFAULT 1 , `Dolby` BIT(1) NOT NULL DEFAULT 0 , `HDTV` BIT(1) NOT NULL DEFAULT 0 , PRIMARY KEY (`idTVMovieProgram`) )")
                 End Try
 
                 Try
@@ -1274,6 +1274,7 @@ Namespace TvEngine
                                             _TvMovieProgram.local = False
                                         End If
 
+                                        _TvMovieProgram.needsUpdate = True
                                         _TvMovieProgram.Persist()
 
                                     End If
@@ -1378,6 +1379,7 @@ Namespace TvEngine
                                         _TvMovieProgram.FanArt = _MovingPicturesDB(i).FanArt
                                     End If
 
+                                    _TvMovieProgram.needsUpdate = True
                                     _TvMovieProgram.Persist()
 
                                 End If
@@ -1434,11 +1436,16 @@ Namespace TvEngine
                                 Dim _Program As IList(Of Program) = ObjectFactory.GetCollection(GetType(Program), stmt2.Execute())
 
                                 'Wenn Program gefunden dann in TvMovieProgram schreiben
+
                                 If _Program.Count >= 1 Then
 
                                     For y As Integer = 0 To _Program.Count - 1
                                         'idProgram in TvMovieProgram suchen & Daten aktualisieren
                                         Dim _TvMovieProgram As TVMovieProgram = getTvMovieProgram(_Program(y).IdProgram)
+
+
+                                        'nur Informationen die zwigend benötigt werden, anzeige in GuiItems, GuiCategories & GuiHighlights
+                                        '+ zusätzlich Infos zum sortieren & suchen (z.B. TvMovieBewretung, Fun, Action, etc.)
 
                                         'BildDateiname aus Clickfinder DB holen, sofern vorhanden
                                         If CBool(_ClickfinderDB(i).KzBilddateiHeruntergeladen) = True And Not String.IsNullOrEmpty(_ClickfinderDB(i).Bilddateiname) Then
@@ -1455,21 +1462,43 @@ Namespace TvEngine
                                             _TvMovieProgram.KurzKritik = _ClickfinderDB(i).Kurzkritik
                                         End If
 
-                                        'Audio Format aus Clickfinder DB holen
-                                        _TvMovieProgram.Dolby = _ClickfinderDB(i).Dolby
+                                        
 
-                                        'HD Format über Sender Bezeichnung oder aus Clickfinder DB holen
-                                        If InStr(_TvMovieProgram.ReferencedProgram.ReferencedChannel.DisplayName, " HD") > 0 Then
-                                            _TvMovieProgram.HDTV = True
-                                        Else
-                                            _TvMovieProgram.HDTV = _ClickfinderDB(i).KzHDTV
-                                        End If
-
-                                        'Bewertungen String aus Clickfinder DB holen
+                                        'Bewertungen String aus Clickfinder DB holen, zerlegen, einzel Bewertungen extrahieren
                                         If Not String.IsNullOrEmpty(_ClickfinderDB(i).Bewertungen) Then
-                                            _TvMovieProgram.RatingString = _ClickfinderDB(i).Bewertungen
+                                            ' We want to split this input string
+                                            Dim s As String = _ClickfinderDB(i).Bewertungen
+
+                                            ' Split string based on spaces
+                                            Dim words As String() = s.Split(New Char() {";"c})
+
+                                            ' Use For Each loop over words and display them
+                                            Dim word As String
+                                            For Each word In words
+
+                                                'MsgBox(Left(word, InStr(word, "=") - 1))
+
+                                                'MsgBox(CInt(Right(word, word.Length - InStr(word, "="))))
+
+                                                Select Case Left(word, InStr(word, "=") - 1)
+                                                    Case Is = "Spaß"
+                                                        _TvMovieProgram.Fun = CInt(Right(word, word.Length - InStr(word, "=")))
+                                                    Case Is = "Action"
+                                                        _TvMovieProgram.Action = CInt(Right(word, word.Length - InStr(word, "=")))
+                                                    Case Is = "Erotik"
+                                                        _TvMovieProgram.Erotic = CInt(Right(word, word.Length - InStr(word, "=")))
+                                                    Case Is = "Spannung"
+                                                        _TvMovieProgram.Tension = CInt(Right(word, word.Length - InStr(word, "=")))
+                                                    Case Is = "Anspruch"
+                                                        _TvMovieProgram.Requirement = CInt(Right(word, word.Length - InStr(word, "=")))
+                                                    Case Is = "Gefühl"
+                                                        _TvMovieProgram.Feelings = CInt(Right(word, word.Length - InStr(word, "=")))
+                                                End Select
+
+                                            Next
                                         End If
 
+                                        _TvMovieProgram.needsUpdate = True
                                         _TvMovieProgram.Persist()
 
                                         _CounterFound = _CounterFound + 1
@@ -1562,6 +1591,7 @@ Namespace TvEngine
                                     _TvMovieProgram.idVideo = _VideoDB(i).VideoID
                                     _TvMovieProgram.local = True
 
+                                    _TvMovieProgram.needsUpdate = True
                                     _TvMovieProgram.Persist()
 
                                 End If
@@ -1616,75 +1646,6 @@ Namespace TvEngine
                 MyLog.Error("TVMovie: Error - RunApplicationAfter not found")
             End If
         End Sub
-
-
-        Private Sub PrepareTvMovieProgramTable()
-            'Reset TvMovieProgram Table
-            Try
-                StartTVMoviePlus()
-
-                MyLog.Info("TVMovie: [PrepareTvMovieProgramTable]: TvMovieProgram table cleared")
-
-            Catch ex As Exception
-                'Falls die Tabelle nicht existiert, abfangen & erstellen
-                Broker.Execute("CREATE  TABLE `mptvdb`.`TVMovieProgram` ( `idTVMovieProgram` INT NOT NULL AUTO_INCREMENT , `idProgram` INT NOT NULL DEFAULT 0 , `TVMovieBewertung` INT NOT NULL DEFAULT 0 , `FanArt` VARCHAR(255) , `idSeries` INT NOT NULL DEFAULT 0 , `SeriesPosterImage` VARCHAR(255) , `idEpisode` VARCHAR(15) , `EpisodeImage` VARCHAR(255) , `local` BIT(1) NOT NULL DEFAULT 0 , `idMovingPictures` INT NOT NULL DEFAULT 0 , `idVideo` INT NOT NULL DEFAULT 0 , `KurzKritik` VARCHAR(255) , `BildDateiname` VARCHAR(32) , `Cover` VARCHAR(512) , PRIMARY KEY (`idTVMovieProgram`) )")
-                MyLog.Info("TVMovie: [PrepareTvMovieProgramTable]: TvMovieProgram not exist -> create new")
-            End Try
-
-
-            'If _tvbLayer.GetSetting("ClickfinderDataAvailable", "false").Value = "true" Then
-
-            '    Dim _tableExist As Boolean = False
-
-            '    'Prüfen ob TvMovieProgram table existiert, falls nicht erstellen
-            '    Try
-            '        Dim _TestResult As New ArrayList
-            '        Dim sqlstring As String
-            '        sqlstring = "Select * from TvMovieProgram LIMIT 1"
-            '        _TestResult.AddRange(Broker.Execute(sqlstring).TransposeToFieldList("idProgram", False))
-            '        _tableExist = True
-            '    Catch gentle As GentleException
-            '        'gentle Fehler abfangen und tabelle erstellen
-            '        Broker.Execute("CREATE  TABLE `mptvdb`.`TVMovieProgram` ( `idTVMovieProgram` INT NOT NULL AUTO_INCREMENT , `idProgram` INT NOT NULL DEFAULT 0 , `TVMovieBewertung` INT NOT NULL DEFAULT 0 , `FanArt` VARCHAR(255) , `idSeries` INT NOT NULL DEFAULT 0 , `SeriesPosterImage` VARCHAR(255) , `idEpisode` VARCHAR(15) , `EpisodeImage` VARCHAR(255) , `local` BIT(1) NOT NULL DEFAULT 0 , `idMovingPictures` INT NOT NULL DEFAULT 0 , `idVideo` INT NOT NULL DEFAULT 0 , `KurzKritik` VARCHAR(255) , `BildDateiname` VARCHAR(32) , `Cover` VARCHAR(512) , PRIMARY KEY (`idTVMovieProgram`) )")
-
-            '        MyLog.Info("TVMovie: [PrepareTvMovieProgramTable]: TvMovieProgram not exist -> create new")
-            '    Catch ex As Exception
-            '        MyLog.[Error]("TVMovie: [PrepareTvMovieProgramTable]: exception err:{0} stack:{1}", ex.Message, ex.StackTrace)
-            '    End Try
-
-            '    'Wenn existiert, dann alte Sendungen löschen
-            '    If _tableExist = True Then
-            '        Try
-            '            Dim timer As Date = Date.Now
-            '            Dim _Result As New ArrayList
-            '            Dim _sqlstring As String = String.Empty
-
-            '            'Alle Sendungen in TvMovieProgram finden, die nicht in program table existieren
-            '            _sqlstring = "SELECT * From TvMovieProgram AS a LEFT JOIN program AS b ON a.idProgram = b.idProgram WHERE b.idProgram IS NULL"
-            '            _Result.AddRange(Broker.Execute(_sqlstring).TransposeToFieldList("idProgram", False))
-
-            '            'Alle Sendungen in TvMovieProgram finden, die Älter sind als gestern
-            '            _sqlstring = "Select * from TvMovieProgram INNER JOIN program ON TvMovieProgram.idprogram = program.idProgram " & _
-            '                                                        "WHERE startTime <= " & MySqlDate(Date.Today.AddDays(-1))
-            '            _Result.AddRange(Broker.Execute(_sqlstring).TransposeToFieldList("idProgram", False))
-
-
-            '            For i As Integer = 0 To _Result.Count - 1
-            '                Dim _TvMovieProgram As TVMovieProgram = TVMovieProgram.Retrieve(CInt(_Result.Item(i)))
-            '                _TvMovieProgram.Remove()
-            '            Next
-
-            '            MyLog.Info("TVMovie: [PrepareTvMovieProgramTable]: {0} programs deleted from TvMovieProgram in {1}s", _Result.Count, DateDiff(DateInterval.Second, timer, Date.Now))
-
-            '        Catch ex2 As Exception
-            '            'Broker.Execute("CREATE  TABLE `mptvdb`.`TVMovieProgram` ( `idTVMovieProgram` INT NOT NULL AUTO_INCREMENT , `idProgram` INT NOT NULL DEFAULT 0 , `TVMovieBewertung` INT NOT NULL DEFAULT 0 , `FanArt` VARCHAR(255) , `idSeries` INT NOT NULL DEFAULT 0 , `SeriesPosterImage` VARCHAR(255) , `idEpisode` VARCHAR(15) , `EpisodeImage` VARCHAR(255) , `local` BIT(1) NOT NULL DEFAULT 0 , `idMovingPictures` INT NOT NULL DEFAULT 0 , `idVideo` INT NOT NULL DEFAULT 0 , `KurzKritik` VARCHAR(255) , `BildDateiname` VARCHAR(32) , `Cover` VARCHAR(512) , PRIMARY KEY (`idTVMovieProgram`) )")
-            '            MyLog.[Error]("TVMovie: [PrepareTvMovieProgramTable]: exception err:{0} stack:{1}", ex2.Message, ex2.StackTrace)
-            '        End Try
-            '    End If
-            'End If
-        End Sub
-
-
 
         Private Function allowedSigns(ByVal expression As String) As String
             Return Replace(Replace(expression, "'", "''"), ":", "%")
@@ -1781,6 +1742,7 @@ Namespace TvEngine
                                             _TvMovieProgram.local = False
                                         End If
 
+                                        _TvMovieProgram.needsUpdate = True
                                         _TvMovieProgram.Persist()
 
                                     End If

@@ -77,14 +77,38 @@ Namespace TvDatabase
         <TableColumn("Cover", NotNull:=True)> _
         Private m_Cover As String
 
+
+
+
+        <TableColumn("Fun", NotNull:=True)> _
+        Private m_Fun As Integer
+
+        <TableColumn("Action", NotNull:=True)> _
+        Private m_Action As Integer
+
+        <TableColumn("Feelings", NotNull:=True)> _
+        Private m_Feelings As Integer
+
+        <TableColumn("Erotic", NotNull:=True)> _
+        Private m_Erotic As Integer
+
+        <TableColumn("Tension", NotNull:=True)> _
+        Private m_Tension As Integer
+
+        <TableColumn("Requirement", NotNull:=True)> _
+        Private m_Requirement As Integer
+
+        <TableColumn("needsUpdate", NotNull:=True)> _
+        Private m_needsUpdate As Boolean
+
         <TableColumn("Dolby", NotNull:=True)> _
         Private m_Dolby As Boolean
 
         <TableColumn("HDTV", NotNull:=True)> _
         Private m_HDTV As Boolean
 
-        <TableColumn("RatingString", NotNull:=True)> _
-        Private m_RatingString As String
+        '<TableColumn("RatingString", NotNull:=True)> _
+        'Private m_RatingString As String
 
 #End Region
 
@@ -285,6 +309,75 @@ Namespace TvDatabase
             End Set
         End Property
 
+
+
+        Public Property Fun() As Integer
+            Get
+                Return m_Fun
+            End Get
+            Set(ByVal value As Integer)
+                m_isChanged = m_isChanged Or m_Fun <> value
+                m_Fun = value
+            End Set
+        End Property
+        Public Property Action() As Integer
+            Get
+                Return m_Action
+            End Get
+            Set(ByVal value As Integer)
+                m_isChanged = m_isChanged Or m_Action <> value
+                m_Action = value
+            End Set
+        End Property
+        Public Property Feelings() As Integer
+            Get
+                Return m_Feelings
+            End Get
+            Set(ByVal value As Integer)
+                m_isChanged = m_isChanged Or m_Feelings <> value
+                m_Feelings = value
+            End Set
+        End Property
+        Public Property Erotic() As Integer
+            Get
+                Return m_Erotic
+            End Get
+            Set(ByVal value As Integer)
+                m_isChanged = m_isChanged Or m_Erotic <> value
+                m_Erotic = value
+            End Set
+        End Property
+        Public Property Tension() As Integer
+            Get
+                Return m_Tension
+            End Get
+            Set(ByVal value As Integer)
+                m_isChanged = m_isChanged Or m_Tension <> value
+                m_Tension = value
+            End Set
+        End Property
+
+        Public Property Requirement() As Integer
+            Get
+                Return m_Requirement
+            End Get
+            Set(ByVal value As Integer)
+                m_isChanged = m_isChanged Or m_Requirement <> value
+                m_Requirement = value
+            End Set
+        End Property
+
+
+        Public Property needsUpdate() As Boolean
+            Get
+                Return m_needsUpdate
+            End Get
+            Set(ByVal value As Boolean)
+                m_isChanged = m_isChanged Or m_needsUpdate <> value
+                m_needsUpdate = value
+            End Set
+        End Property
+
         Public Property Dolby() As Boolean
             Get
                 Return m_Dolby
@@ -305,15 +398,15 @@ Namespace TvDatabase
             End Set
         End Property
 
-        Public Property RatingString() As String
-            Get
-                Return m_RatingString
-            End Get
-            Set(ByVal value As String)
-                m_isChanged = m_isChanged Or m_RatingString <> value
-                m_RatingString = value
-            End Set
-        End Property
+        'Public Property RatingString() As String
+        '    Get
+        '        Return m_RatingString
+        '    End Get
+        '    Set(ByVal value As String)
+        '        m_isChanged = m_isChanged Or m_RatingString <> value
+        '        m_RatingString = value
+        '    End Set
+        'End Property
 
 #End Region
 
