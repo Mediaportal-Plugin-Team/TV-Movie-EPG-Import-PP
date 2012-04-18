@@ -209,7 +209,7 @@ Public Class TVSeriesDB
                     For i As Integer = 0 To _result.Rows.Count - 1
 
                         If Not String.IsNullOrEmpty(DatabaseUtility.[Get](_result, i, "LocalPath")) Then
-                            Return DatabaseUtility.[Get](_result, i, "LocalPath")
+                            Return "Fan Art\" & DatabaseUtility.[Get](_result, i, "LocalPath")
                             Exit Property
                         End If
                     Next

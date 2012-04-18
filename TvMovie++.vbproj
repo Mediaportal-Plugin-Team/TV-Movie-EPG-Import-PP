@@ -56,30 +56,37 @@
     <Import Include="System" />
     <Reference Include="Common.Utils, Version=1.2.2.0, Culture=neutral, processorArchitecture=x86">
       <HintPath>C:\Program Files\Team MediaPortal\MediaPortal TV Server\Common.Utils.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
       <Private>False</Private>
     </Reference>
     <Reference Include="Databases, Version=1.2.2.0, Culture=neutral, processorArchitecture=x86">
       <HintPath>C:\Program Files\Team MediaPortal\MediaPortal\Databases.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
       <Private>False</Private>
     </Reference>
     <Reference Include="Gentle.Common, Version=1.5.0.29112, Culture=neutral, PublicKeyToken=80b5de62e27be49b, processorArchitecture=MSIL">
       <HintPath>C:\Program Files\Team MediaPortal\MediaPortal TV Server\Gentle.Common.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
       <Private>False</Private>
     </Reference>
     <Reference Include="Gentle.Framework, Version=1.5.0.29112, Culture=neutral, PublicKeyToken=80b5de62e27be49b, processorArchitecture=MSIL">
       <HintPath>C:\Program Files\Team MediaPortal\MediaPortal TV Server\Gentle.Framework.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
       <Private>False</Private>
     </Reference>
     <Reference Include="PluginBase, Version=1.2.2.0, Culture=neutral, processorArchitecture=x86">
       <HintPath>C:\Program Files\Team MediaPortal\MediaPortal TV Server\PluginBase.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
       <Private>False</Private>
     </Reference>
     <Reference Include="PowerScheduler.Interfaces, Version=1.2.2.0, Culture=neutral, processorArchitecture=x86">
       <HintPath>C:\Program Files\Team MediaPortal\MediaPortal TV Server\PowerScheduler.Interfaces.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
       <Private>False</Private>
     </Reference>
     <Reference Include="SetupControls, Version=1.2.2.0, Culture=neutral, processorArchitecture=x86">
       <HintPath>C:\Program Files\Team MediaPortal\MediaPortal TV Server\SetupControls.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
       <Private>False</Private>
     </Reference>
     <Reference Include="System, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL" />
@@ -91,18 +98,22 @@
     </Reference>
     <Reference Include="TvBusinessLayer, Version=1.2.2.0, Culture=neutral, processorArchitecture=x86">
       <HintPath>C:\Program Files\Team MediaPortal\MediaPortal TV Server\TvBusinessLayer.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
       <Private>False</Private>
     </Reference>
     <Reference Include="TvControl, Version=1.2.2.0, Culture=neutral, processorArchitecture=x86">
       <HintPath>C:\Program Files\Team MediaPortal\MediaPortal TV Server\TvControl.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
       <Private>False</Private>
     </Reference>
     <Reference Include="TVDatabase, Version=1.2.2.0, Culture=neutral, processorArchitecture=x86">
       <HintPath>C:\Program Files\Team MediaPortal\MediaPortal TV Server\TVDatabase.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
       <Private>False</Private>
     </Reference>
     <Reference Include="TvLibrary.Interfaces, Version=1.2.2.0, Culture=neutral, processorArchitecture=x86">
       <HintPath>C:\Program Files\Team MediaPortal\MediaPortal TV Server\TvLibrary.Interfaces.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
       <Private>False</Private>
     </Reference>
     <Compile Include="Classes\ClickfinderDB.vb" />
