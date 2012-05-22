@@ -1129,11 +1129,11 @@ Namespace TvEngine
                 MyLog.[Debug]("TVMovie: [TvMovie++ Settings]: ClickfinderDataAvailable = " & _tvbLayer.GetSetting("TvMovieIsEpisodenScanner").Value)
 
                 Try
-                    Broker.Execute("drop table `mptvdb`.`tvmovieprogram`")
-                    Broker.Execute("CREATE  TABLE `mptvdb`.`TVMovieProgram` ( `idTVMovieProgram` INT NOT NULL AUTO_INCREMENT , `idProgram` INT NOT NULL DEFAULT 0 , `TVMovieBewertung` INT NOT NULL DEFAULT 0 , `FanArt` VARCHAR(255) , `idSeries` INT NOT NULL DEFAULT 0 , `SeriesPosterImage` VARCHAR(255) , `idEpisode` VARCHAR(15) , `EpisodeImage` VARCHAR(255) , `local` BIT(1) NOT NULL DEFAULT 0 , `idMovingPictures` INT NOT NULL DEFAULT 0 , `idVideo` INT NOT NULL DEFAULT 0 , `KurzKritik` VARCHAR(255) , `BildDateiname` VARCHAR(32) , `Cover` VARCHAR(512) , `Fun` INT NOT NULL DEFAULT 0 , `Action` INT NOT NULL DEFAULT 0 , `Feelings` INT NOT NULL DEFAULT 0 , `Erotic` INT NOT NULL DEFAULT 0 , `Tension` INT NOT NULL DEFAULT 0 , `Requirement` INT NOT NULL DEFAULT 0 , `Actors` TEXT , `needsUpdate` BIT(1) NOT NULL DEFAULT 1 , `Dolby` BIT(1) NOT NULL DEFAULT 0 , `HDTV` BIT(1) NOT NULL DEFAULT 0 , `Country` VARCHAR(50) , `Regie` VARCHAR(50) , `Year` DATETIME NOT NULL , `Describtion` TEXT , `ShortDescribtion` TEXT , PRIMARY KEY (`idTVMovieProgram`) )")
+                    Broker.Execute("DROP TABLE mptvdb.tvmovieprogram")
+                    Broker.Execute("CREATE TABLE mptvdb.TVMovieProgram ( idTVMovieProgram INT NOT NULL AUTO_INCREMENT , idProgram INT NOT NULL DEFAULT 0 , TVMovieBewertung INT NOT NULL DEFAULT 0 , FanArt VARCHAR(255) , idSeries INT NOT NULL DEFAULT 0 , SeriesPosterImage VARCHAR(255) , idEpisode VARCHAR(15) , EpisodeImage VARCHAR(255) , local BIT(1) NOT NULL DEFAULT 0 , idMovingPictures INT NOT NULL DEFAULT 0 , idVideo INT NOT NULL DEFAULT 0 , KurzKritik VARCHAR(255) , BildDateiname VARCHAR(32) , Cover VARCHAR(512) , Fun INT NOT NULL DEFAULT 0 , Action INT NOT NULL DEFAULT 0 , Feelings INT NOT NULL DEFAULT 0 , Erotic INT NOT NULL DEFAULT 0 , Tension INT NOT NULL DEFAULT 0 , Requirement INT NOT NULL DEFAULT 0 , Actors TEXT , needsUpdate BIT(1) NOT NULL DEFAULT 1 , Dolby BIT(1) NOT NULL DEFAULT 0 , HDTV BIT(1) NOT NULL DEFAULT 0 , Country VARCHAR(50) , Regie VARCHAR(50) , Year DATETIME NOT NULL , Describtion TEXT , ShortDescribtion TEXT , PRIMARY KEY (idTVMovieProgram) )")
                 Catch ex As Exception
                     'Falls die Tabelle nicht existiert, abfangen & erstellen
-                    Broker.Execute("CREATE  TABLE `mptvdb`.`TVMovieProgram` ( `idTVMovieProgram` INT NOT NULL AUTO_INCREMENT , `idProgram` INT NOT NULL DEFAULT 0 , `TVMovieBewertung` INT NOT NULL DEFAULT 0 , `FanArt` VARCHAR(255) , `idSeries` INT NOT NULL DEFAULT 0 , `SeriesPosterImage` VARCHAR(255) , `idEpisode` VARCHAR(15) , `EpisodeImage` VARCHAR(255) , `local` BIT(1) NOT NULL DEFAULT 0 , `idMovingPictures` INT NOT NULL DEFAULT 0 , `idVideo` INT NOT NULL DEFAULT 0 , `KurzKritik` VARCHAR(255) , `BildDateiname` VARCHAR(32) , `Cover` VARCHAR(512) , `Fun` INT NOT NULL DEFAULT 0 , `Action` INT NOT NULL DEFAULT 0 , `Feelings` INT NOT NULL DEFAULT 0 , `Erotic` INT NOT NULL DEFAULT 0 , `Tension` INT NOT NULL DEFAULT 0 , `Requirement` INT NOT NULL DEFAULT 0 , `Actors` TEXT , `needsUpdate` BIT(1) NOT NULL DEFAULT 1 , `Dolby` BIT(1) NOT NULL DEFAULT 0 , `HDTV` BIT(1) NOT NULL DEFAULT 0 , `Country` VARCHAR(50) , `Regie` VARCHAR(50) , `Year` DATETIME NOT NULL , `Describtion` TEXT , `ShortDescribtion` TEXT , PRIMARY KEY (`idTVMovieProgram`) )")
+                    Broker.Execute("CREATE TABLE mptvdb.TVMovieProgram ( idTVMovieProgram INT NOT NULL AUTO_INCREMENT , idProgram INT NOT NULL DEFAULT 0 , TVMovieBewertung INT NOT NULL DEFAULT 0 , FanArt VARCHAR(255) , idSeries INT NOT NULL DEFAULT 0 , SeriesPosterImage VARCHAR(255) , idEpisode VARCHAR(15) , EpisodeImage VARCHAR(255) , local BIT(1) NOT NULL DEFAULT 0 , idMovingPictures INT NOT NULL DEFAULT 0 , idVideo INT NOT NULL DEFAULT 0 , KurzKritik VARCHAR(255) , BildDateiname VARCHAR(32) , Cover VARCHAR(512) , Fun INT NOT NULL DEFAULT 0 , Action INT NOT NULL DEFAULT 0 , Feelings INT NOT NULL DEFAULT 0 , Erotic INT NOT NULL DEFAULT 0 , Tension INT NOT NULL DEFAULT 0 , Requirement INT NOT NULL DEFAULT 0 , Actors TEXT , needsUpdate BIT(1) NOT NULL DEFAULT 1 , Dolby BIT(1) NOT NULL DEFAULT 0 , HDTV BIT(1) NOT NULL DEFAULT 0 , Country VARCHAR(50) , Regie VARCHAR(50) , Year DATETIME NOT NULL , Describtion TEXT , ShortDescribtion TEXT , PRIMARY KEY (idTVMovieProgram) )")
                 End Try
 
                 Try
@@ -1671,6 +1671,8 @@ Namespace TvEngine
             MyLog.[Info]("TVMovie: [CheckEpisodenscannerImport]: Process start")
 
             Dim _Counter As Integer = 0
+            
+
             Try
                 'Alle Programme mit Series- & EpisodenNummer laden
                 Dim sb As New SqlBuilder(Gentle.Framework.StatementType.Select, GetType(Program))
@@ -1684,9 +1686,38 @@ Namespace TvEngine
                     For i As Integer = 0 To _Result.Count - 1
 
                         Try
-                            Dim _TvSeriesDB As New TVSeriesDB
-                            _TvSeriesDB.LoadEpisode(allowedSigns(_Result(i).Title), CInt(_Result(i).SeriesNum), CInt(_Result(i).EpisodeNum))
+                            Dim _logSeriesIsLinked As String = String.Empty
+                            Dim _SeriesIsLinked As Boolean = False
 
+
+                            'Prüfen ob die Serie evtl. verlinkt ist.
+                            Dim sbSeries As New SqlBuilder(Gentle.Framework.StatementType.Select, GetType(TvMovieSeriesMapping))
+                            sbSeries.AddConstraint([Operator].Equals, "EpgTitle", _Result(i).Title)
+                            Dim stmtSeries As SqlStatement = sbSeries.GetStatement(True)
+                            Dim _TvMovieSeriesMapping As IList(Of TvMovieSeriesMapping) = ObjectFactory.GetCollection(GetType(TvMovieSeriesMapping), stmtSeries.Execute())
+
+                            Dim _SeriesName As String = String.Empty
+
+                            'Serie ist verlinkt -> org. SerienName anstatt EPG Name verwenden
+                            If _TvMovieSeriesMapping.Count > 0 Then
+
+                                Dim _TvSeriesName As New TVSeriesDB
+
+                                _TvSeriesName.LoadSeriesName(_TvMovieSeriesMapping(0).idSeries)
+                                _SeriesName = _TvSeriesName(0).SeriesName
+
+                                _SeriesIsLinked = True
+                                _logSeriesIsLinked = "TVMovie: [CheckEpisodenscannerImports]: manuel mapping found: " & _TvSeriesName(0).SeriesName & " -> " & _TvMovieSeriesMapping(0).EpgTitle
+
+                                _TvSeriesName.Dispose()
+
+                            Else
+                                'Nicht verlinkt -> EPG Name verwenden
+                                _SeriesName = _Result(i).Title
+                            End If
+
+                            Dim _TvSeriesDB As New TVSeriesDB
+                            _TvSeriesDB.LoadEpisode(allowedSigns(_SeriesName), CInt(_Result(i).SeriesNum), CInt(_Result(i).EpisodeNum))
 
                             'Serie in TvSeries gefunden
                             If _TvSeriesDB.CountSeries > 0 Then
@@ -1696,6 +1727,9 @@ Namespace TvEngine
                                     If InStr(_Result(i).Description, "Neue Folge: " & _Result(i).EpisodeName) = 0 Then
                                         _Result(i).Description = Replace(_Result(i).Description, "Folge: " & _Result(i).EpisodeName, "Neue Folge: " & _Result(i).EpisodeName)
                                         _Result(i).Persist()
+                                        If _SeriesIsLinked = True Then
+                                            MyLog.[Info](_logSeriesIsLinked)
+                                        End If
                                         MyLog.[Info]("TVMovie: [CheckEpisodenscannerImports]: New Episode: {0} - S{1}E{2}", _Result(i).Title, _Result(i).SeriesNum, _Result(i).EpisodeNum)
                                     End If
                                 End If
@@ -1717,8 +1751,14 @@ Namespace TvEngine
                                     If _TvMovieProgram.idSeries = 0 Then
 
                                         If _SeriesIsInTvMovieProgram.Count = 0 Then
+                                            If _SeriesIsLinked = True Then
+                                                MyLog.[Info](_logSeriesIsLinked)
+                                            End If
                                             MyLog.[Info]("TVMovie: [CheckEpisodenscannerImports]: New entry in TvMovieProgram table")
                                         Else
+                                            If _SeriesIsLinked = True Then
+                                                MyLog.[Info](_logSeriesIsLinked)
+                                            End If
                                             MyLog.[Info]("TVMovie: [CheckEpisodenscannerImports]: Updated entry in TvMovieProgram table")
                                         End If
 

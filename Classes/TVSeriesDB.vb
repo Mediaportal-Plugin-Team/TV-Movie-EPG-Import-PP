@@ -120,6 +120,21 @@ Public Class TVSeriesDB
 
     End Sub
 
+    Public Sub LoadSeriesName(ByVal seriesID As Integer)
+
+        Try
+            _SeriesInfos = m_db.Execute( _
+                                [String].Format("SELECT * FROM online_series WHERE ID = {0}", _
+                                seriesID))
+
+        Catch ex As Exception
+            MyLog.[Error]("TVMovie: [LoadSeriesName]: exception err:{0} stack:{1}", ex.Message, ex.StackTrace)
+            OpenTvSeriesDB()
+        End Try
+
+    End Sub
+
+
     Public Function EpisodeFound(ByVal SeriesID As Integer, ByVal EpisodeName As String) As Boolean
 
         Try
