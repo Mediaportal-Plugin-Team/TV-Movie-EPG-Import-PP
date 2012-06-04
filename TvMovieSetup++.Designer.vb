@@ -81,6 +81,7 @@ Namespace SetupTv.Sections
             Me.checkBoxEnableImport = New MediaPortal.UserInterface.Controls.MPCheckBox
             Me.tabPageImportOptions = New System.Windows.Forms.TabPage
             Me.GroupBox2 = New System.Windows.Forms.GroupBox
+            Me.ButtonSeriesMapping = New System.Windows.Forms.Button
             Me.CheckBoxVideoDB = New MediaPortal.UserInterface.Controls.MPCheckBox
             Me.CheckBoxMyFilms = New MediaPortal.UserInterface.Controls.MPCheckBox
             Me.CheckBoxMovingPictures = New MediaPortal.UserInterface.Controls.MPCheckBox
@@ -120,7 +121,6 @@ Namespace SetupTv.Sections
             Me.Label4 = New System.Windows.Forms.Label
             Me.fileDialogDb = New System.Windows.Forms.OpenFileDialog
             Me.OpenFileDialog1 = New System.Windows.Forms.OpenFileDialog
-            Me.ButtonSeriesMapping = New System.Windows.Forms.Button
             Me.tabControlTvMovie.SuspendLayout()
             Me.tabPageSettings.SuspendLayout()
             Me.groupBoxEnableTvMovie.SuspendLayout()
@@ -486,6 +486,15 @@ Namespace SetupTv.Sections
             Me.GroupBox2.TabIndex = 7
             Me.GroupBox2.TabStop = False
             Me.GroupBox2.Text = "Import additional Infos from MediaPortal databases"
+            '
+            'ButtonSeriesMapping
+            '
+            Me.ButtonSeriesMapping.Location = New System.Drawing.Point(116, 70)
+            Me.ButtonSeriesMapping.Name = "ButtonSeriesMapping"
+            Me.ButtonSeriesMapping.Size = New System.Drawing.Size(96, 21)
+            Me.ButtonSeriesMapping.TabIndex = 73
+            Me.ButtonSeriesMapping.Text = "SeriesMapping"
+            Me.ButtonSeriesMapping.UseVisualStyleBackColor = True
             '
             'CheckBoxVideoDB
             '
@@ -929,15 +938,6 @@ Namespace SetupTv.Sections
             '
             Me.OpenFileDialog1.Filter = "Application (*.exe)|*.exe|All files (*.*)|*.*"
             Me.OpenFileDialog1.InitialDirectory = "Environment.GetFolderPath(Environment.SpecialFolder.MyComputer)"
-            '
-            'ButtonSeriesMapping
-            '
-            Me.ButtonSeriesMapping.Location = New System.Drawing.Point(116, 70)
-            Me.ButtonSeriesMapping.Name = "ButtonSeriesMapping"
-            Me.ButtonSeriesMapping.Size = New System.Drawing.Size(96, 21)
-            Me.ButtonSeriesMapping.TabIndex = 73
-            Me.ButtonSeriesMapping.Text = "SeriesMapping"
-            Me.ButtonSeriesMapping.UseVisualStyleBackColor = True
             '
             'TvMovieSetup
             '

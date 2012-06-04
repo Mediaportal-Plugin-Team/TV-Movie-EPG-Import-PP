@@ -1254,6 +1254,7 @@ Namespace TvEngine
                                         _TvMovieProgram.idSeries = _TvSeriesDB(i).SeriesID
                                         _TvMovieProgram.idEpisode = _TvSeriesDB.EpisodeCompositeID
                                         _TvMovieProgram.local = True
+                                        _TvMovieProgram.TVMovieBewertung = 6
 
                                         'Episoden Image
                                         If Not String.IsNullOrEmpty(_TvSeriesDB.EpisodeImage) = True Then
@@ -1765,6 +1766,7 @@ Namespace TvEngine
                                         _TvMovieProgram.idSeries = _TvSeriesDB(0).SeriesID
                                         _TvMovieProgram.idEpisode = _TvSeriesDB.EpisodeCompositeID
                                         _TvMovieProgram.local = True
+                                        _TvMovieProgram.TVMovieBewertung = 6
 
                                         'Episoden Image
                                         If Not String.IsNullOrEmpty(_TvSeriesDB.EpisodeImage) = True Then
@@ -1793,16 +1795,18 @@ Namespace TvEngine
                                 End If
 
                             Else
-                                'Episode nicht in TvSeries DB gefunden (=neue Aufnahme), dann als neu markieren
+                                'Episode nicht in TvSeries DB gefunden (=neue Aufnahme), dann als neu markieren im EPG
                                 If InStr(_Result(i).Description, "Neue Folge: " & _Result(i).EpisodeName) = 0 Then
                                     _Result(i).Description = Replace(_Result(i).Description, "Folge: " & _Result(i).EpisodeName, "Neue Folge: " & _Result(i).EpisodeName)
                                     _Result(i).Persist()
                                 End If
 
+                                'Sofern Clickfinder Plugin aktiviert -> daten in TvMovieProgam schreiben mit Dummy idSeries
                                 If _tvbLayer.GetSetting("ClickfinderDataAvailable", "false").Value = "true" Then
                                     Dim _TvMovieProgram As TVMovieProgram = getTvMovieProgram(_Result(i).IdProgram)
                                     _TvMovieProgram.idSeries = 1
                                     _TvMovieProgram.local = False
+                                    _TvMovieProgram.TVMovieBewertung = 6
                                     _TvMovieProgram.Persist()
                                 End If
 
