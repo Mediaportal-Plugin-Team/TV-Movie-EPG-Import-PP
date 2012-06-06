@@ -1672,7 +1672,6 @@ Namespace TvEngine
             MyLog.[Info]("TVMovie: [CheckEpisodenscannerImport]: Process start")
 
             Dim _Counter As Integer = 0
-            
 
             Try
                 'Alle Programme mit Series- & EpisodenNummer laden
