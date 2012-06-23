@@ -195,6 +195,24 @@ Public Class MovingPicturesDB
             End Get
         End Property
 
+        Public ReadOnly Property Filename() As String
+            Get
+                If _MovingPicturesInfos IsNot Nothing AndAlso _MovingPicturesInfos.Rows.Count > 0 Then
+                    Dim _idMovie_Info As Integer = CInt(DatabaseUtility.[Get](_MovingPicturesInfos, _Index, "id"))
+                    Dim _MovingPicturesFilename As SQLiteResultSet
+
+                    _MovingPicturesFilename = m_db.Execute("SELECT * FROM local_media INNER JOIN local_media__movie_info ON local_media.id = local_media__movie_info.local_media_id WHERE movie_info_id = " & _idMovie_Info)
+                    If _MovingPicturesFilename IsNot Nothing AndAlso _MovingPicturesFilename.Rows.Count > 0 Then
+                        Return DatabaseUtility.[Get](_MovingPicturesFilename, 0, "fullpath")
+                    Else
+                        Return String.Empty
+                    End If
+                Else
+                    Return String.Empty
+                End If
+            End Get
+        End Property
+
         Public ReadOnly Property Rating() As Integer
             Get
                 If _MovingPicturesInfos IsNot Nothing AndAlso _MovingPicturesInfos.Rows.Count > 0 Then

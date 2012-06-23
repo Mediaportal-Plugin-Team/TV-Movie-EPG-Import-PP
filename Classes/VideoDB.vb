@@ -155,6 +155,25 @@ Public Class VideoDB
             End Get
         End Property
 
+        Public ReadOnly Property FileName() As String
+            Get
+                If _VideoDBInfos IsNot Nothing AndAlso _VideoDBInfos.Rows.Count > 0 Then
+                    Dim idMovie As Integer = CInt(DatabaseUtility.[Get](_VideoDBInfos, _Index, "idMovie"))
+                    Dim _VideoDBFileName As SQLiteResultSet
+
+                    _VideoDBFileName = m_db.Execute("SELECT * FROM path INNER JOIN files ON path.idPath = files.idPath WHERE idMovie = " & idMovie)
+
+                    If _VideoDBFileName IsNot Nothing AndAlso _VideoDBFileName.Rows.Count > 0 Then
+                        Return DatabaseUtility.[Get](_VideoDBFileName, 0, "strPath") & DatabaseUtility.[Get](_VideoDBFileName, 0, "strFilename")
+                    Else
+                        Return String.Empty
+                    End If
+                Else
+                    Return ""
+                End If
+            End Get
+        End Property
+
         Public ReadOnly Property Rating() As Integer
             Get
                 If _VideoDBInfos IsNot Nothing AndAlso _VideoDBInfos.Rows.Count > 0 Then

@@ -305,7 +305,18 @@ Public Class TVSeriesDB
             End If
         End Get
     End Property
+    Public ReadOnly Property EpisodeFilename() As String
+        Get
+            Dim _EpsiodeFilename As SQLiteResultSet
 
+            _EpsiodeFilename = m_db.Execute("SELECT * FROM local_episodes WHERE CompositeID LIKE '" & Me.EpisodeCompositeID & "'")
+            If _EpsiodeFilename IsNot Nothing AndAlso _EpsiodeFilename.Rows.Count > 0 Then
+                Return DatabaseUtility.[Get](_EpsiodeFilename, 0, "EpisodeFilename")
+            Else
+                Return String.Empty
+            End If
+        End Get
+    End Property
 #End Region
 
 #Region "IDisposable Members"

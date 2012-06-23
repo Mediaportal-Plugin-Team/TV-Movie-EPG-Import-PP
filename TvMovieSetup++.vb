@@ -95,7 +95,7 @@ Namespace SetupTv.Sections
             Process.Start("http://www.tvmovie.de/ClickFinder.57.0.html")
         End Sub
         Private Sub LinkClickfinderPG_LinkClicked(ByVal sender As System.Object, ByVal e As System.Windows.Forms.LinkLabelLinkClickedEventArgs) Handles LinkClickfinderPG.LinkClicked
-            Process.Start("http://de.team-mediaportal.com/erweiterungen/fernsehen/clickfinder-programguide")
+            Process.Start("http://www.team-mediaportal.com/extensions/television/clickfinder-programguide?lang=en")
         End Sub
         Private Sub Linklabel_EpSc_LinkClicked(ByVal sender As System.Object, ByVal e As System.Windows.Forms.LinkLabelLinkClickedEventArgs) Handles Linklabel_EpSc.LinkClicked
             Process.Start("http://forum.team-mediaportal.com/electronic-program-guide-67/new-tool-episodescanner-adds-series-episodenumbers-your-mediaportal-4tr-epg-76220/")

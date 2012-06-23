@@ -213,7 +213,7 @@ Namespace SetupTv.Sections
             Me.GroupBox1.Controls.Add(Me.BTAppBrowse)
             Me.GroupBox1.Location = New System.Drawing.Point(16, 138)
             Me.GroupBox1.Name = "GroupBox1"
-            Me.GroupBox1.Size = New System.Drawing.Size(408, 67)
+            Me.GroupBox1.Size = New System.Drawing.Size(402, 67)
             Me.GroupBox1.TabIndex = 67
             Me.GroupBox1.TabStop = False
             Me.GroupBox1.Text = "Run application after import"
@@ -269,7 +269,7 @@ Namespace SetupTv.Sections
             'BTAppBrowse
             '
             Me.BTAppBrowse.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.BTAppBrowse.Location = New System.Drawing.Point(367, 17)
+            Me.BTAppBrowse.Location = New System.Drawing.Point(361, 17)
             Me.BTAppBrowse.Name = "BTAppBrowse"
             Me.BTAppBrowse.Size = New System.Drawing.Size(21, 20)
             Me.BTAppBrowse.TabIndex = 66

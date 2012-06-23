@@ -1130,15 +1130,15 @@ Namespace TvEngine
 
                 Try
                     Broker.Execute("DROP TABLE mptvdb.tvmovieprogram")
-                    Broker.Execute("CREATE TABLE mptvdb.TVMovieProgram ( idTVMovieProgram INT NOT NULL AUTO_INCREMENT , idProgram INT NOT NULL DEFAULT 0 , TVMovieBewertung INT NOT NULL DEFAULT 0 , FanArt VARCHAR(255) , idSeries INT NOT NULL DEFAULT 0 , SeriesPosterImage VARCHAR(255) , idEpisode VARCHAR(15) , EpisodeImage VARCHAR(255) , local BIT(1) NOT NULL DEFAULT 0 , idMovingPictures INT NOT NULL DEFAULT 0 , idVideo INT NOT NULL DEFAULT 0 , KurzKritik VARCHAR(255) , BildDateiname VARCHAR(32) , Cover VARCHAR(512) , Fun INT NOT NULL DEFAULT 0 , Action INT NOT NULL DEFAULT 0 , Feelings INT NOT NULL DEFAULT 0 , Erotic INT NOT NULL DEFAULT 0 , Tension INT NOT NULL DEFAULT 0 , Requirement INT NOT NULL DEFAULT 0 , Actors TEXT , needsUpdate BIT(1) NOT NULL DEFAULT 1 , Dolby BIT(1) NOT NULL DEFAULT 0 , HDTV BIT(1) NOT NULL DEFAULT 0 , Country VARCHAR(50) , Regie VARCHAR(50) , Year DATETIME NOT NULL , Describtion TEXT , ShortDescribtion TEXT , PRIMARY KEY (idTVMovieProgram) )")
+                    Broker.Execute("CREATE TABLE mptvdb.TVMovieProgram ( idTVMovieProgram INT NOT NULL AUTO_INCREMENT , idProgram INT NOT NULL DEFAULT 0 , TVMovieBewertung INT NOT NULL DEFAULT 0 , FanArt VARCHAR(255) , idSeries INT NOT NULL DEFAULT 0 , SeriesPosterImage VARCHAR(255) , idEpisode VARCHAR(15) , EpisodeImage VARCHAR(255) , local BIT(1) NOT NULL DEFAULT 0 , idMovingPictures INT NOT NULL DEFAULT 0 , idVideo INT NOT NULL DEFAULT 0 , KurzKritik VARCHAR(255) , BildDateiname VARCHAR(32) , Cover VARCHAR(512) , Fun INT NOT NULL DEFAULT 0 , Action INT NOT NULL DEFAULT 0 , Feelings INT NOT NULL DEFAULT 0 , Erotic INT NOT NULL DEFAULT 0 , Tension INT NOT NULL DEFAULT 0 , Requirement INT NOT NULL DEFAULT 0 , Actors TEXT , needsUpdate BIT(1) NOT NULL DEFAULT 1 , Dolby BIT(1) NOT NULL DEFAULT 0 , HDTV BIT(1) NOT NULL DEFAULT 0 , Country VARCHAR(50) , Regie VARCHAR(50) , Year DATETIME NOT NULL , Describtion TEXT , ShortDescribtion TEXT , FileName VARCHAR(255) , PRIMARY KEY (idTVMovieProgram) )")
                 Catch ex As Exception
                     'Falls die Tabelle nicht existiert, abfangen & erstellen
-                    Broker.Execute("CREATE TABLE mptvdb.TVMovieProgram ( idTVMovieProgram INT NOT NULL AUTO_INCREMENT , idProgram INT NOT NULL DEFAULT 0 , TVMovieBewertung INT NOT NULL DEFAULT 0 , FanArt VARCHAR(255) , idSeries INT NOT NULL DEFAULT 0 , SeriesPosterImage VARCHAR(255) , idEpisode VARCHAR(15) , EpisodeImage VARCHAR(255) , local BIT(1) NOT NULL DEFAULT 0 , idMovingPictures INT NOT NULL DEFAULT 0 , idVideo INT NOT NULL DEFAULT 0 , KurzKritik VARCHAR(255) , BildDateiname VARCHAR(32) , Cover VARCHAR(512) , Fun INT NOT NULL DEFAULT 0 , Action INT NOT NULL DEFAULT 0 , Feelings INT NOT NULL DEFAULT 0 , Erotic INT NOT NULL DEFAULT 0 , Tension INT NOT NULL DEFAULT 0 , Requirement INT NOT NULL DEFAULT 0 , Actors TEXT , needsUpdate BIT(1) NOT NULL DEFAULT 1 , Dolby BIT(1) NOT NULL DEFAULT 0 , HDTV BIT(1) NOT NULL DEFAULT 0 , Country VARCHAR(50) , Regie VARCHAR(50) , Year DATETIME NOT NULL , Describtion TEXT , ShortDescribtion TEXT , PRIMARY KEY (idTVMovieProgram) )")
+                    Broker.Execute("CREATE TABLE mptvdb.TVMovieProgram ( idTVMovieProgram INT NOT NULL AUTO_INCREMENT , idProgram INT NOT NULL DEFAULT 0 , TVMovieBewertung INT NOT NULL DEFAULT 0 , FanArt VARCHAR(255) , idSeries INT NOT NULL DEFAULT 0 , SeriesPosterImage VARCHAR(255) , idEpisode VARCHAR(15) , EpisodeImage VARCHAR(255) , local BIT(1) NOT NULL DEFAULT 0 , idMovingPictures INT NOT NULL DEFAULT 0 , idVideo INT NOT NULL DEFAULT 0 , KurzKritik VARCHAR(255) , BildDateiname VARCHAR(32) , Cover VARCHAR(512) , Fun INT NOT NULL DEFAULT 0 , Action INT NOT NULL DEFAULT 0 , Feelings INT NOT NULL DEFAULT 0 , Erotic INT NOT NULL DEFAULT 0 , Tension INT NOT NULL DEFAULT 0 , Requirement INT NOT NULL DEFAULT 0 , Actors TEXT , needsUpdate BIT(1) NOT NULL DEFAULT 1 , Dolby BIT(1) NOT NULL DEFAULT 0 , HDTV BIT(1) NOT NULL DEFAULT 0 , Country VARCHAR(50) , Regie VARCHAR(50) , Year DATETIME NOT NULL , Describtion TEXT , ShortDescribtion TEXT , FileName VARCHAR(255) , PRIMARY KEY (idTVMovieProgram) )")
                 End Try
 
                 Try
                     'Table TvMovieSeriesMapping anlegen
-                    Broker.Execute("CREATE  TABLE `mptvdb`.`TvMovieSeriesMapping` ( `idSeries` INT NOT NULL , `EpgTitle` VARCHAR(255) , PRIMARY KEY (`idSeries`) )")
+                    Broker.Execute("CREATE  TABLE mptvdb.TvMovieSeriesMapping ( idSeries INT NOT NULL , EpgTitle VARCHAR(255) , PRIMARY KEY (idSeries) )")
                     MyLog.[Debug]("TVMovie: [TvMovie++ Settings]: TvMovieSeriesMapping table created")
                 Catch ex As Exception
                     'existiert bereits
@@ -1255,6 +1255,7 @@ Namespace TvEngine
                                         _TvMovieProgram.idEpisode = _TvSeriesDB.EpisodeCompositeID
                                         _TvMovieProgram.local = True
                                         _TvMovieProgram.TVMovieBewertung = 6
+                                        _TvMovieProgram.FileName = _TvSeriesDB.EpisodeFilename
 
                                         'Episoden Image
                                         If Not String.IsNullOrEmpty(_TvSeriesDB.EpisodeImage) = True Then
@@ -1378,6 +1379,10 @@ Namespace TvEngine
 
                                     If Not String.IsNullOrEmpty(_MovingPicturesDB(i).FanArt) And String.IsNullOrEmpty(_TvMovieProgram.FanArt) Then
                                         _TvMovieProgram.FanArt = _MovingPicturesDB(i).FanArt
+                                    End If
+
+                                    If Not String.IsNullOrEmpty(_MovingPicturesDB(i).Filename) And String.IsNullOrEmpty(_TvMovieProgram.FileName) Then
+                                        _TvMovieProgram.FileName = _MovingPicturesDB(i).Filename
                                     End If
 
                                     _TvMovieProgram.needsUpdate = True
@@ -1595,6 +1600,11 @@ Namespace TvEngine
                                     _TvMovieProgram.idVideo = _VideoDB(i).VideoID
                                     _TvMovieProgram.local = True
 
+
+                                    If Not String.IsNullOrEmpty(_VideoDB(i).Filename) And String.IsNullOrEmpty(_TvMovieProgram.FileName) Then
+                                        _TvMovieProgram.FileName = _VideoDB(i).Filename
+                                    End If
+
                                     _TvMovieProgram.needsUpdate = True
                                     _TvMovieProgram.Persist()
 
@@ -1766,6 +1776,7 @@ Namespace TvEngine
                                         _TvMovieProgram.idEpisode = _TvSeriesDB.EpisodeCompositeID
                                         _TvMovieProgram.local = True
                                         _TvMovieProgram.TVMovieBewertung = 6
+                                        _TvMovieProgram.FileName = _TvSeriesDB.EpisodeFilename
 
                                         'Episoden Image
                                         If Not String.IsNullOrEmpty(_TvSeriesDB.EpisodeImage) = True Then
@@ -1831,6 +1842,8 @@ Namespace TvEngine
         Private Function MySqlDate(ByVal Datum As Date) As String
             Return "'" & Datum.Year & "-" & Format(Datum.Month, "00") & "-" & Format(Datum.Day, "00") & " " & Format(Datum.Hour, "00") & ":" & Format(Datum.Minute, "00") & ":00'"
         End Function
+
+
 
 #End Region
     End Class

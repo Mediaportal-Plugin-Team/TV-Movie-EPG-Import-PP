@@ -77,9 +77,6 @@ Namespace TvDatabase
         <TableColumn("Cover", NotNull:=True)> _
         Private m_Cover As String
 
-
-
-
         <TableColumn("Fun", NotNull:=True)> _
         Private m_Fun As Integer
 
@@ -127,6 +124,10 @@ Namespace TvDatabase
 
         <TableColumn("ShortDescribtion", NotNull:=True)> _
        Private m_ShortDescribtion As String
+
+
+        <TableColumn("FileName", NotNull:=True)> _
+       Private m_FileName As String
 
         '<TableColumn("RatingString", NotNull:=True)> _
         'Private m_RatingString As String
@@ -478,6 +479,15 @@ Namespace TvDatabase
             End Set
         End Property
 
+        Public Property FileName() As String
+            Get
+                Return m_FileName
+            End Get
+            Set(ByVal value As String)
+                m_isChanged = m_isChanged Or m_FileName <> value
+                m_FileName = value
+            End Set
+        End Property
 
 #End Region
 
