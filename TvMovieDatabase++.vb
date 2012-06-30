@@ -1122,11 +1122,16 @@ Namespace TvEngine
         Private Sub StartTVMoviePlus()
             Try
 
-                MyLog.[Debug]("TVMovie: [TvMovie++ Settings]: TvMovieRunAppAfter = " & _tvbLayer.GetSetting("TvMovieRunAppAfter").Value)
-                MyLog.[Debug]("TVMovie: [TvMovie++ Settings]: TvMovieImportTvSeriesInfos = " & _tvbLayer.GetSetting("TvMovieImportTvSeriesInfos").Value)
-                MyLog.[Debug]("TVMovie: [TvMovie++ Settings]: TvMovieImportMovingPicturesInfos = " & _tvbLayer.GetSetting("TvMovieImportMovingPicturesInfos").Value)
-                MyLog.[Debug]("TVMovie: [TvMovie++ Settings]: ClickfinderDataAvailable = " & _tvbLayer.GetSetting("ClickfinderDataAvailable").Value)
-                MyLog.[Debug]("TVMovie: [TvMovie++ Settings]: ClickfinderDataAvailable = " & _tvbLayer.GetSetting("TvMovieIsEpisodenScanner").Value)
+                MyLog.Debug("")
+                MyLog.Debug("******* TvMovie++ started *******")
+                MyLog.Debug("MediaPortal database path: {0}", _tvbLayer.GetSetting("TvMovieMPDatabase").Value)
+                MyLog.Debug("TvMovie database path: {0}", _tvbLayer.GetSetting("TvMoviedatabasepath").Value)
+                MyLog.Debug("run App after: {0}", _tvbLayer.GetSetting("TvMovieRunAppAfter").Value)
+                MyLog.Debug("is EpisodenScanner: {0}", _tvbLayer.GetSetting("TvMovieIsEpisodenScanner").Value)
+                MyLog.Debug("Import Mp-TvSeries Infos: {0}", _tvbLayer.GetSetting("TvMovieImportTvSeriesInfos").Value)
+                MyLog.Debug("Import MovingPictures Infos: {0}", _tvbLayer.GetSetting("TvMovieImportMovingPicturesInfos").Value)
+                MyLog.Debug("Import VideoDatabase Infos: {0}", _tvbLayer.GetSetting("TvMovieImportVideoDatabaseInfos").Value)
+                MyLog.Debug("Import Clickfinder ProgramGuide Infos: {0}", _tvbLayer.GetSetting("ClickfinderDataAvailable").Value)
 
                 Try
                     Broker.Execute("DROP TABLE mptvdb.tvmovieprogram")

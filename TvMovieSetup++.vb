@@ -229,7 +229,7 @@ Namespace SetupTv.Sections
             End If
             setting.Persist()
 
-            setting = layer.GetSetting("TvMovieMPDatabase", "%ProgramData%\Team MediaPortal\MediaPortal\database")
+            setting = layer.GetSetting("TvMovieMPDatabase", "C:\ProgramData\Team MediaPortal\MediaPortal\database")
             setting.Value = tbMPDatabasePath.Text
             setting.Persist()
 
@@ -307,7 +307,7 @@ Namespace SetupTv.Sections
 
             'TV Movie++ Enhancement by Scrounger
             tbRunAppAfter.Text = layer.GetSetting("TvMovieRunAppAfter", String.Empty).Value
-            tbMPDatabasePath.Text = layer.GetSetting("TvMovieMPDatabase", "%ProgramData%\Team MediaPortal\MediaPortal\database").Value
+            tbMPDatabasePath.Text = layer.GetSetting("TvMovieMPDatabase", "C:\ProgramData\Team MediaPortal\MediaPortal\database").Value
             checkBoxRunHidden.Checked = layer.GetSetting("TvMovieRunAppHidden", "true").Value = "true"
             CheckBoxEpSc.Checked = layer.GetSetting("TvMovieIsEpisodenScanner", "false").Value = "true"
             CheckBoxTvSeries.Checked = layer.GetSetting("TvMovieImportTvSeriesInfos", "false").Value = "true"

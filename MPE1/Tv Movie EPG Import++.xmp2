@@ -320,7 +320,7 @@ New Features (Optional):
     <OnlineLocation>http://tv-movie-epg-import-plusplus.googlecode.com/files/Tv%20Movie%20EPG%20Import%2B%2B_v1.2.8.0.mpe1</OnlineLocation>
     <ReleaseDate>2012-06-23T17:12:10</ReleaseDate>
     <Tags />
-    <Location>D:\Projekte\Tv Movie EPG Import++\MPE1\Tv Movie EPG Import++.mpe1</Location>
+    <Location>D:\Projekte\Tv Movie EPG Import++\MPE1\Tv Movie EPG Import++_v[Version].mpe1</Location>
     <Params>
       <Items>
         <SectionParam Name="Icon">
@@ -401,7 +401,7 @@ New Features (Optional):
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>..\Grafiken\MPE1 Icon.png</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{2f8d4906-2dc6-4bea-898a-540ef62c6823}-MPE1 Icon.png</ZipFileName>
+        <ZipFileName>Installer{CopyFile}\{bc0199dd-8feb-4759-9859-f75addfda9aa}-MPE1 Icon.png</ZipFileName>
         <DestinationFilename />
       </FileItem>
     </Items>

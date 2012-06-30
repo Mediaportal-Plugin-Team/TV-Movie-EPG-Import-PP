@@ -68,9 +68,9 @@ Public Class TVSeriesDB
 
             ' Open database
             Dim layer As New TvBusinessLayer
-            If File.Exists(layer.GetSetting("TvMovieMPDatabase", "%ProgramData%\Team MediaPortal\MediaPortal\database").Value & "\TVSeriesDatabase4.db3") = True Then
+            If File.Exists(layer.GetSetting("TvMovieMPDatabase", "C:\ProgramData\Team MediaPortal\MediaPortal\database").Value & "\TVSeriesDatabase4.db3") = True Then
 
-                m_db = New SQLiteClient(layer.GetSetting("TvMovieMPDatabase", "%ProgramData%\Team MediaPortal\MediaPortal\database").Value & "\TVSeriesDatabase4.db3")
+                m_db = New SQLiteClient(layer.GetSetting("TvMovieMPDatabase", "C:\ProgramData\Team MediaPortal\MediaPortal\database").Value & "\TVSeriesDatabase4.db3")
                 ' Retry 10 times on busy (DB in use or system resources exhausted)
                 m_db.BusyRetries = 20
                 ' Wait 100 ms between each try (default 10)
@@ -78,7 +78,7 @@ Public Class TVSeriesDB
 
                 DatabaseUtility.SetPragmas(m_db)
             Else
-                MyLog.[Error]("TVMovie: [OpenTvSeriesDB]: TvSeries Database not found: {0}", layer.GetSetting("TvMovieMPDatabase", "%ProgramData%\Team MediaPortal\MediaPortal\database").Value & "\TVSeriesDatabase4.db3")
+                MyLog.[Error]("TVMovie: [OpenTvSeriesDB]: TvSeries Database not found: {0}", layer.GetSetting("TvMovieMPDatabase", "C:\ProgramData\Team MediaPortal\MediaPortal\database").Value & "\TVSeriesDatabase4.db3")
             End If
 
 
