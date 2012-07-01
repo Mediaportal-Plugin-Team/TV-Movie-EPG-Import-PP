@@ -1134,6 +1134,8 @@ Namespace TvEngine
                 MyLog.Debug("Import VideoDatabase Infos: {0}", _tvbLayer.GetSetting("TvMovieImportVideoDatabaseInfos").Value)
                 MyLog.Debug("Import Clickfinder ProgramGuide Infos: {0}", _tvbLayer.GetSetting("ClickfinderDataAvailable").Value)
 
+
+                'Tabellen erstellen / clear
                 If Gentle.Framework.Broker.ProviderName = "MySQL" Then
                     'Provider: MySQL
                     Try
@@ -1337,7 +1339,6 @@ Namespace TvEngine
             End Try
 
         End Sub
-
 
         Private Sub GetMovingPicturesInfos()
             Try
@@ -1865,12 +1866,6 @@ Namespace TvEngine
                 MyLog.[Error]("TVMovie: [CheckEpisodenscannerImports]: exception err:{0} stack:{1}", ex.Message, ex.StackTrace)
             End Try
         End Sub
-
-        Private Function MySqlDate(ByVal Datum As Date) As String
-            Return "'" & Datum.Year & "-" & Format(Datum.Month, "00") & "-" & Format(Datum.Day, "00") & " " & Format(Datum.Hour, "00") & ":" & Format(Datum.Minute, "00") & ":00'"
-        End Function
-
-
 
 #End Region
     End Class
