@@ -134,6 +134,26 @@ Public Class TVSeriesDB
 
     End Sub
 
+    Public Function SeriesFound(ByVal SeriesName As String) As Boolean
+
+        Try
+            _SeriesInfos = m_db.Execute( _
+                                [String].Format("SELECT * FROM online_series WHERE Pretty_Name LIKE '{0}' OR SortName LIKE '{0}' OR origName LIKE '{0}'", _
+                                SeriesName))
+
+            If _SeriesInfos IsNot Nothing AndAlso _SeriesInfos.Rows.Count > 0 Then
+                Return True
+            Else
+                Return False
+            End If
+
+        Catch ex As Exception
+            MyLog.[Error]("TVMovie: [SeriesFound]: exception err:{0} stack:{1}", ex.Message, ex.StackTrace)
+            OpenTvSeriesDB()
+        End Try
+
+    End Function
+
 
     Public Function EpisodeFound(ByVal SeriesID As Integer, ByVal EpisodeName As String) As Boolean
 

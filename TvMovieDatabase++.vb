@@ -1121,9 +1121,10 @@ Namespace TvEngine
 
         Private Sub StartTVMoviePlus()
             Try
+                Dim _plugin As New TvMovie
 
                 MyLog.Debug("")
-                MyLog.Debug("******* TvMovie++ started *******")
+                MyLog.Debug("******* TvMovie++ {0} started *******", _plugin.Version)
                 MyLog.Debug("TvServer provider: {0}", Gentle.Framework.Broker.ProviderName)
                 MyLog.Debug("MediaPortal database path: {0}", _tvbLayer.GetSetting("TvMovieMPDatabase").Value)
                 MyLog.Debug("TvMovie database path: {0}", _tvbLayer.GetSetting("TvMoviedatabasepath").Value)
@@ -1263,6 +1264,7 @@ Namespace TvEngine
 
                         End Try
 
+                        'Alle gefundenen episoden der Serie durchlaufen
                         For d As Integer = 0 To _Result.Count - 1
                             Dim _program As Program = Program.Retrieve(CInt(_Result.Item(d)))
                             Try
@@ -1321,6 +1323,36 @@ Namespace TvEngine
                                     End If
 
                                     _EpisodeFoundCounter = _EpisodeFoundCounter + 1
+
+                                Else
+                                    'Episode nicht gefunden -> nur SeriesInfo schreiben
+
+                                    'Daten im EPG (program) updaten
+                                    '_program.StarRating = _TvSeriesDB.EpisodeRating
+                                    '_program.Persist()
+
+                                    'Clickfinder ProgramGuide Infos in TvMovieProgram schreiben, sofern aktiviert
+                                    If _tvbLayer.GetSetting("ClickfinderDataAvailable", "false").Value = "true" Then
+
+                                        'idProgram in TvMovieProgram suchen & Daten aktualisieren
+                                        Dim _TvMovieProgram As TVMovieProgram = getTvMovieProgram(_program.IdProgram)
+                                        _TvMovieProgram.idSeries = _TvSeriesDB(i).SeriesID
+                                        _TvMovieProgram.local = False
+
+                                        'Serien Poster Image
+                                        If Not String.IsNullOrEmpty(_TvSeriesDB(i).SeriesPosterImage) = True Then
+                                            _TvMovieProgram.SeriesPosterImage = _TvSeriesDB(i).SeriesPosterImage
+                                        End If
+
+                                        'FanArt
+                                        If Not String.IsNullOrEmpty(_TvSeriesDB(i).FanArt) = True Then
+                                            _TvMovieProgram.FanArt = _TvSeriesDB(i).FanArt
+                                        End If
+
+                                        _TvMovieProgram.needsUpdate = True
+                                        _TvMovieProgram.Persist()
+
+                                    End If
 
                                 End If
 
@@ -1720,11 +1752,13 @@ Namespace TvEngine
             MyLog.[Info]("TVMovie: [CheckEpisodenscannerImport]: Process start")
 
             Dim _Counter As Integer = 0
-
+            Dim _lastSeriesName As String = String.Empty
+            Dim _SeriesDummyID As Integer = 0
             Try
-                'Alle Programme mit Series- & EpisodenNummer laden
+                'Alle Programme mit EpisodenNummer laden
                 Dim sb As New SqlBuilder(Gentle.Framework.StatementType.Select, GetType(Program))
                 sb.AddConstraint([Operator].GreaterThan, "episodeNum", "")
+                sb.AddOrderByField(True, "title")
                 Dim stmt As SqlStatement = sb.GetStatement(True)
                 Dim _Result As IList(Of Program) = ObjectFactory.GetCollection(GetType(Program), stmt.Execute())
 
@@ -1734,19 +1768,20 @@ Namespace TvEngine
                     For i As Integer = 0 To _Result.Count - 1
 
                         Try
-                            Dim _logSeriesIsLinked As String = String.Empty
-                            Dim _SeriesIsLinked As Boolean = False
                             Dim _SqlString As String = String.Empty
                             Dim _SeriesName As String = String.Empty
                             Dim _SeriesMappingResult As New ArrayList
+                            Dim _logSeriesFound As Boolean = False
+                            Dim _logmapped As String = "False"
+                            Dim _logNewEpisode As Boolean = False
+                            Dim _logCPGtable As Boolean = False
 
                             'Prüfen ob EPG-SerienName in TvSeries DB gefunden wird, wenn nicht, schauen ob Verlinkung existiert
                             Dim _checkSeriesName As New TVSeriesDB
-                            _checkSeriesName.LoadEpisode(allowedSigns(_Result(i).Title), CInt(_Result(i).SeriesNum), CInt(_Result(i).EpisodeNum))
-                            Dim _checkSeriesNameCounter As Integer = _checkSeriesName.CountSeries
+                            Dim _checkSeriesNameCounter As Boolean = _checkSeriesName.SeriesFound(allowedSigns(_Result(i).Title))
                             _checkSeriesName.Dispose()
 
-                            If _checkSeriesNameCounter > 0 Then
+                            If _checkSeriesNameCounter = True Then
                                 _SeriesName = _Result(i).Title
                             Else
                                 'Prüfen ob Serie verlinkt ist
@@ -1758,67 +1793,58 @@ Namespace TvEngine
                                 'Serie ist verlinkt -> org. SerienName anstatt EPG Name verwenden
                                 If _SeriesMappingResult.Count > 0 Then
 
+                                    _logmapped = TvMovieSeriesMapping.Retrieve(CInt(_SeriesMappingResult.Item(0))).EpgTitle
+
                                     Dim _TvSeriesName As New TVSeriesDB
 
                                     _TvSeriesName.LoadSeriesName(CInt(_SeriesMappingResult.Item(0)))
                                     _SeriesName = _TvSeriesName(0).SeriesName
 
-                                    _SeriesIsLinked = True
-                                    _logSeriesIsLinked = "TVMovie: [CheckEpisodenscannerImports]: manuel mapping found: " & _TvSeriesName(0).SeriesName & " -> " & _Result(i).Title & " (" & TvMovieSeriesMapping.Retrieve(CInt(_SeriesMappingResult.Item(0))).EpgTitle & ")"
-
                                     _TvSeriesName.Dispose()
 
                                 Else
                                     'Nicht verlinkt -> EPG Name verwenden
+                                    _logmapped = "False"
                                     _SeriesName = _Result(i).Title
                                 End If
                             End If
 
+                            If Not _lastSeriesName = _SeriesName Then
+                                MyLog.Info("")
+                                _lastSeriesName = _SeriesName
+                                _SeriesDummyID = _SeriesDummyID + 1
+                            End If
+
+                            'prüfen ob Episode gefunden wird
                             Dim _TvSeriesDB As New TVSeriesDB
                             _TvSeriesDB.LoadEpisode(allowedSigns(_SeriesName), CInt(_Result(i).SeriesNum), CInt(_Result(i).EpisodeNum))
 
-                            'Serie in TvSeries gefunden
+                            'Episode in TvSeries gefunden
                             If _TvSeriesDB.CountSeries > 0 Then
+                                _logSeriesFound = True
 
                                 'Falls Episode nicht lokal verfügbar -> im EPG Describtion kennzeichnen
                                 If _TvSeriesDB.EpisodeExistLocal = False Then
+                                    _logNewEpisode = True
                                     If InStr(_Result(i).Description, "Neue Folge: " & _Result(i).EpisodeName) = 0 Then
                                         _Result(i).Description = Replace(_Result(i).Description, "Folge: " & _Result(i).EpisodeName, "Neue Folge: " & _Result(i).EpisodeName)
                                         _Result(i).Persist()
-                                        If _SeriesIsLinked = True Then
-                                            MyLog.[Info](_logSeriesIsLinked)
-                                        End If
-                                        MyLog.[Info]("TVMovie: [CheckEpisodenscannerImports]: New Episode: {0} - S{1}E{2}", _Result(i).Title, _Result(i).SeriesNum, _Result(i).EpisodeNum)
+
+                                        'MyLog.[Info]("TVMovie: [CheckEpisodenscannerImports]: New Episode: {0} - S{1}E{2}", _Result(i).EpisodeName, _Result(i).SeriesNum, _Result(i).EpisodeNum)
                                     End If
+                                Else
+                                    _logNewEpisode = False
                                 End If
                                 _Counter = _Counter + 1
 
 
                                 If _tvbLayer.GetSetting("ClickfinderDataAvailable", "false").Value = "true" Then
-
-                                    'Pürfen ob in TvMovieProgram existiert
-                                    Dim sb2 As New SqlBuilder(Gentle.Framework.StatementType.Select, GetType(TVMovieProgram))
-                                    sb2.AddConstraint([Operator].Equals, "idprogram", _Result(i).IdProgram)
-                                    Dim stmt2 As SqlStatement = sb2.GetStatement(True)
-                                    Dim _SeriesIsInTvMovieProgram As IList(Of TVMovieProgram) = ObjectFactory.GetCollection(GetType(TVMovieProgram), stmt2.Execute())
-
+                                    _logCPGtable = True
                                     'TvMovieProgram laden / neu anlegen
                                     Dim _TvMovieProgram As TVMovieProgram = getTvMovieProgram(_Result(i).IdProgram)
 
-                                    'Sofern idSeries = 0 -> Daten updaten & speichern
-                                    If _TvMovieProgram.idSeries = 0 Then
-
-                                        If _SeriesIsInTvMovieProgram.Count = 0 Then
-                                            If _SeriesIsLinked = True Then
-                                                MyLog.[Info](_logSeriesIsLinked)
-                                            End If
-                                            MyLog.[Info]("TVMovie: [CheckEpisodenscannerImports]: New entry in TvMovieProgram table")
-                                        Else
-                                            If _SeriesIsLinked = True Then
-                                                MyLog.[Info](_logSeriesIsLinked)
-                                            End If
-                                            MyLog.[Info]("TVMovie: [CheckEpisodenscannerImports]: Updated entry in TvMovieProgram table")
-                                        End If
+                                    'Sofern idEpisode = nothing -> Daten updaten & speichern
+                                    If String.IsNullOrEmpty(_TvMovieProgram.idEpisode) = True Then
 
                                         _TvMovieProgram.idSeries = _TvSeriesDB(0).SeriesID
                                         _TvMovieProgram.idEpisode = _TvSeriesDB.EpisodeCompositeID
@@ -1852,24 +1878,36 @@ Namespace TvEngine
 
                                 End If
 
+                                MyLog.Info("TVMovie: [CheckEpisodenscannerImports]: {0}: {1} - S{2}E{3} found (SeriesDB: {4}, mapped: {5}, newEpisode: {6}, CPGtable: {7})", _
+                                                                                _SeriesName, _Result(i).EpisodeName, _Result(i).SeriesNum, _Result(i).EpisodeNum, _
+                                                                                _logSeriesFound, _logmapped, _logNewEpisode, _logCPGtable)
                             Else
-                                'Episode nicht in TvSeries DB gefunden (=neue Aufnahme), dann als neu markieren im EPG
+                                'Episode & Serie nicht in TvSeries DB gefunden (=neue Aufnahme), dann als neu markieren im EPG
+                                _logSeriesFound = False
+
                                 If InStr(_Result(i).Description, "Neue Folge: " & _Result(i).EpisodeName) = 0 Then
                                     _Result(i).Description = Replace(_Result(i).Description, "Folge: " & _Result(i).EpisodeName, "Neue Folge: " & _Result(i).EpisodeName)
                                     _Result(i).Persist()
+                                    _logNewEpisode = True
                                 End If
 
                                 'Sofern Clickfinder Plugin aktiviert -> daten in TvMovieProgam schreiben mit Dummy idSeries
                                 If _tvbLayer.GetSetting("ClickfinderDataAvailable", "false").Value = "true" Then
+                                    _logCPGtable = True
+
                                     Dim _TvMovieProgram As TVMovieProgram = getTvMovieProgram(_Result(i).IdProgram)
-                                    _TvMovieProgram.idSeries = 1
+                                    _TvMovieProgram.idSeries = _SeriesDummyID
                                     _TvMovieProgram.local = False
                                     _TvMovieProgram.TVMovieBewertung = 6
                                     _TvMovieProgram.Persist()
                                 End If
 
                                 _Counter = _Counter + 1
-                                MyLog.[Debug]("TVMovie: [CheckEpisodenscannerImports]: Episode: {0} - S{1}E{2} not found in MP-TvSeries DB -> mark as Neue Folge", _Result(i).Title, _Result(i).SeriesNum, _Result(i).EpisodeNum)
+                                'MyLog.[Debug]("TVMovie: [CheckEpisodenscannerImports]: Episode: {0} - S{1}E{2} not found in MP-TvSeries DB -> mark as Neue Folge", _Result(i).EpisodeName, _Result(i).SeriesNum, _Result(i).EpisodeNum)
+
+                                MyLog.Info("TVMovie: [CheckEpisodenscannerImports]: {0}: {1} - S{2}E{3} not found (SeriesDB: {4}, mapped: {5}, newEpisode: {6}, CPGtable: {7})", _
+                                                                                _SeriesName, _Result(i).EpisodeName, _Result(i).SeriesNum, _Result(i).EpisodeNum, _
+                                                                                _logSeriesFound, _logmapped, _logNewEpisode, _logCPGtable)
                             End If
 
                             _TvSeriesDB.Dispose()
@@ -1889,6 +1927,4 @@ Namespace TvEngine
 
 #End Region
     End Class
-
-    ' class
 End Namespace

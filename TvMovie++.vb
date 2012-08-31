@@ -136,6 +136,7 @@ Namespace TvEngine
             End Set
         End Property
 
+
 #End Region
 
 #Region "Powerscheduler handling"
@@ -269,7 +270,7 @@ Namespace TvEngine
 
         Public ReadOnly Property Version() As String Implements ITvServerPlugin.Version
             Get
-                Return "1.2.9.0"
+                Return "1.2.9.4"
             End Get
         End Property
 
