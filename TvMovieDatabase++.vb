@@ -1729,40 +1729,38 @@ Namespace TvEngine
                             Dim _SeriesName As String = String.Empty
                             Dim _SeriesMappingResult As New ArrayList
 
+                            'Prüfen ob EPG-SerienName in TvSeries DB gefunden wird, sonst schauen ob Verlinkung existiert
+                            Dim _checkSeriesName As New TVSeriesDB
+                            _checkSeriesName.LoadEpisode(allowedSigns(_Result(i).Title), CInt(_Result(i).SeriesNum), CInt(_Result(i).EpisodeNum))
+                            Dim _checkSeriesNameCounter As Integer = _checkSeriesName.CountSeries
+                            _checkSeriesName.Dispose()
 
-                            'Prüfen ob Serie verlinkt ist
-                            _SqlString = "Select * from TvMovieSeriesMapping " & _
-                                                "WHERE EpgTitle LIKE '%" & allowedSigns(_Result(i).Title) & "%'"
-
-                            _SeriesMappingResult.AddRange(Broker.Execute(_SqlString).TransposeToFieldList("idSeries", False))
-
-
-                            ''Prüfen ob die Serie evtl. verlinkt ist.
-                            'Dim sbSeries As New SqlBuilder(Gentle.Framework.StatementType.Select, GetType(TvMovieSeriesMapping))
-                            'sbSeries.AddConstraint([Operator].Equals, "EpgTitle", _Result(i).Title)
-                            'Dim stmtSeries As SqlStatement = sbSeries.GetStatement(True)
-                            'Dim _TvMovieSeriesMapping As IList(Of TvMovieSeriesMapping) = ObjectFactory.GetCollection(GetType(TvMovieSeriesMapping), stmtSeries.Execute())
-
-                            ''Serie ist verlinkt -> org. SerienName anstatt EPG Name verwenden
-                            'If _TvMovieSeriesMapping.Count > 0 Then
-
-
-                            'Serie ist verlinkt -> org. SerienName anstatt EPG Name verwenden
-                            If _SeriesMappingResult.Count > 0 Then
-
-                                Dim _TvSeriesName As New TVSeriesDB
-
-                                _TvSeriesName.LoadSeriesName(CInt(_SeriesMappingResult.Item(0)))
-                                _SeriesName = _TvSeriesName(0).SeriesName
-
-                                _SeriesIsLinked = True
-                                _logSeriesIsLinked = "TVMovie: [CheckEpisodenscannerImports]: manuel mapping found: " & _TvSeriesName(0).SeriesName & " -> " & _Result(i).Title & " (" & TvMovieSeriesMapping.Retrieve(CInt(_SeriesMappingResult.Item(0))).EpgTitle & ")"
-
-                                _TvSeriesName.Dispose()
-
-                            Else
-                                'Nicht verlinkt -> EPG Name verwenden
+                            If _checkSeriesNameCounter > 0 Then
                                 _SeriesName = _Result(i).Title
+                            Else
+                                'Prüfen ob Serie verlinkt ist
+                                _SqlString = "Select * from TvMovieSeriesMapping " & _
+                                                    "WHERE EpgTitle LIKE '%" & allowedSigns(_Result(i).Title) & "%'"
+
+                                _SeriesMappingResult.AddRange(Broker.Execute(_SqlString).TransposeToFieldList("idSeries", False))
+
+                                'Serie ist verlinkt -> org. SerienName anstatt EPG Name verwenden
+                                If _SeriesMappingResult.Count > 0 Then
+
+                                    Dim _TvSeriesName As New TVSeriesDB
+
+                                    _TvSeriesName.LoadSeriesName(CInt(_SeriesMappingResult.Item(0)))
+                                    _SeriesName = _TvSeriesName(0).SeriesName
+
+                                    _SeriesIsLinked = True
+                                    _logSeriesIsLinked = "TVMovie: [CheckEpisodenscannerImports]: manuel mapping found: " & _TvSeriesName(0).SeriesName & " -> " & _Result(i).Title & " (" & TvMovieSeriesMapping.Retrieve(CInt(_SeriesMappingResult.Item(0))).EpgTitle & ")"
+
+                                    _TvSeriesName.Dispose()
+
+                                Else
+                                    'Nicht verlinkt -> EPG Name verwenden
+                                    _SeriesName = _Result(i).Title
+                                End If
                             End If
 
                             Dim _TvSeriesDB As New TVSeriesDB
