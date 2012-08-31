@@ -1232,25 +1232,36 @@ Namespace TvEngine
 
                         Dim _Result As New ArrayList
 
+                        'Zunächst nach alle Serien mit SerienName aus TvSeries DB suchen
+                        _SQLString = "Select idProgram from program WHERE title LIKE '" & allowedSigns(_TvSeriesDB(i).SeriesName) & "'"
+                        _Result.AddRange(Broker.Execute(_SQLString).TransposeToFieldList("idProgram", False))
+
+                        MyLog.[Info]("TVMovie: [GetSeriesInfos]: {0}: {1} episodes found", _TvSeriesDB(i).SeriesName, _Result.Count)
+
+                        'SeriesMappingNamen laden, sofern vorhanden
                         Try
                             Dim _TvMovieSeriesMapping As TvMovieSeriesMapping = TvMovieSeriesMapping.Retrieve(_TvSeriesDB(i).SeriesID)
 
                             If Not String.IsNullOrEmpty(_TvMovieSeriesMapping.EpgTitle) Then
-                                _SQLString = _
-                                            "Select idProgram from program WHERE title LIKE '" & allowedSigns(_TvMovieSeriesMapping.EpgTitle) & "'"
-                                MyLog.[Info]("TVMovie: [GetSeriesInfos]: manuel mapping found: {0} -> {1}", _TvSeriesDB(i).SeriesName, _TvMovieSeriesMapping.EpgTitle)
-                            Else
-                                _SQLString = _
-                                    "Select idProgram from program WHERE title LIKE '" & allowedSigns(_TvSeriesDB(i).SeriesName)
-                                MyLog.Warn("TVMovie: [GetSeriesInfos]: EpgTitle is empty for idseries = {0}", _TvSeriesDB(i).SeriesID)
+                                Dim _MappedSeriesNames As New ArrayList(Split(_TvMovieSeriesMapping.EpgTitle, "|"))
+                                MyLog.[Info]("TVMovie: [GetSeriesInfos]: {0}: manuel mapping found: {1}", _TvSeriesDB(i).SeriesName, Replace(_TvMovieSeriesMapping.EpgTitle, "|", ", "))
+
+                                For z As Integer = 0 To _MappedSeriesNames.Count - 1
+                                    Dim _MappedSeries As New ArrayList
+                                    _SQLString = "Select idProgram from program WHERE title LIKE '" & allowedSigns(CStr(_MappedSeriesNames.Item(z))) & "'"
+                                    _MappedSeries.AddRange(Broker.Execute(_SQLString).TransposeToFieldList("idProgram", False))
+
+                                    If _MappedSeries.Count > 0 Then
+                                        _Result.AddRange(_MappedSeries)
+                                        MyLog.[Info]("TVMovie: [GetSeriesInfos]: {0}: {1} episodes found", _MappedSeriesNames.Item(z), _MappedSeries.Count)
+                                    End If
+
+                                Next
                             End If
 
-                        Catch ex As Exception
-                            _SQLString = _
-                            "Select idProgram from program WHERE title LIKE '" & allowedSigns(_TvSeriesDB(i).SeriesName) & "'"
-                        End Try
+                        Catch SeriesMappingEx As Exception
 
-                        _Result.AddRange(Broker.Execute(_SQLString).TransposeToFieldList("idProgram", False))
+                        End Try
 
                         For d As Integer = 0 To _Result.Count - 1
                             Dim _program As Program = Program.Retrieve(CInt(_Result.Item(d)))
@@ -1319,10 +1330,10 @@ Namespace TvEngine
                             End Try
                         Next
 
-                        MyLog.[Info]("TVMovie: [GetSeriesInfos]: {0}: {1}/{2} episodes found", _TvSeriesDB(i).SeriesName, _EpisodeFoundCounter, _Result.Count)
+                        MyLog.[Info]("TVMovie: [GetSeriesInfos]: {0}: {1}/{2} episodes identified", _TvSeriesDB(i).SeriesName, _EpisodeFoundCounter, _Result.Count)
                         _CounterFound = _CounterFound + _EpisodeFoundCounter
                         _Counter = _Counter + _Result.Count
-
+                        MyLog.[Info]("")
                     Catch ex As Exception
                         MyLog.[Error]("TVMovie: [GetSeriesInfos]: Loop _TvSeriesDB - exception err:{0} stack:{1}", ex.Message, ex.StackTrace)
                     End Try
@@ -1729,7 +1740,7 @@ Namespace TvEngine
                             Dim _SeriesName As String = String.Empty
                             Dim _SeriesMappingResult As New ArrayList
 
-                            'Prüfen ob EPG-SerienName in TvSeries DB gefunden wird, sonst schauen ob Verlinkung existiert
+                            'Prüfen ob EPG-SerienName in TvSeries DB gefunden wird, wenn nicht, schauen ob Verlinkung existiert
                             Dim _checkSeriesName As New TVSeriesDB
                             _checkSeriesName.LoadEpisode(allowedSigns(_Result(i).Title), CInt(_Result(i).SeriesNum), CInt(_Result(i).EpisodeNum))
                             Dim _checkSeriesNameCounter As Integer = _checkSeriesName.CountSeries
