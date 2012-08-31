@@ -770,7 +770,7 @@ Namespace SetupTv.Sections
             End Try
         End Sub
 
-        Private Sub ManualImportThread()
+        Public Sub ManualImportThread()
             Dim _database As New TvEngine.TvMovieDatabase()
             Try
                 _database.LaunchTVMUpdater(False)
