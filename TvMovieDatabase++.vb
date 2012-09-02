@@ -1324,37 +1324,38 @@ Namespace TvEngine
 
                                     _EpisodeFoundCounter = _EpisodeFoundCounter + 1
 
-                                Else
-                                    'Episode nicht gefunden -> nur SeriesInfo schreiben
-
-                                    'Daten im EPG (program) updaten
-                                    '_program.StarRating = _TvSeriesDB.EpisodeRating
-                                    '_program.Persist()
-
-                                    'Clickfinder ProgramGuide Infos in TvMovieProgram schreiben, sofern aktiviert
-                                    If _tvbLayer.GetSetting("ClickfinderDataAvailable", "false").Value = "true" Then
-
-                                        'idProgram in TvMovieProgram suchen & Daten aktualisieren
-                                        Dim _TvMovieProgram As TVMovieProgram = getTvMovieProgram(_program.IdProgram)
-                                        _TvMovieProgram.idSeries = _TvSeriesDB(i).SeriesID
-                                        _TvMovieProgram.local = False
-
-                                        'Serien Poster Image
-                                        If Not String.IsNullOrEmpty(_TvSeriesDB(i).SeriesPosterImage) = True Then
-                                            _TvMovieProgram.SeriesPosterImage = _TvSeriesDB(i).SeriesPosterImage
-                                        End If
-
-                                        'FanArt
-                                        If Not String.IsNullOrEmpty(_TvSeriesDB(i).FanArt) = True Then
-                                            _TvMovieProgram.FanArt = _TvSeriesDB(i).FanArt
-                                        End If
-
-                                        _TvMovieProgram.needsUpdate = True
-                                        _TvMovieProgram.Persist()
-
-                                    End If
-
                                 End If
+
+                                'Episode nicht gefunden -> nur SeriesInfo schreiben
+
+                                'Daten im EPG (program) updaten
+                                '_program.StarRating = _TvSeriesDB.EpisodeRating
+                                '_program.Persist()
+
+                                ''Clickfinder ProgramGuide Infos in TvMovieProgram schreiben, sofern aktiviert
+                                'If _tvbLayer.GetSetting("ClickfinderDataAvailable", "false").Value = "true" Then
+
+                                '    'idProgram in TvMovieProgram suchen & Daten aktualisieren
+                                '    Dim _TvMovieProgram As TVMovieProgram = getTvMovieProgram(_program.IdProgram)
+                                '    _TvMovieProgram.idSeries = _TvSeriesDB(i).SeriesID
+                                '    _TvMovieProgram.local = False
+
+                                '    'Serien Poster Image
+                                '    If Not String.IsNullOrEmpty(_TvSeriesDB(i).SeriesPosterImage) = True Then
+                                '        _TvMovieProgram.SeriesPosterImage = _TvSeriesDB(i).SeriesPosterImage
+                                '    End If
+
+                                '    'FanArt
+                                '    If Not String.IsNullOrEmpty(_TvSeriesDB(i).FanArt) = True Then
+                                '        _TvMovieProgram.FanArt = _TvSeriesDB(i).FanArt
+                                '    End If
+
+                                '    _TvMovieProgram.needsUpdate = True
+                                '    _TvMovieProgram.Persist()
+
+                                'End If
+
+                                'End If
 
                             Catch ex As Exception
                                 MyLog.[Error]("TVMovie: [GetSeriesInfos]: Loop :Result exception err:{0} stack:{1}", ex.Message, ex.StackTrace)
