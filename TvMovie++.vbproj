@@ -64,6 +64,11 @@
       <SpecificVersion>False</SpecificVersion>
       <Private>False</Private>
     </Reference>
+    <Reference Include="enrichEPG, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files\Team MediaPortal\MediaPortal TV Server\enrichEPG.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="Gentle.Common, Version=1.5.0.29112, Culture=neutral, PublicKeyToken=80b5de62e27be49b, processorArchitecture=MSIL">
       <HintPath>C:\Program Files\Team MediaPortal\MediaPortal TV Server\Gentle.Common.dll</HintPath>
       <SpecificVersion>False</SpecificVersion>
