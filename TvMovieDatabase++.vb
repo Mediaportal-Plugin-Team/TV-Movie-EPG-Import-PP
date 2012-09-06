@@ -1185,8 +1185,8 @@ Namespace TvEngine
                 CBool(_tvbLayer.GetSetting("TvMovieImportTvSeriesInfos").Value), _
                 CBool(_tvbLayer.GetSetting("TvMovieImportVideoDatabaseInfos").Value), _
                 CBool(_tvbLayer.GetSetting("TvMovieImportMovingPicturesInfos").Value), _
-                _ImportStartTime, IO.Path.GetDirectoryName(_tvbLayer.GetSetting("TvMovieRunAppAfter", String.Empty).Value), _
-                enrichEPG.EnrichEPG.LogPath.Server, "tvmovie++.log")
+                _ImportStartTime, enrichEPG.EnrichEPG.LogPath.Server, IO.Path.GetDirectoryName(_tvbLayer.GetSetting("TvMovieRunAppAfter", String.Empty).Value), _
+                , "tvmovie++.log")
 
                 _enrichEPG.start()
 
