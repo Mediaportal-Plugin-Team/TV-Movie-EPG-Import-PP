@@ -1180,6 +1180,9 @@ Namespace TvEngine
                     GetTvMovieHighlights()
                 End If
 
+                MyLog.Debug("")
+                MyLog.Debug("enrich.dll starten")
+
                 'enrichEPG Api aufrufen
                 Dim _enrichEPG As New enrichEPG.EnrichEPG(_tvbLayer.GetSetting("TvMovieMPDatabase", "C:\ProgramData\Team MediaPortal\MediaPortal\database").Value, _
                 CBool(_tvbLayer.GetSetting("TvMovieImportTvSeriesInfos").Value), _
