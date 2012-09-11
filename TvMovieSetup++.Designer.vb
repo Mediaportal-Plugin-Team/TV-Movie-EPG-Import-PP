@@ -51,6 +51,7 @@ Namespace SetupTv.Sections
         ''' </summary>
         Private Sub InitializeComponent()
             Me.components = New System.ComponentModel.Container
+            Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(TvMovieSetup))
             Me.openFileDialog = New System.Windows.Forms.OpenFileDialog
             Me.tabControlTvMovie = New MediaPortal.UserInterface.Controls.MPTabControl
             Me.tabPageSettings = New System.Windows.Forms.TabPage
@@ -121,6 +122,10 @@ Namespace SetupTv.Sections
             Me.Label4 = New System.Windows.Forms.Label
             Me.fileDialogDb = New System.Windows.Forms.OpenFileDialog
             Me.OpenFileDialog1 = New System.Windows.Forms.OpenFileDialog
+            Me.CheckBoxTheTvDb = New MediaPortal.UserInterface.Controls.MPCheckBox
+            Me.Label6 = New System.Windows.Forms.Label
+            Me.tbMPThumbs = New System.Windows.Forms.TextBox
+            Me.Label7 = New System.Windows.Forms.Label
             Me.tabControlTvMovie.SuspendLayout()
             Me.tabPageSettings.SuspendLayout()
             Me.groupBoxEnableTvMovie.SuspendLayout()
@@ -472,6 +477,7 @@ Namespace SetupTv.Sections
             '
             'GroupBox2
             '
+            Me.GroupBox2.Controls.Add(Me.CheckBoxTheTvDb)
             Me.GroupBox2.Controls.Add(Me.ButtonSeriesMapping)
             Me.GroupBox2.Controls.Add(Me.CheckBoxVideoDB)
             Me.GroupBox2.Controls.Add(Me.CheckBoxMyFilms)
@@ -489,7 +495,7 @@ Namespace SetupTv.Sections
             '
             'ButtonSeriesMapping
             '
-            Me.ButtonSeriesMapping.Location = New System.Drawing.Point(116, 70)
+            Me.ButtonSeriesMapping.Location = New System.Drawing.Point(116, 59)
             Me.ButtonSeriesMapping.Name = "ButtonSeriesMapping"
             Me.ButtonSeriesMapping.Size = New System.Drawing.Size(96, 21)
             Me.ButtonSeriesMapping.TabIndex = 73
@@ -533,7 +539,7 @@ Namespace SetupTv.Sections
             '
             Me.CheckBoxTvSeries.AutoSize = True
             Me.CheckBoxTvSeries.FlatStyle = System.Windows.Forms.FlatStyle.Popup
-            Me.CheckBoxTvSeries.Location = New System.Drawing.Point(16, 74)
+            Me.CheckBoxTvSeries.Location = New System.Drawing.Point(16, 63)
             Me.CheckBoxTvSeries.Name = "CheckBoxTvSeries"
             Me.CheckBoxTvSeries.Size = New System.Drawing.Size(85, 17)
             Me.CheckBoxTvSeries.TabIndex = 69
@@ -878,6 +884,9 @@ Namespace SetupTv.Sections
             '
             'GroupBox3
             '
+            Me.GroupBox3.Controls.Add(Me.Label7)
+            Me.GroupBox3.Controls.Add(Me.Label6)
+            Me.GroupBox3.Controls.Add(Me.tbMPThumbs)
             Me.GroupBox3.Controls.Add(Me.Label5)
             Me.GroupBox3.Controls.Add(Me.LinkClickfinderPG)
             Me.GroupBox3.Controls.Add(Me.CheckBoxClickfinderPG)
@@ -922,7 +931,7 @@ Namespace SetupTv.Sections
             '
             Me.Label4.Location = New System.Drawing.Point(22, 48)
             Me.Label4.Name = "Label4"
-            Me.Label4.Size = New System.Drawing.Size(372, 49)
+            Me.Label4.Size = New System.Drawing.Size(372, 32)
             Me.Label4.TabIndex = 73
             Me.Label4.Text = "If you use                                          plugin, you have to enable it" & _
                 " to import additional infos. Otherwise disable this function, it increases the i" & _
@@ -938,6 +947,41 @@ Namespace SetupTv.Sections
             '
             Me.OpenFileDialog1.Filter = "Application (*.exe)|*.exe|All files (*.*)|*.*"
             Me.OpenFileDialog1.InitialDirectory = "Environment.GetFolderPath(Environment.SpecialFolder.MyComputer)"
+            '
+            'CheckBoxTheTvDb
+            '
+            Me.CheckBoxTheTvDb.AutoSize = True
+            Me.CheckBoxTheTvDb.FlatStyle = System.Windows.Forms.FlatStyle.Popup
+            Me.CheckBoxTheTvDb.Location = New System.Drawing.Point(264, 63)
+            Me.CheckBoxTheTvDb.Name = "CheckBoxTheTvDb"
+            Me.CheckBoxTheTvDb.Size = New System.Drawing.Size(113, 17)
+            Me.CheckBoxTheTvDb.TabIndex = 74
+            Me.CheckBoxTheTvDb.Text = "use TheTvDb.com"
+            Me.CheckBoxTheTvDb.UseVisualStyleBackColor = True
+            '
+            'Label6
+            '
+            Me.Label6.AutoSize = True
+            Me.Label6.Location = New System.Drawing.Point(18, 113)
+            Me.Label6.Name = "Label6"
+            Me.Label6.Size = New System.Drawing.Size(88, 13)
+            Me.Label6.TabIndex = 76
+            Me.Label6.Text = "MP Thumbs path"
+            '
+            'tbMPThumbs
+            '
+            Me.tbMPThumbs.Location = New System.Drawing.Point(125, 110)
+            Me.tbMPThumbs.Name = "tbMPThumbs"
+            Me.tbMPThumbs.Size = New System.Drawing.Size(259, 20)
+            Me.tbMPThumbs.TabIndex = 75
+            '
+            'Label7
+            '
+            Me.Label7.Location = New System.Drawing.Point(12, 145)
+            Me.Label7.Name = "Label7"
+            Me.Label7.Size = New System.Drawing.Size(372, 85)
+            Me.Label7.TabIndex = 77
+            Me.Label7.Text = resources.GetString("Label7.Text")
             '
             'TvMovieSetup
             '
@@ -1048,5 +1092,9 @@ Namespace SetupTv.Sections
         Friend WithEvents Linklabel_EpSc As System.Windows.Forms.LinkLabel
         Private WithEvents CheckBoxEpSc As MediaPortal.UserInterface.Controls.MPCheckBox
         Friend WithEvents ButtonSeriesMapping As System.Windows.Forms.Button
+        Private WithEvents CheckBoxTheTvDb As MediaPortal.UserInterface.Controls.MPCheckBox
+        Private WithEvents Label6 As System.Windows.Forms.Label
+        Friend WithEvents tbMPThumbs As System.Windows.Forms.TextBox
+        Friend WithEvents Label7 As System.Windows.Forms.Label
     End Class
 End Namespace

@@ -123,6 +123,11 @@
   <metadata name="imageListTvmStations.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>141, 17</value>
   </metadata>
+  <data name="Label7.Text" xml:space="preserve">
+    <value>If you use TheTvDB.com, then you are able to download Cover, FanArt and Episode images for series, that are not in your TvSeries database (= scheduled recordings imported by Episodenscanner). These images will be used by the Clickfinder ProgramGuide plugin.
+
+Leave it blank, if you don't want to download any images.</value>
+  </data>
   <metadata name="fileDialogDb.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>301, 17</value>
   </metadata>

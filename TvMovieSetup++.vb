@@ -233,6 +233,10 @@ Namespace SetupTv.Sections
             setting.Value = tbMPDatabasePath.Text
             setting.Persist()
 
+            setting = layer.GetSetting("TvMovieMPThumbsPath", "")
+            setting.Value = tbMPThumbs.Text
+            setting.Persist()
+
             setting = layer.GetSetting("TvMovieImportTvSeriesInfos", "false")
             If CheckBoxTvSeries.Checked Then
                 setting.Value = "true"
@@ -240,6 +244,15 @@ Namespace SetupTv.Sections
                 setting.Value = "false"
             End If
             setting.Persist()
+
+            setting = layer.GetSetting("TvMovieUseTheTvDb", "false")
+            If CheckBoxTheTvDb.Checked Then
+                setting.Value = "true"
+            Else
+                setting.Value = "false"
+            End If
+            setting.Persist()
+
 
             setting = layer.GetSetting("TvMovieImportMovingPicturesInfos", "false")
             If CheckBoxMovingPictures.Checked Then
@@ -308,9 +321,11 @@ Namespace SetupTv.Sections
             'TV Movie++ Enhancement by Scrounger
             tbRunAppAfter.Text = layer.GetSetting("TvMovieRunAppAfter", String.Empty).Value
             tbMPDatabasePath.Text = layer.GetSetting("TvMovieMPDatabase", "C:\ProgramData\Team MediaPortal\MediaPortal\database").Value
+            tbMPThumbs.Text = layer.GetSetting("TvMovieMPThumbsPath", "").Value
             checkBoxRunHidden.Checked = layer.GetSetting("TvMovieRunAppHidden", "true").Value = "true"
             CheckBoxEpSc.Checked = layer.GetSetting("TvMovieIsEpisodenScanner", "false").Value = "true"
             CheckBoxTvSeries.Checked = layer.GetSetting("TvMovieImportTvSeriesInfos", "false").Value = "true"
+            CheckBoxTheTvDb.Checked = layer.GetSetting("TvMovieUseTheTvDb", "false").Value = "true"
             CheckBoxMovingPictures.Checked = layer.GetSetting("TvMovieImportMovingPicturesInfos", "false").Value = "true"
             CheckBoxMyFilms.Checked = layer.GetSetting("TvMovieImportMyFilmsInfos", "false").Value = "true"
             CheckBoxVideoDB.Checked = layer.GetSetting("TvMovieImportVideoDatabaseInfos", "false").Value = "true"
@@ -322,6 +337,11 @@ Namespace SetupTv.Sections
                 ButtonSeriesMapping.Enabled = False
             End If
 
+            If CheckBoxTheTvDb.Checked And CheckBoxClickfinderPG.Checked Then
+                tbMPThumbs.Enabled = True
+            Else
+                tbMPThumbs.Enabled = False
+            End If
 
         End Sub
 
@@ -853,8 +873,6 @@ Namespace SetupTv.Sections
 #End Region
 
         Private Sub CheckBoxTvSeries_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles CheckBoxTvSeries.CheckedChanged
-            Dim layer As New TvBusinessLayer()
-
             If CheckBoxTvSeries.Checked Then
                 ButtonSeriesMapping.Enabled = True
             Else
@@ -874,6 +892,22 @@ Namespace SetupTv.Sections
                 MsgBox("TvSeries Datenbank nicht gefunden !", MsgBoxStyle.Critical, "Fehler")
             End If
 
+        End Sub
+
+        Private Sub CheckBoxTheTvDb_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles CheckBoxTheTvDb.CheckedChanged
+            If CheckBoxTheTvDb.Checked And CheckBoxClickfinderPG.Checked Then
+                tbMPThumbs.Enabled = True
+            Else
+                tbMPThumbs.Enabled = False
+            End If
+        End Sub
+
+        Private Sub CheckBoxClickfinderPG_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles CheckBoxClickfinderPG.CheckedChanged
+            If CheckBoxClickfinderPG.Checked And CheckBoxTheTvDb.Checked Then
+                tbMPThumbs.Enabled = True
+            Else
+                tbMPThumbs.Enabled = False
+            End If
         End Sub
     End Class
 End Namespace

@@ -64,7 +64,7 @@
       <SpecificVersion>False</SpecificVersion>
       <Private>False</Private>
     </Reference>
-    <Reference Include="enrichEPG, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="enrichEPG, Version=1.2.5.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Program Files\Team MediaPortal\MediaPortal TV Server\enrichEPG.dll</HintPath>
     </Reference>

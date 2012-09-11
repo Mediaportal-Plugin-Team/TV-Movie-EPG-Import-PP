@@ -1188,8 +1188,10 @@ Namespace TvEngine
                 CBool(_tvbLayer.GetSetting("TvMovieImportTvSeriesInfos").Value), _
                 CBool(_tvbLayer.GetSetting("TvMovieImportVideoDatabaseInfos").Value), _
                 CBool(_tvbLayer.GetSetting("TvMovieImportMovingPicturesInfos").Value), _
-                _ImportStartTime, enrichEPG.EnrichEPG.LogPath.Server, IO.Path.GetDirectoryName(_tvbLayer.GetSetting("TvMovieRunAppAfter", String.Empty).Value), _
-                , "tvmovie++.log")
+                _ImportStartTime, _
+                enrichEPG.EnrichEPG.LogPath.Server, _
+                IO.Path.GetDirectoryName(_tvbLayer.GetSetting("TvMovieRunAppAfter", String.Empty).Value), , , _
+                "tvmovie++.log", CBool(_tvbLayer.GetSetting("TvMovieUseTheTvDb", "false").Value), , _tvbLayer.GetSetting("TvMovieMPThumbsPath", "").Value)
 
                 _enrichEPG.start()
 
@@ -1197,6 +1199,7 @@ Namespace TvEngine
                 Dim setting As Setting = TvBLayer.GetSetting("TvMovieLastUpdate")
                 setting.Value = DateTime.Now.ToString()
                 setting.Persist()
+
 
             Catch ex As Exception
                 MyLog.Error("TVMovie: [StartTVMoviePlus]: error: {0} stack: {1}", ex.Message, ex.StackTrace)
