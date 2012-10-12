@@ -258,7 +258,7 @@ Click Next to continue or Cancel to exit Setup.
       <Major>1</Major>
       <Minor>3</Minor>
       <Build>3</Build>
-      <Revision>5</Revision>
+      <Revision>7</Revision>
     </Version>
     <ExtensionDescription>TV Movie EPG Import++ plugin is a replacement for the Tv Movie EPG Import Plugin (Author: rtv) that comes as part of MediaPortal TvServer. The plugin use the Tv Movie Clickfinder Database to supplying you with EPG data for german TV channels. The Clickfinder Plugin maps this data to your MediaPortal TV channels.
 
@@ -281,18 +281,15 @@ New Features (Optional):
 - Imports ratings from your MovingPictures and Video databases and mark existing Movie as „Lokal verfügbar“ in EPG Describtion. An integration of MyFilms database will be supported in a feature version.
 
 - Imports addiotional Data that are needed for the MediaPortal Plugin Clickfinder ProgramGuide </ExtensionDescription>
-    <VersionDescription>=== Version 1.3.3.5 ===
+    <VersionDescription>=== Version 1.3.3.7 ===
 
-
-
-  * small bug fixes
-
-  * detects now misspelling in EPG title / episodeName (improve the accuracy for identify serie) </VersionDescription>
+  * Episodenscanner path bug fixed
+  * no episodeName available bug fixed </VersionDescription>
     <DevelopmentStatus>Stable</DevelopmentStatus>
-    <OnlineLocation>http://tv-movie-epg-import-plusplus.googlecode.com/files/Tv%20Movie%20EPG%20Import%2B%2B_v1.3.3.5.mpe1</OnlineLocation>
-    <ReleaseDate>2012-09-29T17:12:10</ReleaseDate>
+    <OnlineLocation>http://tv-movie-epg-import-plusplus.googlecode.com/files/Tv%20Movie%20EPG%20Import%2B%2B_v1.3.3.7.mpe1</OnlineLocation>
+    <ReleaseDate>2012-10-12T17:12:10</ReleaseDate>
     <Tags />
-    <Location>D:\Projekte\Tv Movie EPG Import++\MPE1\Tv Movie EPG Import++_[Version].mpe1</Location>
+    <Location>D:\Projekte\Tv Movie EPG Import++\MPE1\Tv Movie EPG Import++_v[Version].mpe1</Location>
     <Params>
       <Items>
         <SectionParam Name="Icon">
@@ -387,7 +384,7 @@ New Features (Optional):
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>..\Grafiken\MPE1 Icon.png</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{52233ce7-6ed0-4633-90d2-4a5a1642ccca}-MPE1 Icon.png</ZipFileName>
+        <ZipFileName>Installer{CopyFile}\{83c9a236-3b89-407f-930a-9a0b5772cf05}-MPE1 Icon.png</ZipFileName>
         <DestinationFilename />
       </FileItem>
     </Items>

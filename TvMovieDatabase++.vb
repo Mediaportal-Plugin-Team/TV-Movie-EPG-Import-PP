@@ -1184,16 +1184,28 @@ Namespace TvEngine
                 MyLog.Debug("enrich.dll starten")
 
                 'enrichEPG Api aufrufen
-                Dim _enrichEPG As New enrichEPG.EnrichEPG(_tvbLayer.GetSetting("TvMovieMPDatabase", "C:\ProgramData\Team MediaPortal\MediaPortal\database").Value, _
-                CBool(_tvbLayer.GetSetting("TvMovieImportTvSeriesInfos").Value), _
-                CBool(_tvbLayer.GetSetting("TvMovieImportVideoDatabaseInfos").Value), _
-                CBool(_tvbLayer.GetSetting("TvMovieImportMovingPicturesInfos").Value), _
-                _ImportStartTime, _
-                enrichEPG.EnrichEPG.LogPath.Server, _
-                IO.Path.GetDirectoryName(_tvbLayer.GetSetting("TvMovieRunAppAfter", String.Empty).Value), , , _
-                "tvmovie++.log", CBool(_tvbLayer.GetSetting("TvMovieUseTheTvDb", "false").Value), , _tvbLayer.GetSetting("TvMovieMPThumbsPath", "").Value)
+                Try
+                    Dim _EpisodenScannerPath As String = String.Empty
 
-                _enrichEPG.start()
+                    If Not String.IsNullOrEmpty(_tvbLayer.GetSetting("TvMovieRunAppAfter", String.Empty).Value) Then
+                        _EpisodenScannerPath = IO.Path.GetDirectoryName(_tvbLayer.GetSetting("TvMovieRunAppAfter", String.Empty).Value)
+                    End If
+
+                    Dim _enrichEPG As New enrichEPG.EnrichEPG(_tvbLayer.GetSetting("TvMovieMPDatabase", "C:\ProgramData\Team MediaPortal\MediaPortal\database").Value, _
+                    CBool(_tvbLayer.GetSetting("TvMovieImportTvSeriesInfos").Value), _
+                    CBool(_tvbLayer.GetSetting("TvMovieImportVideoDatabaseInfos").Value), _
+                    CBool(_tvbLayer.GetSetting("TvMovieImportMovingPicturesInfos").Value), _
+                    _ImportStartTime, _
+                    enrichEPG.EnrichEPG.LogPath.Server, _
+                    _EpisodenScannerPath, , , _
+                    "tvmovie++.log", CBool(_tvbLayer.GetSetting("TvMovieUseTheTvDb", "false").Value), , _tvbLayer.GetSetting("TvMovieMPThumbsPath", "").Value)
+
+                    _enrichEPG.start()
+
+                Catch exEnrich As Exception
+                    MyLog.Error("TVMovie: [StartTVMoviePlus]: starting enrichEPG.dll")
+                    MyLog.Error("TVMovie: [StartTVMoviePlus]: error: {0} stack: {1}", exEnrich.Message, exEnrich.StackTrace)
+                End Try
 
                 'Am Ende nochmal TvMovieLastUpdate in Settings speichern -> Abschlusszeit
                 Dim setting As Setting = TvBLayer.GetSetting("TvMovieLastUpdate")
