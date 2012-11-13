@@ -262,16 +262,16 @@ Namespace TvEngine
 
 #Region "ITvServerPlugin Members"
 
-
         Public ReadOnly Property Name() As String Implements ITvServerPlugin.Name
             Get
                 Return "TV Movie EPG import++"
             End Get
         End Property
 
+
         Public ReadOnly Property Version() As String Implements ITvServerPlugin.Version
             Get
-                Return "1.3.3.7"
+                Return "1.3.4.0"
             End Get
         End Property
 
