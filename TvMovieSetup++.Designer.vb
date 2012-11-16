@@ -82,6 +82,7 @@ Namespace SetupTv.Sections
             Me.checkBoxEnableImport = New MediaPortal.UserInterface.Controls.MPCheckBox
             Me.tabPageImportOptions = New System.Windows.Forms.TabPage
             Me.GroupBox2 = New System.Windows.Forms.GroupBox
+            Me.CheckBoxTheTvDb = New MediaPortal.UserInterface.Controls.MPCheckBox
             Me.ButtonSeriesMapping = New System.Windows.Forms.Button
             Me.CheckBoxVideoDB = New MediaPortal.UserInterface.Controls.MPCheckBox
             Me.CheckBoxMyFilms = New MediaPortal.UserInterface.Controls.MPCheckBox
@@ -116,16 +117,17 @@ Namespace SetupTv.Sections
             Me.columnHeader2 = New System.Windows.Forms.ColumnHeader
             Me.tabClickfinderPG = New System.Windows.Forms.TabPage
             Me.GroupBox3 = New System.Windows.Forms.GroupBox
+            Me.Label7 = New System.Windows.Forms.Label
+            Me.Label6 = New System.Windows.Forms.Label
+            Me.tbMPThumbs = New System.Windows.Forms.TextBox
             Me.Label5 = New System.Windows.Forms.Label
             Me.LinkClickfinderPG = New System.Windows.Forms.LinkLabel
             Me.CheckBoxClickfinderPG = New MediaPortal.UserInterface.Controls.MPCheckBox
             Me.Label4 = New System.Windows.Forms.Label
             Me.fileDialogDb = New System.Windows.Forms.OpenFileDialog
             Me.OpenFileDialog1 = New System.Windows.Forms.OpenFileDialog
-            Me.CheckBoxTheTvDb = New MediaPortal.UserInterface.Controls.MPCheckBox
-            Me.Label6 = New System.Windows.Forms.Label
-            Me.tbMPThumbs = New System.Windows.Forms.TextBox
-            Me.Label7 = New System.Windows.Forms.Label
+            Me.MpCheckBoxStartImportAtTime = New MediaPortal.UserInterface.Controls.MPCheckBox
+            Me.tbImportStartTime = New System.Windows.Forms.MaskedTextBox
             Me.tabControlTvMovie.SuspendLayout()
             Me.tabPageSettings.SuspendLayout()
             Me.groupBoxEnableTvMovie.SuspendLayout()
@@ -353,6 +355,8 @@ Namespace SetupTv.Sections
             '
             Me.groupBoxImportTime.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
                         Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.groupBoxImportTime.Controls.Add(Me.tbImportStartTime)
+            Me.groupBoxImportTime.Controls.Add(Me.MpCheckBoxStartImportAtTime)
             Me.groupBoxImportTime.Controls.Add(Me.progressBarImportTotal)
             Me.groupBoxImportTime.Controls.Add(Me.buttonImportNow)
             Me.groupBoxImportTime.Controls.Add(Me.checkBoxSlowImport)
@@ -364,7 +368,7 @@ Namespace SetupTv.Sections
             Me.groupBoxImportTime.Enabled = False
             Me.groupBoxImportTime.Location = New System.Drawing.Point(16, 211)
             Me.groupBoxImportTime.Name = "groupBoxImportTime"
-            Me.groupBoxImportTime.Size = New System.Drawing.Size(391, 100)
+            Me.groupBoxImportTime.Size = New System.Drawing.Size(391, 110)
             Me.groupBoxImportTime.TabIndex = 2
             Me.groupBoxImportTime.TabStop = False
             Me.groupBoxImportTime.Text = "Import newer database after"
@@ -393,7 +397,7 @@ Namespace SetupTv.Sections
             Me.checkBoxSlowImport.Checked = True
             Me.checkBoxSlowImport.CheckState = System.Windows.Forms.CheckState.Checked
             Me.checkBoxSlowImport.FlatStyle = System.Windows.Forms.FlatStyle.Popup
-            Me.checkBoxSlowImport.Location = New System.Drawing.Point(15, 43)
+            Me.checkBoxSlowImport.Location = New System.Drawing.Point(16, 91)
             Me.checkBoxSlowImport.Name = "checkBoxSlowImport"
             Me.checkBoxSlowImport.Size = New System.Drawing.Size(245, 17)
             Me.checkBoxSlowImport.TabIndex = 7
@@ -492,6 +496,17 @@ Namespace SetupTv.Sections
             Me.GroupBox2.TabIndex = 7
             Me.GroupBox2.TabStop = False
             Me.GroupBox2.Text = "Import additional Infos from MediaPortal databases"
+            '
+            'CheckBoxTheTvDb
+            '
+            Me.CheckBoxTheTvDb.AutoSize = True
+            Me.CheckBoxTheTvDb.FlatStyle = System.Windows.Forms.FlatStyle.Popup
+            Me.CheckBoxTheTvDb.Location = New System.Drawing.Point(264, 63)
+            Me.CheckBoxTheTvDb.Name = "CheckBoxTheTvDb"
+            Me.CheckBoxTheTvDb.Size = New System.Drawing.Size(113, 17)
+            Me.CheckBoxTheTvDb.TabIndex = 74
+            Me.CheckBoxTheTvDb.Text = "use TheTvDb.com"
+            Me.CheckBoxTheTvDb.UseVisualStyleBackColor = True
             '
             'ButtonSeriesMapping
             '
@@ -898,6 +913,30 @@ Namespace SetupTv.Sections
             Me.GroupBox3.TabStop = False
             Me.GroupBox3.Text = "Clickfinder ProgramGuide"
             '
+            'Label7
+            '
+            Me.Label7.Location = New System.Drawing.Point(12, 145)
+            Me.Label7.Name = "Label7"
+            Me.Label7.Size = New System.Drawing.Size(372, 85)
+            Me.Label7.TabIndex = 77
+            Me.Label7.Text = resources.GetString("Label7.Text")
+            '
+            'Label6
+            '
+            Me.Label6.AutoSize = True
+            Me.Label6.Location = New System.Drawing.Point(18, 113)
+            Me.Label6.Name = "Label6"
+            Me.Label6.Size = New System.Drawing.Size(88, 13)
+            Me.Label6.TabIndex = 76
+            Me.Label6.Text = "MP Thumbs path"
+            '
+            'tbMPThumbs
+            '
+            Me.tbMPThumbs.Location = New System.Drawing.Point(125, 110)
+            Me.tbMPThumbs.Name = "tbMPThumbs"
+            Me.tbMPThumbs.Size = New System.Drawing.Size(259, 20)
+            Me.tbMPThumbs.TabIndex = 75
+            '
             'Label5
             '
             Me.Label5.AutoSize = True
@@ -948,40 +987,26 @@ Namespace SetupTv.Sections
             Me.OpenFileDialog1.Filter = "Application (*.exe)|*.exe|All files (*.*)|*.*"
             Me.OpenFileDialog1.InitialDirectory = "Environment.GetFolderPath(Environment.SpecialFolder.MyComputer)"
             '
-            'CheckBoxTheTvDb
+            'MpCheckBoxStartImportAtTime
             '
-            Me.CheckBoxTheTvDb.AutoSize = True
-            Me.CheckBoxTheTvDb.FlatStyle = System.Windows.Forms.FlatStyle.Popup
-            Me.CheckBoxTheTvDb.Location = New System.Drawing.Point(264, 63)
-            Me.CheckBoxTheTvDb.Name = "CheckBoxTheTvDb"
-            Me.CheckBoxTheTvDb.Size = New System.Drawing.Size(113, 17)
-            Me.CheckBoxTheTvDb.TabIndex = 74
-            Me.CheckBoxTheTvDb.Text = "use TheTvDb.com"
-            Me.CheckBoxTheTvDb.UseVisualStyleBackColor = True
+            Me.MpCheckBoxStartImportAtTime.AutoSize = True
+            Me.MpCheckBoxStartImportAtTime.FlatStyle = System.Windows.Forms.FlatStyle.Popup
+            Me.MpCheckBoxStartImportAtTime.Location = New System.Drawing.Point(15, 41)
+            Me.MpCheckBoxStartImportAtTime.Name = "MpCheckBoxStartImportAtTime"
+            Me.MpCheckBoxStartImportAtTime.Size = New System.Drawing.Size(87, 17)
+            Me.MpCheckBoxStartImportAtTime.TabIndex = 70
+            Me.MpCheckBoxStartImportAtTime.Text = "start import at"
+            Me.MpCheckBoxStartImportAtTime.UseVisualStyleBackColor = True
             '
-            'Label6
+            'tbImportStartTime
             '
-            Me.Label6.AutoSize = True
-            Me.Label6.Location = New System.Drawing.Point(18, 113)
-            Me.Label6.Name = "Label6"
-            Me.Label6.Size = New System.Drawing.Size(88, 13)
-            Me.Label6.TabIndex = 76
-            Me.Label6.Text = "MP Thumbs path"
-            '
-            'tbMPThumbs
-            '
-            Me.tbMPThumbs.Location = New System.Drawing.Point(125, 110)
-            Me.tbMPThumbs.Name = "tbMPThumbs"
-            Me.tbMPThumbs.Size = New System.Drawing.Size(259, 20)
-            Me.tbMPThumbs.TabIndex = 75
-            '
-            'Label7
-            '
-            Me.Label7.Location = New System.Drawing.Point(12, 145)
-            Me.Label7.Name = "Label7"
-            Me.Label7.Size = New System.Drawing.Size(372, 85)
-            Me.Label7.TabIndex = 77
-            Me.Label7.Text = resources.GetString("Label7.Text")
+            Me.tbImportStartTime.Location = New System.Drawing.Point(108, 40)
+            Me.tbImportStartTime.Mask = "00:00"
+            Me.tbImportStartTime.Name = "tbImportStartTime"
+            Me.tbImportStartTime.Size = New System.Drawing.Size(49, 20)
+            Me.tbImportStartTime.TabIndex = 71
+            Me.tbImportStartTime.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
+            Me.tbImportStartTime.ValidatingType = GetType(Date)
             '
             'TvMovieSetup
             '
@@ -1096,5 +1121,7 @@ Namespace SetupTv.Sections
         Private WithEvents Label6 As System.Windows.Forms.Label
         Friend WithEvents tbMPThumbs As System.Windows.Forms.TextBox
         Friend WithEvents Label7 As System.Windows.Forms.Label
+        Private WithEvents MpCheckBoxStartImportAtTime As MediaPortal.UserInterface.Controls.MPCheckBox
+        Friend WithEvents tbImportStartTime As System.Windows.Forms.MaskedTextBox
     End Class
 End Namespace

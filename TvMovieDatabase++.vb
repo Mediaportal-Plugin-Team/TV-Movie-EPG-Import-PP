@@ -348,6 +348,7 @@ Namespace TvEngine
                     Dim lastUpdated As DateTime = Convert.ToDateTime(TvBLayer.GetSetting("TvMovieLastUpdate", "0").Value)
                     '        if (Convert.ToInt64(TvBLayer.GetSetting("TvMovieLastUpdate", "0").Value) == LastUpdate)
                     If lastUpdated >= (DateTime.Now - restTime) Then
+                        MyLog.Debug("TVMovie: Last update was at {0} - no new import needed", Convert.ToString(lastUpdated))
                         Return False
                     Else
                         MyLog.Debug("TVMovie: Last update was at {0} - new import scheduled", Convert.ToString(lastUpdated))
@@ -1135,6 +1136,7 @@ Namespace TvEngine
                 MyLog.Debug("Import MovingPictures Infos: {0}", _tvbLayer.GetSetting("TvMovieImportMovingPicturesInfos").Value)
                 MyLog.Debug("Import VideoDatabase Infos: {0}", _tvbLayer.GetSetting("TvMovieImportVideoDatabaseInfos").Value)
                 MyLog.Debug("Import Clickfinder ProgramGuide Infos: {0}", _tvbLayer.GetSetting("ClickfinderDataAvailable").Value)
+                MyLog.Debug("Last Update: {0}", TvBLayer.GetSetting("TvMovieLastUpdate").Value)
 
                 'Tabellen erstellen / clear
                 If Gentle.Framework.Broker.ProviderName = "MySQL" Then
@@ -1175,6 +1177,9 @@ Namespace TvEngine
                     End Try
                 End If
 
+                'Alle idPrograms (+ Year sonst fehler, da nicht Null sein darf) in TvMovieProgram spiegeln
+                Broker.Execute("INSERT INTO mptvdb.TVMovieProgram (TVMovieProgram.idProgram, TVMovieProgram.year) SELECT program.idProgram, program.originalAirDate from mptvdb.program")
+
                 'Tv Movie Highlight und Suchoptionen für Clickfinder ProgramGuide importieren
                 If _tvbLayer.GetSetting("ClickfinderDataAvailable").Value = "true" Then
                     GetTvMovieHighlights()
@@ -1209,7 +1214,12 @@ Namespace TvEngine
 
                 'Am Ende nochmal TvMovieLastUpdate in Settings speichern -> Abschlusszeit
                 Dim setting As Setting = TvBLayer.GetSetting("TvMovieLastUpdate")
-                setting.Value = DateTime.Now.ToString()
+
+                If CBool(TvBLayer.GetSetting("TvMovieStartImportAtTime", "false").Value) = True Then
+                    setting.Value = DateTime.Now.Date.AddHours(CDate(TvBLayer.GetSetting("TvMovieStartImportTime", "06:00").Value).Hour).AddMinutes(CDate(TvBLayer.GetSetting("TvMovieStartImportTime", "06:00").Value).Minute).ToString
+                Else
+                    setting.Value = DateTime.Now.ToString()
+                End If
                 setting.Persist()
 
 
@@ -1238,23 +1248,37 @@ Namespace TvEngine
                         If _Result.Count > 0 Then
                             For d As Integer = 0 To _Result.Count - 1
 
-                                Dim _channel As Channel = Channel.Retrieve(_Result(d).IdChannel)
-                                _DebugchannelName = _channel.DisplayName
+                                'Dim _channel As Channel = Channel.Retrieve(_Result(d).IdChannel)
+                                '_DebugchannelName = _channel.DisplayName
 
-                                Dim sb2 As New SqlBuilder(Gentle.Framework.StatementType.Select, GetType(Program))
-                                sb2.AddConstraint([Operator].Equals, "startTime", _ClickfinderDB(i).Beginn)
-                                sb2.AddConstraint([Operator].Equals, "endTime", _ClickfinderDB(i).Ende)
-                                sb2.AddConstraint([Operator].Equals, "idChannel", _channel.IdChannel)
-                                Dim stmt2 As SqlStatement = sb2.GetStatement(True)
-                                Dim _Program As IList(Of Program) = ObjectFactory.GetCollection(GetType(Program), stmt2.Execute())
+
+
+                                'Dim sb2 As New SqlBuilder(Gentle.Framework.StatementType.Select, GetType(Program))
+                                'sb2.AddConstraint([Operator].Equals, "startTime", _ClickfinderDB(i).Beginn)
+                                'sb2.AddConstraint([Operator].Equals, "endTime", _ClickfinderDB(i).Ende)
+                                'sb2.AddConstraint([Operator].Equals, "idChannel", _channel.IdChannel)
+                                'Dim stmt2 As SqlStatement = sb2.GetStatement(True)
+                                'Dim _Program As IList(Of Program) = ObjectFactory.GetCollection(GetType(Program), stmt2.Execute())
 
                                 'Wenn Program gefunden dann in TvMovieProgram schreiben
 
-                                If _Program.Count >= 1 Then
+                                Dim _SQLstring As String = _
+                                    "Select * from program INNER JOIN TvMovieProgram ON program.idprogram = TvMovieProgram.idProgram " & _
+                                    "WHERE startTime = " & MySqlDate(_ClickfinderDB(i).Beginn) & " " & _
+                                    "AND endTime = " & MySqlDate(_ClickfinderDB(i).Ende) & " " & _
+                                    "AND idChannel = " & _Result(d).IdChannel
 
-                                    For y As Integer = 0 To _Program.Count - 1
+                                'List: Daten laden
+                                _SQLstring = Replace(_SQLstring, " * ", " TVMovieProgram.idProgram, TVMovieProgram.Action, TVMovieProgram.Actors, TVMovieProgram.BildDateiname, TVMovieProgram.Country, TVMovieProgram.Cover, TVMovieProgram.Describtion, TVMovieProgram.Dolby, TVMovieProgram.EpisodeImage, TVMovieProgram.Erotic, TVMovieProgram.FanArt, TVMovieProgram.Feelings, TVMovieProgram.FileName, TVMovieProgram.Fun, TVMovieProgram.HDTV, TVMovieProgram.idEpisode, TVMovieProgram.idMovingPictures, TVMovieProgram.idSeries, TVMovieProgram.idTVMovieProgram, TVMovieProgram.idVideo, TVMovieProgram.KurzKritik, TVMovieProgram.local, TVMovieProgram.needsUpdate, TVMovieProgram.Regie, TVMovieProgram.Requirement, TVMovieProgram.SeriesPosterImage, TVMovieProgram.ShortDescribtion, TVMovieProgram.Tension, TVMovieProgram.TVMovieBewertung, TVMovieProgram.Year ")
+                                Dim _SQLstate1 As SqlStatement = Broker.GetStatement(_SQLstring)
+                                Dim _TvMovieProgramList As List(Of TVMovieProgram) = ObjectFactory.GetCollection(GetType(TVMovieProgram), _SQLstate1.Execute())
+
+
+                                If _TvMovieProgramList.Count >= 1 Then
+
+                                    For Each _TvMovieProgram As TVMovieProgram In _TvMovieProgramList
                                         'idProgram in TvMovieProgram suchen & Daten aktualisieren
-                                        Dim _TvMovieProgram As TVMovieProgram = getTvMovieProgram(_Program(y).IdProgram)
+                                        'Dim _TvMovieProgram As TVMovieProgram = getTvMovieProgram(_Program(y).IdProgram)
 
 
                                         'nur Informationen die zwigend benötigt werden, anzeige in GuiItems, GuiCategories & GuiHighlights
@@ -1320,9 +1344,9 @@ Namespace TvEngine
                                         _CounterFound = _CounterFound + 1
                                     Next
 
-                                    If _Program.Count > 1 Then
+                                    If _TvMovieProgramList.Count > 1 Then
                                         MyLog.Info("Program found in {0} EPG Entries (Start: {1}, Ende: {2}, Titel: {3}, Channel: {4}", _
-                                                _Program.Count, _ClickfinderDB(i).Beginn, _ClickfinderDB(i).Ende, _ClickfinderDB(i).Titel, _channel.DisplayName)
+                                                _TvMovieProgramList.Count, _ClickfinderDB(i).Beginn, _ClickfinderDB(i).Ende, _ClickfinderDB(i).Titel, _Result(d).ReferencedChannel.DisplayName)
                                     End If
 
                                 Else
@@ -1351,15 +1375,17 @@ Namespace TvEngine
             Return Replace(Replace(expression, "'", "''"), ":", "%")
         End Function
 
-        Private Function getTvMovieProgram(ByVal idProgram As Integer) As TVMovieProgram
+        Friend Shared Function MySqlDate(ByVal Datum As Date) As String
             Try
-                'idProgram in TvMovieProgram suchen & Daten aktualisieren
-                Dim _TvMovieProgram As TVMovieProgram = TVMovieProgram.Retrieve(idProgram)
-                Return _TvMovieProgram
+                If Gentle.Framework.Broker.ProviderName = "MySQL" Then
+                    Return "'" & Datum.Year & "-" & Format(Datum.Month, "00") & "-" & Format(Datum.Day, "00") & " " & Format(Datum.Hour, "00") & ":" & Format(Datum.Minute, "00") & ":00'"
+                Else
+                    Return "'" & Datum.Year & Format(Datum.Month, "00") & Format(Datum.Day, "00") & " " & Format(Datum.Hour, "00") & ":" & Format(Datum.Minute, "00") & ":" & Format(Datum.Second, "00") & "'"
+                End If
+
             Catch ex As Exception
-                'idProgram in TvMovieProgram nicht gefunden -> Daten neu anlegen
-                Dim _TvMovieProgram As New TVMovieProgram(idProgram)
-                Return _TvMovieProgram
+                MyLog.Error("[Helper]: [MySqlDate]: exception err: {0} stack: {1}", ex.Message, ex.StackTrace)
+                Return ""
             End Try
         End Function
 

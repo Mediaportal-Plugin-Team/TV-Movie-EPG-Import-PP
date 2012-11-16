@@ -286,6 +286,18 @@ Namespace SetupTv.Sections
             End If
             setting.Persist()
 
+            setting = layer.GetSetting("TvMovieStartImportAtTime", "false")
+            If MpCheckBoxStartImportAtTime.Checked Then
+                setting.Value = "true"
+            Else
+                setting.Value = "false"
+            End If
+            setting.Persist()
+
+            setting = layer.GetSetting("TvMovieStartImportTime", "06:00")
+            setting.Value = tbImportStartTime.Text
+            setting.Persist()
+
         End Sub
 
         Public Overrides Sub OnSectionActivated()
@@ -317,7 +329,6 @@ Namespace SetupTv.Sections
             checkBoxShowRepeat.Checked = layer.GetSetting("TvMovieShowRepeating", "false").Value = "true"
             SetRestPeriod(layer.GetSetting("TvMovieRestPeriod", "24").Value)
 
-
             'TV Movie++ Enhancement by Scrounger
             tbRunAppAfter.Text = layer.GetSetting("TvMovieRunAppAfter", String.Empty).Value
             tbMPDatabasePath.Text = layer.GetSetting("TvMovieMPDatabase", "C:\ProgramData\Team MediaPortal\MediaPortal\database").Value
@@ -330,6 +341,8 @@ Namespace SetupTv.Sections
             CheckBoxMyFilms.Checked = layer.GetSetting("TvMovieImportMyFilmsInfos", "false").Value = "true"
             CheckBoxVideoDB.Checked = layer.GetSetting("TvMovieImportVideoDatabaseInfos", "false").Value = "true"
             CheckBoxClickfinderPG.Checked = layer.GetSetting("ClickfinderDataAvailable", "false").Value = "true"
+            MpCheckBoxStartImportAtTime.Checked = CBool(layer.GetSetting("TvMovieStartImportAtTime", "false").Value)
+            tbImportStartTime.Text = layer.GetSetting("TvMovieStartImportTime", "06:00").Value
 
             If CheckBoxTvSeries.Checked = True Then
                 ButtonSeriesMapping.Enabled = True
@@ -341,6 +354,13 @@ Namespace SetupTv.Sections
                 tbMPThumbs.Enabled = True
             Else
                 tbMPThumbs.Enabled = False
+            End If
+
+            If MpCheckBoxStartImportAtTime.Checked Then
+                tbImportStartTime.Enabled = True
+
+            Else
+                tbImportStartTime.Enabled = False
             End If
 
         End Sub
@@ -907,6 +927,14 @@ Namespace SetupTv.Sections
                 tbMPThumbs.Enabled = True
             Else
                 tbMPThumbs.Enabled = False
+            End If
+        End Sub
+
+        Private Sub MpCheckBoxStartImportAtTime_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MpCheckBoxStartImportAtTime.CheckedChanged
+            If MpCheckBoxStartImportAtTime.Checked Then
+                tbImportStartTime.Enabled = True
+            Else
+                tbImportStartTime.Enabled = False
             End If
         End Sub
     End Class

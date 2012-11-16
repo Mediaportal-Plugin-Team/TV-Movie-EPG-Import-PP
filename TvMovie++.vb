@@ -45,7 +45,7 @@ Namespace TvEngine
         Private _database As TvMovieDatabase
         Private _stateTimer As System.Timers.Timer
         Private _isImporting As Boolean = False
-        Private Const _timerIntervall As Long = 1800000
+        Private Const _timerIntervall As Long = 180000
         Private Const _localMachineRegSubKey As String = "HKEY_LOCAL_MACHINE\SOFTWARE\Ewe\TVGhost\Gemeinsames"
 
         Private Const _virtualStoreRegSubKey32b As String = "HKEY_CURRENT_USER\Software\Classes\VirtualStore\MACHINE\SOFTWARE\Ewe\TVGhost\Gemeinsames"
@@ -271,7 +271,7 @@ Namespace TvEngine
 
         Public ReadOnly Property Version() As String Implements ITvServerPlugin.Version
             Get
-                Return "1.3.4.0"
+                Return "1.3.4.6"
             End Get
         End Property
 
