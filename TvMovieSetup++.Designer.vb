@@ -71,6 +71,8 @@ Namespace SetupTv.Sections
             Me.rbLocal = New System.Windows.Forms.RadioButton
             Me.tbDbPath = New System.Windows.Forms.TextBox
             Me.groupBoxImportTime = New System.Windows.Forms.GroupBox
+            Me.tbImportStartTime = New System.Windows.Forms.MaskedTextBox
+            Me.MpCheckBoxStartImportAtTime = New MediaPortal.UserInterface.Controls.MPCheckBox
             Me.progressBarImportTotal = New System.Windows.Forms.ProgressBar
             Me.buttonImportNow = New System.Windows.Forms.Button
             Me.checkBoxSlowImport = New MediaPortal.UserInterface.Controls.MPCheckBox
@@ -126,8 +128,9 @@ Namespace SetupTv.Sections
             Me.Label4 = New System.Windows.Forms.Label
             Me.fileDialogDb = New System.Windows.Forms.OpenFileDialog
             Me.OpenFileDialog1 = New System.Windows.Forms.OpenFileDialog
-            Me.MpCheckBoxStartImportAtTime = New MediaPortal.UserInterface.Controls.MPCheckBox
-            Me.tbImportStartTime = New System.Windows.Forms.MaskedTextBox
+            Me.CheckCPGimportAllImages = New MediaPortal.UserInterface.Controls.MPCheckBox
+            Me.GroupBox4 = New System.Windows.Forms.GroupBox
+            Me.Label8 = New System.Windows.Forms.Label
             Me.tabControlTvMovie.SuspendLayout()
             Me.tabPageSettings.SuspendLayout()
             Me.groupBoxEnableTvMovie.SuspendLayout()
@@ -143,6 +146,7 @@ Namespace SetupTv.Sections
             Me.panelTimeSpan.SuspendLayout()
             Me.tabClickfinderPG.SuspendLayout()
             Me.GroupBox3.SuspendLayout()
+            Me.GroupBox4.SuspendLayout()
             Me.SuspendLayout()
             '
             'openFileDialog
@@ -372,6 +376,27 @@ Namespace SetupTv.Sections
             Me.groupBoxImportTime.TabIndex = 2
             Me.groupBoxImportTime.TabStop = False
             Me.groupBoxImportTime.Text = "Import newer database after"
+            '
+            'tbImportStartTime
+            '
+            Me.tbImportStartTime.Location = New System.Drawing.Point(108, 40)
+            Me.tbImportStartTime.Mask = "00:00"
+            Me.tbImportStartTime.Name = "tbImportStartTime"
+            Me.tbImportStartTime.Size = New System.Drawing.Size(49, 20)
+            Me.tbImportStartTime.TabIndex = 71
+            Me.tbImportStartTime.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
+            Me.tbImportStartTime.ValidatingType = GetType(Date)
+            '
+            'MpCheckBoxStartImportAtTime
+            '
+            Me.MpCheckBoxStartImportAtTime.AutoSize = True
+            Me.MpCheckBoxStartImportAtTime.FlatStyle = System.Windows.Forms.FlatStyle.Popup
+            Me.MpCheckBoxStartImportAtTime.Location = New System.Drawing.Point(15, 41)
+            Me.MpCheckBoxStartImportAtTime.Name = "MpCheckBoxStartImportAtTime"
+            Me.MpCheckBoxStartImportAtTime.Size = New System.Drawing.Size(87, 17)
+            Me.MpCheckBoxStartImportAtTime.TabIndex = 70
+            Me.MpCheckBoxStartImportAtTime.Text = "start import at"
+            Me.MpCheckBoxStartImportAtTime.UseVisualStyleBackColor = True
             '
             'progressBarImportTotal
             '
@@ -899,6 +924,7 @@ Namespace SetupTv.Sections
             '
             'GroupBox3
             '
+            Me.GroupBox3.Controls.Add(Me.GroupBox4)
             Me.GroupBox3.Controls.Add(Me.Label7)
             Me.GroupBox3.Controls.Add(Me.Label6)
             Me.GroupBox3.Controls.Add(Me.tbMPThumbs)
@@ -915,7 +941,7 @@ Namespace SetupTv.Sections
             '
             'Label7
             '
-            Me.Label7.Location = New System.Drawing.Point(12, 145)
+            Me.Label7.Location = New System.Drawing.Point(29, 250)
             Me.Label7.Name = "Label7"
             Me.Label7.Size = New System.Drawing.Size(372, 85)
             Me.Label7.TabIndex = 77
@@ -924,7 +950,7 @@ Namespace SetupTv.Sections
             'Label6
             '
             Me.Label6.AutoSize = True
-            Me.Label6.Location = New System.Drawing.Point(18, 113)
+            Me.Label6.Location = New System.Drawing.Point(18, 223)
             Me.Label6.Name = "Label6"
             Me.Label6.Size = New System.Drawing.Size(88, 13)
             Me.Label6.TabIndex = 76
@@ -932,7 +958,7 @@ Namespace SetupTv.Sections
             '
             'tbMPThumbs
             '
-            Me.tbMPThumbs.Location = New System.Drawing.Point(125, 110)
+            Me.tbMPThumbs.Location = New System.Drawing.Point(125, 220)
             Me.tbMPThumbs.Name = "tbMPThumbs"
             Me.tbMPThumbs.Size = New System.Drawing.Size(259, 20)
             Me.tbMPThumbs.TabIndex = 75
@@ -948,7 +974,7 @@ Namespace SetupTv.Sections
             'LinkClickfinderPG
             '
             Me.LinkClickfinderPG.AutoSize = True
-            Me.LinkClickfinderPG.Location = New System.Drawing.Point(71, 48)
+            Me.LinkClickfinderPG.Location = New System.Drawing.Point(71, 43)
             Me.LinkClickfinderPG.Name = "LinkClickfinderPG"
             Me.LinkClickfinderPG.Size = New System.Drawing.Size(126, 13)
             Me.LinkClickfinderPG.TabIndex = 72
@@ -968,7 +994,7 @@ Namespace SetupTv.Sections
             '
             'Label4
             '
-            Me.Label4.Location = New System.Drawing.Point(22, 48)
+            Me.Label4.Location = New System.Drawing.Point(22, 43)
             Me.Label4.Name = "Label4"
             Me.Label4.Size = New System.Drawing.Size(372, 32)
             Me.Label4.TabIndex = 73
@@ -987,26 +1013,35 @@ Namespace SetupTv.Sections
             Me.OpenFileDialog1.Filter = "Application (*.exe)|*.exe|All files (*.*)|*.*"
             Me.OpenFileDialog1.InitialDirectory = "Environment.GetFolderPath(Environment.SpecialFolder.MyComputer)"
             '
-            'MpCheckBoxStartImportAtTime
+            'CheckCPGimportAllImages
             '
-            Me.MpCheckBoxStartImportAtTime.AutoSize = True
-            Me.MpCheckBoxStartImportAtTime.FlatStyle = System.Windows.Forms.FlatStyle.Popup
-            Me.MpCheckBoxStartImportAtTime.Location = New System.Drawing.Point(15, 41)
-            Me.MpCheckBoxStartImportAtTime.Name = "MpCheckBoxStartImportAtTime"
-            Me.MpCheckBoxStartImportAtTime.Size = New System.Drawing.Size(87, 17)
-            Me.MpCheckBoxStartImportAtTime.TabIndex = 70
-            Me.MpCheckBoxStartImportAtTime.Text = "start import at"
-            Me.MpCheckBoxStartImportAtTime.UseVisualStyleBackColor = True
+            Me.CheckCPGimportAllImages.AutoSize = True
+            Me.CheckCPGimportAllImages.FlatStyle = System.Windows.Forms.FlatStyle.Popup
+            Me.CheckCPGimportAllImages.Location = New System.Drawing.Point(11, 21)
+            Me.CheckCPGimportAllImages.Name = "CheckCPGimportAllImages"
+            Me.CheckCPGimportAllImages.Size = New System.Drawing.Size(57, 17)
+            Me.CheckCPGimportAllImages.TabIndex = 78
+            Me.CheckCPGimportAllImages.Text = "Enable"
+            Me.CheckCPGimportAllImages.UseVisualStyleBackColor = True
             '
-            'tbImportStartTime
+            'GroupBox4
             '
-            Me.tbImportStartTime.Location = New System.Drawing.Point(108, 40)
-            Me.tbImportStartTime.Mask = "00:00"
-            Me.tbImportStartTime.Name = "tbImportStartTime"
-            Me.tbImportStartTime.Size = New System.Drawing.Size(49, 20)
-            Me.tbImportStartTime.TabIndex = 71
-            Me.tbImportStartTime.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
-            Me.tbImportStartTime.ValidatingType = GetType(Date)
+            Me.GroupBox4.Controls.Add(Me.Label8)
+            Me.GroupBox4.Controls.Add(Me.CheckCPGimportAllImages)
+            Me.GroupBox4.Location = New System.Drawing.Point(21, 83)
+            Me.GroupBox4.Name = "GroupBox4"
+            Me.GroupBox4.Size = New System.Drawing.Size(391, 124)
+            Me.GroupBox4.TabIndex = 79
+            Me.GroupBox4.TabStop = False
+            Me.GroupBox4.Text = "Import all programs with images"
+            '
+            'Label8
+            '
+            Me.Label8.Location = New System.Drawing.Point(8, 45)
+            Me.Label8.Name = "Label8"
+            Me.Label8.Size = New System.Drawing.Size(377, 76)
+            Me.Label8.TabIndex = 79
+            Me.Label8.Text = resources.GetString("Label8.Text")
             '
             'TvMovieSetup
             '
@@ -1041,6 +1076,8 @@ Namespace SetupTv.Sections
             Me.tabClickfinderPG.ResumeLayout(False)
             Me.GroupBox3.ResumeLayout(False)
             Me.GroupBox3.PerformLayout()
+            Me.GroupBox4.ResumeLayout(False)
+            Me.GroupBox4.PerformLayout()
             Me.ResumeLayout(False)
 
         End Sub
@@ -1123,5 +1160,8 @@ Namespace SetupTv.Sections
         Friend WithEvents Label7 As System.Windows.Forms.Label
         Private WithEvents MpCheckBoxStartImportAtTime As MediaPortal.UserInterface.Controls.MPCheckBox
         Friend WithEvents tbImportStartTime As System.Windows.Forms.MaskedTextBox
+        Friend WithEvents GroupBox4 As System.Windows.Forms.GroupBox
+        Friend WithEvents Label8 As System.Windows.Forms.Label
+        Private WithEvents CheckCPGimportAllImages As MediaPortal.UserInterface.Controls.MPCheckBox
     End Class
 End Namespace

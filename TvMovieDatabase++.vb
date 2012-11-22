@@ -370,11 +370,12 @@ Namespace TvEngine
                 Return
             End If
 
+            TvMovie._isImporting = True
+
             'TvMovie++: In Setting speichern das Import gerade läuft
             Dim setting As Setting = TvBLayer.GetSetting("TvMovieImportIsRunning", "false")
             setting.Value = "true"
             setting.Persist()
-
 
             Dim mappingList As List(Of Mapping) = GetMappingList()
             If mappingList Is Nothing OrElse mappingList.Count < 1 Then
@@ -497,6 +498,9 @@ Namespace TvEngine
                 setting.Persist()
 
             End If
+
+            TvMovie._isImporting = False
+
             GC.Collect()
         End Sub
 
@@ -523,12 +527,22 @@ Namespace TvEngine
 
             ' UNUSED: F16zu9 , live , untertitel , Dauer , Wiederholung
             'sqlb.Append("SELECT * "); // need for saver schema filling
-            sqlb.Append("SELECT TVDaten.SenderKennung, TVDaten.Beginn, TVDaten.Ende, TVDaten.Sendung, TVDaten.Genre, TVDaten.Kurzkritik, TVDaten.KurzBeschreibung, TVDaten.Beschreibung")
-            sqlb.Append(", TVDaten.Audiodescription, TVDaten.DolbySuround, TVDaten.Stereo, TVDaten.DolbyDigital, TVDaten.Dolby, TVDaten.Zweikanalton")
-            sqlb.Append(", TVDaten.FSK, TVDaten.Herstellungsjahr, TVDaten.Originaltitel, TVDaten.Regie, TVDaten.Darsteller")
-            sqlb.Append(", TVDaten.Interessant, TVDaten.Bewertungen")
-            sqlb.Append(", TVDaten.live, TVDaten.Dauer, TVDaten.Herstellungsland,TVDaten.Wiederholung")
-            sqlb.Append(" FROM TVDaten WHERE (((TVDaten.SenderKennung)=""{0}"") AND ((TVDaten.Ende)>= #{1}#)) ORDER BY TVDaten.Beginn;")
+            sqlb.Append("SELECT Sendungen.SenderKennung, Sendungen.Beginn, Sendungen.Ende, Sendungen.Titel, Sendungen.Genre, Sendungen.Kurzkritik, Sendungen.KurzBeschreibung, SendungenDetails.Beschreibung")
+            sqlb.Append(", Sendungen.KzAudiodescription, Sendungen.KzDolbySurround, Sendungen.KzStereo, Sendungen.KzDolbyDigital, Sendungen.KzDolby, Sendungen.KzZweikanalton")
+            sqlb.Append(", Sendungen.FSK, Sendungen.Herstellungsjahr, Sendungen.Originaltitel, Sendungen.Regie, SendungenDetails.Darsteller")
+            sqlb.Append(", Sendungen.Bewertung, Sendungen.Bewertungen")
+            sqlb.Append(", Sendungen.KzLive, Sendungen.Dauer, Sendungen.Herstellungsland, Sendungen.KzWiederholung")
+            sqlb.Append(" FROM Sendungen INNER JOIN SendungenDetails ON Sendungen.Pos = SendungenDetails.Pos WHERE (((Sendungen.SenderKennung)=""{0}"") AND ((Sendungen.Ende)>= #{1}#)) ORDER BY Sendungen.Beginn;")
+
+            '''old
+            'sqlb.Append("SELECT TVDaten.SenderKennung, TVDaten.Beginn, TVDaten.Ende, TVDaten.Sendung, TVDaten.Genre, TVDaten.Kurzkritik, TVDaten.KurzBeschreibung, TVDaten.Beschreibung")
+            'sqlb.Append(", TVDaten.Audiodescription, TVDaten.DolbySuround, TVDaten.Stereo, TVDaten.DolbyDigital, TVDaten.Dolby, TVDaten.Zweikanalton")
+            'sqlb.Append(", TVDaten.FSK, TVDaten.Herstellungsjahr, TVDaten.Originaltitel, TVDaten.Regie, TVDaten.Darsteller")
+            'sqlb.Append(", TVDaten.Interessant, TVDaten.Bewertungen")
+            'sqlb.Append(", TVDaten.live, TVDaten.Dauer, TVDaten.Herstellungsland,TVDaten.Wiederholung")
+            'sqlb.Append(" FROM TVDaten WHERE (((TVDaten.SenderKennung)=""{0}"") AND ((TVDaten.Ende)>= #{1}#)) ORDER BY TVDaten.Beginn;")
+
+            'SELECT * FROM Sendungen INNER JOIN SendungenDetails ON Sendungen.Pos = SendungenDetails.Pos WHERE Bewertung > 0 ORDER BY SenderKennung ASC
 
             Dim importTime As DateTime = DateTime.Now.Subtract(System.TimeSpan.FromHours(4))
             sqlSelect = String.Format(sqlb.ToString(), stationName, importTime.ToString("yyyy-MM-dd HH:mm:ss"))
@@ -1229,11 +1243,26 @@ Namespace TvEngine
         End Sub
 
         Private Sub GetTvMovieHighlights()
+
             Try
-                MyLog.[Debug]("TVMovie: [GetTvMovieHighlights]: start import")
+                MyLog.Debug("TVMovie: [GetTvMovieHighlights]: start import")
+                MyLog.Debug("TVMovie: [GetTvMovieHighlights]: Import all programs that have images: {0}", _tvbLayer.GetSetting("TvMovieCPGImportProgramsWithImages", "false").Value)
+
+                Dim _SQLstringClickfinderDB As String = String.Empty
+
+                If CBool(_tvbLayer.GetSetting("TvMovieCPGImportProgramsWithImages", "false").Value) = False Then
+                    _SQLstringClickfinderDB = "SELECT * FROM Sendungen INNER JOIN SendungenDetails ON Sendungen.Pos = SendungenDetails.Pos WHERE Bewertung > 0 ORDER BY SenderKennung ASC"
+                Else
+                    'String für programme mit Bildern (user defined)
+                    _SQLstringClickfinderDB = "SELECT * FROM Sendungen INNER JOIN SendungenDetails ON Sendungen.Pos = SendungenDetails.Pos WHERE Bewertung > 0 OR KzBilddateiHeruntergeladen = True ORDER BY SenderKennung ASC"
+                End If
+
+                _SQLstringClickfinderDB = Replace(_SQLstringClickfinderDB, "*", "Sendungen.Titel, Sendungen.Beginn, Sendungen.Ende, Sendungen.SenderKennung, Sendungen.Bewertung, Sendungen.KzLive, Sendungen.KzWiederholung, Sendungen.KzDolby, Sendungen.KzDolbyDigital, Sendungen.KzDolbySurround, Sendungen.KzHDTV, Sendungen.KzBilddateiHeruntergeladen, SendungenDetails.Darsteller, Sendungen.Regie, Sendungen.Herstellungsland, Sendungen.Herstellungsjahr, Sendungen.Kurzkritik, Sendungen.Bilddateiname, Sendungen.Bewertungen")
+
                 'Alle Sendungen mit Bewertung laden
-                Dim _ClickfinderDB As New ClickfinderDB("SELECT * FROM Sendungen INNER JOIN SendungenDetails ON Sendungen.Pos = SendungenDetails.Pos WHERE Bewertung > 0 ORDER BY SenderKennung ASC", TvMovie.DatabasePath)
+                Dim _ClickfinderDB As New ClickfinderDB(_SQLstringClickfinderDB, TvMovie.DatabasePath)
                 Dim _CounterFound As Integer = 0
+                Dim _StartTimer As Date = Date.Now
 
                 For i As Integer = 0 To _ClickfinderDB.Count - 1
                     Dim _DebugchannelName As String = String.Empty
@@ -1251,8 +1280,6 @@ Namespace TvEngine
                                 'Dim _channel As Channel = Channel.Retrieve(_Result(d).IdChannel)
                                 '_DebugchannelName = _channel.DisplayName
 
-
-
                                 'Dim sb2 As New SqlBuilder(Gentle.Framework.StatementType.Select, GetType(Program))
                                 'sb2.AddConstraint([Operator].Equals, "startTime", _ClickfinderDB(i).Beginn)
                                 'sb2.AddConstraint([Operator].Equals, "endTime", _ClickfinderDB(i).Ende)
@@ -1260,7 +1287,6 @@ Namespace TvEngine
                                 'Dim stmt2 As SqlStatement = sb2.GetStatement(True)
                                 'Dim _Program As IList(Of Program) = ObjectFactory.GetCollection(GetType(Program), stmt2.Execute())
 
-                                'Wenn Program gefunden dann in TvMovieProgram schreiben
 
                                 Dim _SQLstring As String = _
                                     "Select * from program INNER JOIN TvMovieProgram ON program.idprogram = TvMovieProgram.idProgram " & _
@@ -1273,14 +1299,10 @@ Namespace TvEngine
                                 Dim _SQLstate1 As SqlStatement = Broker.GetStatement(_SQLstring)
                                 Dim _TvMovieProgramList As List(Of TVMovieProgram) = ObjectFactory.GetCollection(GetType(TVMovieProgram), _SQLstate1.Execute())
 
-
+                                'Wenn Program gefunden dann in TvMovieProgram schreiben
                                 If _TvMovieProgramList.Count >= 1 Then
 
                                     For Each _TvMovieProgram As TVMovieProgram In _TvMovieProgramList
-                                        'idProgram in TvMovieProgram suchen & Daten aktualisieren
-                                        'Dim _TvMovieProgram As TVMovieProgram = getTvMovieProgram(_Program(y).IdProgram)
-
-
                                         'nur Informationen die zwigend benötigt werden, anzeige in GuiItems, GuiCategories & GuiHighlights
                                         '+ zusätzlich Infos zum sortieren & suchen (z.B. TvMovieBewretung, Fun, Action, etc.)
 
@@ -1338,7 +1360,6 @@ Namespace TvEngine
                                             _TvMovieProgram.Actors = _ClickfinderDB(i).Darsteller
                                         End If
 
-                                        _TvMovieProgram.needsUpdate = True
                                         _TvMovieProgram.Persist()
 
                                         _CounterFound = _CounterFound + 1
@@ -1353,17 +1374,16 @@ Namespace TvEngine
                                     'Nur alte Sendungen < 2 Tage sind nicht im EPG enthalten
                                     'Mylog.[Debug]("Start: {0}, Ende: {1}, Titel: {2}, Channel: {3}", _ClickfinderDB(i).Beginn, _ClickfinderDB(i).Ende, _ClickfinderDB(i).Titel, _channel.DisplayName)
                                 End If
-
                             Next
                         End If
 
                     Catch ex As Exception
-                        MyLog.[Error]("TVMovie: [GetTvMovieHighlights]: databasePath: {0} exception err:{1} stack:{2}", TvMovie.DatabasePath, ex.Message, ex.StackTrace)
                         MyLog.[Error]("TVMovie: [GetTvMovieHighlights]: Titel: {0}, SenderKennung:{1}, DisplayName:{2}, Beginn:{3}", _ClickfinderDB(i).Titel, _ClickfinderDB(i).SenderKennung, _DebugchannelName, _ClickfinderDB(i).Beginn)
+                        MyLog.[Error]("TVMovie: [GetTvMovieHighlights]: databasePath: {0} exception err:{1} stack:{2}", TvMovie.DatabasePath, ex.Message, ex.StackTrace)
                     End Try
                 Next
 
-                MyLog.[Info]("TVMovie: [GetTvMovieHighlights]: Summary: Infos for {0}/{1} saved in TvMovieProgram", _CounterFound, _ClickfinderDB.Count)
+                MyLog.[Info]("TVMovie: [GetTvMovieHighlights]: Summary: Infos for {0}/{1} saved in TvMovieProgram (Duration: {2}s)", _CounterFound, _ClickfinderDB.Count, DateDiff(DateInterval.Second, _StartTimer, Date.Now))
 
             Catch ex As Exception
                 MyLog.[Error]("TVMovie: [GetTvMovieHighlights]: databasePath: {0} exception err:{1} stack:{2}", TvMovie.DatabasePath, ex.Message, ex.StackTrace)

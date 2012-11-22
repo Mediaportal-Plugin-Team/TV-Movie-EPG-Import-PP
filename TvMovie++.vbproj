@@ -121,6 +121,7 @@
       <Private>False</Private>
     </Reference>
     <Compile Include="Classes\ClickfinderDB.vb" />
+    <Compile Include="Classes\Helper.vb" />
     <Compile Include="Classes\MyLog.vb" />
     <Compile Include="Classes\TVMovieProgram.vb" />
     <Compile Include="Classes\TvMovieSeriesMapping.vb" />

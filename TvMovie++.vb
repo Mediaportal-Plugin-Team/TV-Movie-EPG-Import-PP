@@ -44,7 +44,7 @@ Namespace TvEngine
 
         Private _database As TvMovieDatabase
         Private _stateTimer As System.Timers.Timer
-        Private _isImporting As Boolean = False
+        Friend Shared _isImporting As Boolean = False
         Private Const _timerIntervall As Long = 180000
         Private Const _localMachineRegSubKey As String = "HKEY_LOCAL_MACHINE\SOFTWARE\Ewe\TVGhost\Gemeinsames"
 
@@ -195,11 +195,19 @@ Namespace TvEngine
                             If updateDuration > 20 Then
                                 _database.Import()
                             Else
-                                MyLog.Info("TVMovie: Import skipped because there was no new data.")
+                                'TvMovie++: Wenn Import Zeit gesetzt -> import immer ausführen egal ob tvuptodate neue daten holt
+                                Dim layer As New TvBusinessLayer
+                                If CBool(layer.GetSetting("TvMovieStartImportAtTime", "false").Value) = True Then
+                                    MyLog.Info("TVMovie: No new data imported by tvuptodate.exe -> try on next import")
+                                    MyLog.Info("TVMovie: Import starttime defined by user -> Start Import")
+                                    _database.Import()
+                                Else
+                                    MyLog.Info("TVMovie: Import skipped because there was no new data.")
+                                End If
                             End If
                         Else
                             MyLog.Info("TVMovie: Import skipped because the update process timed out / has been aborted.")
-                        End If
+                            End If
                     End If
                 Catch ex As Exception
                     MyLog.Info("TvMovie plugin error:")
@@ -213,6 +221,7 @@ Namespace TvEngine
 
         Private Sub StartImportThread(ByVal source As Object, ByVal e As ElapsedEventArgs)
             'TODO: check stateinfo
+
             SpawnImportThread()
         End Sub
 
@@ -222,6 +231,7 @@ Namespace TvEngine
                 If layer.GetSetting("TvMovieEnabled", "false").Value <> "true" Then
                     Return
                 End If
+
             Catch ex1 As Exception
                 MyLog.[Error]("TVMovie: Error checking enabled status - {0},{1}", ex1.Message, ex1.StackTrace)
             End Try
@@ -271,7 +281,7 @@ Namespace TvEngine
 
         Public ReadOnly Property Version() As String Implements ITvServerPlugin.Version
             Get
-                Return "1.3.4.6"
+                Return "1.3.4.9"
             End Get
         End Property
 

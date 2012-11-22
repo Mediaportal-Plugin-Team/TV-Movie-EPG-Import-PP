@@ -30,6 +30,7 @@ Imports TvEngine
 Imports TvLibrary.Log
 Imports SetupTv
 Imports TvMovie.TvEngine.TvMovie
+Imports TvMovie.TvEngine
 
 
 Namespace SetupTv.Sections
@@ -294,6 +295,15 @@ Namespace SetupTv.Sections
             End If
             setting.Persist()
 
+            setting = layer.GetSetting("TvMovieCPGImportProgramsWithImages", "false")
+            If CheckCPGimportAllImages.Checked Then
+                setting.Value = "true"
+            Else
+                setting.Value = "false"
+            End If
+
+            setting.Persist()
+
             setting = layer.GetSetting("TvMovieStartImportTime", "06:00")
             setting.Value = tbImportStartTime.Text
             setting.Persist()
@@ -314,7 +324,7 @@ Namespace SetupTv.Sections
             checkBoxShowRatings.Checked = layer.GetSetting("TvMovieShowRatings", "true").Value = "true"
             checkBoxShowAudioFormat.Checked = layer.GetSetting("TvMovieShowAudioFormat", "false").Value = "true"
             checkBoxSlowImport.Checked = layer.GetSetting("TvMovieSlowImport", "true").Value = "true"
-     
+
 
             Dim tvMovieLimitActors As Decimal = Convert.ToDecimal(layer.GetSetting("TvMovieLimitActors", "5").Value)
             If tvMovieLimitActors < numericUpDownActorCount.Minimum OrElse tvMovieLimitActors > numericUpDownActorCount.Maximum Then
@@ -343,6 +353,7 @@ Namespace SetupTv.Sections
             CheckBoxClickfinderPG.Checked = layer.GetSetting("ClickfinderDataAvailable", "false").Value = "true"
             MpCheckBoxStartImportAtTime.Checked = CBool(layer.GetSetting("TvMovieStartImportAtTime", "false").Value)
             tbImportStartTime.Text = layer.GetSetting("TvMovieStartImportTime", "06:00").Value
+            CheckCPGimportAllImages.Checked = CBool(layer.GetSetting("TvMovieCPGImportProgramsWithImages", "false").Value)
 
             If CheckBoxTvSeries.Checked = True Then
                 ButtonSeriesMapping.Enabled = True
@@ -356,9 +367,14 @@ Namespace SetupTv.Sections
                 tbMPThumbs.Enabled = False
             End If
 
+            If CheckBoxClickfinderPG.Checked Then
+                CheckCPGimportAllImages.Enabled = True
+            Else
+                CheckCPGimportAllImages.Enabled = False
+            End If
+
             If MpCheckBoxStartImportAtTime.Checked Then
                 tbImportStartTime.Enabled = True
-
             Else
                 tbImportStartTime.Enabled = False
             End If
@@ -798,6 +814,7 @@ Namespace SetupTv.Sections
         Private Sub buttonImportNow_Click(ByVal sender As Object, ByVal e As EventArgs) Handles buttonImportNow.Click
             buttonImportNow.Enabled = False
             SaveDbSettings()
+
             Try
                 Dim manualThread As New Thread(New ThreadStart(AddressOf ManualImportThread))
                 manualThread.Name = "TV Movie manual importer"
@@ -925,9 +942,18 @@ Namespace SetupTv.Sections
         Private Sub CheckBoxClickfinderPG_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles CheckBoxClickfinderPG.CheckedChanged
             If CheckBoxClickfinderPG.Checked And CheckBoxTheTvDb.Checked Then
                 tbMPThumbs.Enabled = True
+                CheckCPGimportAllImages.Enabled = True
             Else
                 tbMPThumbs.Enabled = False
+                CheckCPGimportAllImages.Enabled = False
             End If
+
+            If CheckBoxClickfinderPG.Checked Then
+                CheckCPGimportAllImages.Enabled = True
+            Else
+                CheckCPGimportAllImages.Enabled = False
+            End If
+
         End Sub
 
         Private Sub MpCheckBoxStartImportAtTime_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MpCheckBoxStartImportAtTime.CheckedChanged
