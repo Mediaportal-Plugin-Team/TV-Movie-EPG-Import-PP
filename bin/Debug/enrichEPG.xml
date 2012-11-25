@@ -44,30 +44,6 @@ enrichEPG
 	<summary>
  Indicates whether the entity is changed and requires saving or not.
  </summary>
-</member><member name="P:enrichEPG.TvDatabase.TVMovieProgram.idTVMovieProgram">
-	<summary>
- Property relating to database column idTVMovieProgram
- </summary>
-</member><member name="P:enrichEPG.TvDatabase.TVMovieProgram.TVMovieBewertung">
-	<summary>
- Property relating to database column TVMovieBewertung
- </summary>
-</member><member name="P:enrichEPG.TvDatabase.TVMovieProgram.idProgram">
-	<summary>
- Property relating to database column idProgram
- </summary>
-</member><member name="P:enrichEPG.TvDatabase.TVMovieProgram.idSeries">
-	<summary>
- Property relating to database column idSeries
- </summary>
-</member><member name="P:enrichEPG.TvDatabase.TVMovieProgram.idMovingPictures">
-	<summary>
- Property relating to database column idMovingPictures
- </summary>
-</member><member name="P:enrichEPG.TvDatabase.TVMovieProgram.idVideo">
-	<summary>
- Property relating to database column idVideo
- </summary>
 </member><member name="M:enrichEPG.TvDatabase.TVMovieProgram.ListAll">
 	<summary>
  Static method to retrieve all instances that are stored in the database in one call

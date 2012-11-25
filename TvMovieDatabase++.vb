@@ -18,24 +18,38 @@
 
 #End Region
 
-Imports System
-Imports System.Collections.Generic
-Imports System.Data
-Imports System.Data.OleDb
-Imports System.Diagnostics
-Imports System.IO
-Imports System.Text
-Imports System.Threading
-Imports TvDatabase
-Imports TvLibrary.Interfaces
-Imports TvLibrary.Log
-Imports System.Collections
-Imports Gentle.Framework
-Imports Gentle.Common
-Imports TvMovie.TvDatabase
-Imports TvMovie.ClickfinderDB
-Imports enrichEPG
 
+Imports System.ComponentModel
+Imports System.Diagnostics
+Imports System.Drawing
+Imports System.Globalization
+Imports System.IO
+Imports System.Net
+Imports System.Net.Sockets
+Imports System.Runtime.InteropServices
+Imports System.Text
+Imports System.Windows.Forms
+Imports Gentle.Common
+Imports Gentle.Framework
+Imports TvLibrary.Log
+Imports TvControl
+Imports MediaPortal.UserInterface.Controls
+Imports MediaPortal.Configuration
+Imports TvEngine
+Imports TvEngine.Events
+Imports TvLibrary.Interfaces
+Imports TvLibrary.Implementations
+Imports TvDatabase
+Imports SetupTv
+Imports System.Threading
+Imports System.Runtime.CompilerServices
+Imports System.Data.SqlClient
+Imports MySql.Data.MySqlClient
+Imports System.Data.OleDb
+Imports System.Data
+Imports System.Reflection
+Imports System.Collections.Generic
+Imports System.Linq
 
 Namespace TvEngine
 
@@ -673,7 +687,7 @@ Namespace TvEngine
             If Bewertungen.Length > 0 Then
                 Dim RatingString As String = Bewertungen
                 Dim NewList As New List(Of String)
-                Dim KeyList As New Generic.Dictionary(Of String, String)
+                Dim KeyList As New Dictionary(Of String, String)
                 Dim Rating As Short = 0
 
                 'Split the String by ";"
@@ -1153,46 +1167,7 @@ Namespace TvEngine
                 MyLog.Debug("Last Update: {0}", TvBLayer.GetSetting("TvMovieLastUpdate").Value)
 
                 'Tabellen erstellen / clear
-                If Gentle.Framework.Broker.ProviderName = "MySQL" Then
-                    'Provider: MySQL
-                    Try
-                        Broker.Execute("DROP TABLE mptvdb.tvmovieprogram")
-                        Broker.Execute("CREATE TABLE mptvdb.TVMovieProgram ( idTVMovieProgram INT NOT NULL AUTO_INCREMENT , idProgram INT NOT NULL DEFAULT 0 , TVMovieBewertung INT NOT NULL DEFAULT 0 , FanArt VARCHAR(255) , idSeries INT NOT NULL DEFAULT 0 , SeriesPosterImage VARCHAR(255) , idEpisode VARCHAR(15) , EpisodeImage VARCHAR(255) , local BIT(1) NOT NULL DEFAULT 0 , idMovingPictures INT NOT NULL DEFAULT 0 , idVideo INT NOT NULL DEFAULT 0 , KurzKritik VARCHAR(255) , BildDateiname VARCHAR(32) , Cover VARCHAR(512) , Fun INT NOT NULL DEFAULT 0 , Action INT NOT NULL DEFAULT 0 , Feelings INT NOT NULL DEFAULT 0 , Erotic INT NOT NULL DEFAULT 0 , Tension INT NOT NULL DEFAULT 0 , Requirement INT NOT NULL DEFAULT 0 , Actors TEXT , needsUpdate BIT(1) NOT NULL DEFAULT 1 , Dolby BIT(1) NOT NULL DEFAULT 0 , HDTV BIT(1) NOT NULL DEFAULT 0 , Country VARCHAR(50) , Regie VARCHAR(50) , Year DATETIME NOT NULL , Describtion TEXT , ShortDescribtion TEXT , FileName VARCHAR(255) , PRIMARY KEY (idTVMovieProgram) )")
-                    Catch ex As Exception
-                        'Falls die Tabelle nicht existiert, abfangen & erstellen
-                        Broker.Execute("CREATE TABLE mptvdb.TVMovieProgram ( idTVMovieProgram INT NOT NULL AUTO_INCREMENT , idProgram INT NOT NULL DEFAULT 0 , TVMovieBewertung INT NOT NULL DEFAULT 0 , FanArt VARCHAR(255) , idSeries INT NOT NULL DEFAULT 0 , SeriesPosterImage VARCHAR(255) , idEpisode VARCHAR(15) , EpisodeImage VARCHAR(255) , local BIT(1) NOT NULL DEFAULT 0 , idMovingPictures INT NOT NULL DEFAULT 0 , idVideo INT NOT NULL DEFAULT 0 , KurzKritik VARCHAR(255) , BildDateiname VARCHAR(32) , Cover VARCHAR(512) , Fun INT NOT NULL DEFAULT 0 , Action INT NOT NULL DEFAULT 0 , Feelings INT NOT NULL DEFAULT 0 , Erotic INT NOT NULL DEFAULT 0 , Tension INT NOT NULL DEFAULT 0 , Requirement INT NOT NULL DEFAULT 0 , Actors TEXT , needsUpdate BIT(1) NOT NULL DEFAULT 1 , Dolby BIT(1) NOT NULL DEFAULT 0 , HDTV BIT(1) NOT NULL DEFAULT 0 , Country VARCHAR(50) , Regie VARCHAR(50) , Year DATETIME NOT NULL , Describtion TEXT , ShortDescribtion TEXT , FileName VARCHAR(255) , PRIMARY KEY (idTVMovieProgram) )")
-                    End Try
-
-                    Try
-                        'Table TvMovieSeriesMapping anlegen
-                        Broker.Execute("CREATE  TABLE mptvdb.TvMovieSeriesMapping ( idSeries INT NOT NULL , EpgTitle VARCHAR(255) , PRIMARY KEY (idSeries) )")
-                        MyLog.[Debug]("TVMovie: [TvMovie++ Settings]: TvMovieSeriesMapping table created")
-                    Catch ex As Exception
-                        'existiert bereits
-                        MyLog.[Debug]("TVMovie: [TvMovie++ Settings]: TvMovieSeriesMapping table exist")
-                    End Try
-                Else
-                    'Provider: MSSQL
-                    Try
-                        Broker.Execute("DROP TABLE mptvdb.[dbo].tvmovieprogram")
-                        Broker.Execute("CREATE TABLE MpTvDb.[dbo].TVMovieProgram ( idTVMovieProgram int NOT NULL IDENTITY, idProgram INT NOT NULL DEFAULT 0 , TVMovieBewertung INT NOT NULL DEFAULT 0 , FanArt VARCHAR(255) , idSeries INT NOT NULL DEFAULT 0 , SeriesPosterImage VARCHAR(255) , idEpisode VARCHAR(15) , EpisodeImage VARCHAR(255) , local BIT NOT NULL DEFAULT 0 , idMovingPictures INT NOT NULL DEFAULT 0 , idVideo INT NOT NULL DEFAULT 0 , KurzKritik VARCHAR(255) , BildDateiname VARCHAR(32) , Cover VARCHAR(512) , Fun INT NOT NULL DEFAULT 0 , Action INT NOT NULL DEFAULT 0 , Feelings INT NOT NULL DEFAULT 0 , Erotic INT NOT NULL DEFAULT 0 , Tension INT NOT NULL DEFAULT 0 , Requirement INT NOT NULL DEFAULT 0 , Actors TEXT , needsUpdate BIT NOT NULL DEFAULT 1 , Dolby BIT NOT NULL DEFAULT 0 , HDTV BIT NOT NULL DEFAULT 0 , Country VARCHAR(50) , Regie VARCHAR(50) , Year DATETIME NOT NULL , Describtion TEXT , ShortDescribtion TEXT , FileName VARCHAR(255) , PRIMARY KEY (idTVMovieProgram))")
-                    Catch ex As Exception
-                        'Falls die Tabelle nicht existiert, abfangen & erstellen
-                        Broker.Execute("CREATE TABLE MpTvDb.[dbo].TVMovieProgram ( idTVMovieProgram int NOT NULL IDENTITY, idProgram INT NOT NULL DEFAULT 0 , TVMovieBewertung INT NOT NULL DEFAULT 0 , FanArt VARCHAR(255) , idSeries INT NOT NULL DEFAULT 0 , SeriesPosterImage VARCHAR(255) , idEpisode VARCHAR(15) , EpisodeImage VARCHAR(255) , local BIT NOT NULL DEFAULT 0 , idMovingPictures INT NOT NULL DEFAULT 0 , idVideo INT NOT NULL DEFAULT 0 , KurzKritik VARCHAR(255) , BildDateiname VARCHAR(32) , Cover VARCHAR(512) , Fun INT NOT NULL DEFAULT 0 , Action INT NOT NULL DEFAULT 0 , Feelings INT NOT NULL DEFAULT 0 , Erotic INT NOT NULL DEFAULT 0 , Tension INT NOT NULL DEFAULT 0 , Requirement INT NOT NULL DEFAULT 0 , Actors TEXT , needsUpdate BIT NOT NULL DEFAULT 1 , Dolby BIT NOT NULL DEFAULT 0 , HDTV BIT NOT NULL DEFAULT 0 , Country VARCHAR(50) , Regie VARCHAR(50) , Year DATETIME NOT NULL , Describtion TEXT , ShortDescribtion TEXT , FileName VARCHAR(255) , PRIMARY KEY (idTVMovieProgram))")
-                    End Try
-
-                    Try
-                        'Table TvMovieSeriesMapping anlegen
-                        Broker.Execute("CREATE  TABLE mptvdb.[dbo].TvMovieSeriesMapping ( idSeries INT NOT NULL , EpgTitle VARCHAR(255) , PRIMARY KEY (idSeries) )")
-                        MyLog.[Debug]("TVMovie: [TvMovie++ Settings]: TvMovieSeriesMapping table created")
-                    Catch ex As Exception
-                        'existiert bereits
-                        MyLog.[Debug]("TVMovie: [TvMovie++ Settings]: TvMovieSeriesMapping table exist")
-                    End Try
-                End If
-
-                'Alle idPrograms (+ Year sonst fehler, da nicht Null sein darf) in TvMovieProgram spiegeln
-                Broker.Execute("INSERT INTO mptvdb.TVMovieProgram (TVMovieProgram.idProgram, TVMovieProgram.year) SELECT program.idProgram, program.originalAirDate from mptvdb.program")
+                Helper.CreateOrClearTvMovieProgramTable()
 
                 'Tv Movie Highlight und Suchoptionen für Clickfinder ProgramGuide importieren
                 If _tvbLayer.GetSetting("ClickfinderDataAvailable").Value = "true" Then
@@ -1243,152 +1218,118 @@ Namespace TvEngine
         End Sub
 
         Private Sub GetTvMovieHighlights()
-
             Try
-                MyLog.Debug("TVMovie: [GetTvMovieHighlights]: start import")
-                MyLog.Debug("TVMovie: [GetTvMovieHighlights]: Import all programs that have images: {0}", _tvbLayer.GetSetting("TvMovieCPGImportProgramsWithImages", "false").Value)
+                MyLog.Info("")
+                MyLog.Info("-------------------- Import data for Clickfinder ProgramGuide --------------------")
+                Dim _TestTimer As Date = Now
 
-                Dim _SQLstringClickfinderDB As String = String.Empty
+                Dim MvLayer As New MyBusinessLayer
+                Dim _Counter As Integer = 0
+                Dim _stationCounter As Integer = 0
+                Dim _tvMdatabasePath As String = "\\10.0.1.2\TV Movie\TV Movie ClickFinder\tvdaten.mdb"
 
-                If CBool(_tvbLayer.GetSetting("TvMovieCPGImportProgramsWithImages", "false").Value) = False Then
-                    _SQLstringClickfinderDB = "SELECT * FROM Sendungen INNER JOIN SendungenDetails ON Sendungen.Pos = SendungenDetails.Pos WHERE Bewertung > 0 ORDER BY SenderKennung ASC"
-                Else
-                    'String für programme mit Bildern (user defined)
-                    _SQLstringClickfinderDB = "SELECT * FROM Sendungen INNER JOIN SendungenDetails ON Sendungen.Pos = SendungenDetails.Pos WHERE Bewertung > 0 OR KzBilddateiHeruntergeladen = True ORDER BY SenderKennung ASC"
-                End If
+                'List: TvMMapping laden
+                Dim _SQLstate1 As SqlStatement = Broker.GetStatement("SELECT * FROM TvMovieMapping ORDER BY StationName ASC")
+                Dim _TvMovieMappingList As List(Of TvMovieMapping) = ObjectFactory.GetCollection(GetType(TvMovieMapping), _SQLstate1.Execute())
 
-                _SQLstringClickfinderDB = Replace(_SQLstringClickfinderDB, "*", "Sendungen.Titel, Sendungen.Beginn, Sendungen.Ende, Sendungen.SenderKennung, Sendungen.Bewertung, Sendungen.KzLive, Sendungen.KzWiederholung, Sendungen.KzDolby, Sendungen.KzDolbyDigital, Sendungen.KzDolbySurround, Sendungen.KzHDTV, Sendungen.KzBilddateiHeruntergeladen, SendungenDetails.Darsteller, Sendungen.Regie, Sendungen.Herstellungsland, Sendungen.Herstellungsjahr, Sendungen.Kurzkritik, Sendungen.Bilddateiname, Sendungen.Bewertungen")
+                'Alle gemappten TvMovie Channels durchlaufen
+                For Each _TvMchannel As TvMovieMapping In _TvMovieMappingList
 
-                'Alle Sendungen mit Bewertung laden
-                Dim _ClickfinderDB As New ClickfinderDB(_SQLstringClickfinderDB, TvMovie.DatabasePath)
-                Dim _CounterFound As Integer = 0
-                Dim _StartTimer As Date = Date.Now
+                    _stationCounter = _stationCounter + 1
+                    'Alle TvMprogramme des jeweiligen channels laden
+                    Dim _SQLstringClickfinderDB As String = String.Empty
+                    Dim sqlb As New StringBuilder()
 
-                For i As Integer = 0 To _ClickfinderDB.Count - 1
-                    Dim _DebugchannelName As String = String.Empty
-                    Try
-                        'Überprüfen ob SenderKennung gemappt ist
-                        Dim sb As New SqlBuilder(Gentle.Framework.StatementType.Select, GetType(TvMovieMapping))
-                        sb.AddConstraint([Operator].Equals, "stationName", _ClickfinderDB(i).SenderKennung)
-                        Dim stmt As SqlStatement = sb.GetStatement(True)
-                        Dim _Result As IList(Of TvMovieMapping) = ObjectFactory.GetCollection(GetType(TvMovieMapping), stmt.Execute())
+                    'SqlString: Bewertung > 0 laden
+                    sqlb.Append("WHERE (((Sendungen.SenderKennung)=""{0}"") AND ((Sendungen.Beginn)>= #{1}#)) ORDER BY Sendungen.Beginn")
+                    _SQLstringClickfinderDB = String.Format(sqlb.ToString(), _TvMchannel.StationName, Date.Today.AddDays(-1).ToString("yyyy-MM-dd HH:mm:ss"))
+                    Dim _TvMprogramList As List(Of TvMprogram) = TvMprogram.RetrieveList(_SQLstringClickfinderDB, _TvMchannel.ReferencedChannel.DisplayName)
 
-                        'Falls channel gemappt, Sendung im Program suchen
-                        If _Result.Count > 0 Then
-                            For d As Integer = 0 To _Result.Count - 1
+                    'Sofern _TvMprogramList.Count > 0, ProgramList laden um idProgram zu bekommen und importieren
+                    If _TvMprogramList.Count > 0 Then
 
-                                'Dim _channel As Channel = Channel.Retrieve(_Result(d).IdChannel)
-                                '_DebugchannelName = _channel.DisplayName
+                        'Alle programme des jeweiligen channels laden -> wg. idProgram
+                        Dim stmt2 As SqlStatement = Broker.GetStatement(String.Format("SELECT * FROM program WHERE idChannel = {0} ORDER BY startTime ASC", _TvMchannel.IdChannel))
+                        Dim _ProgramList As List(Of Program) = ObjectFactory.GetCollection(GetType(Program), stmt2.Execute())
 
-                                'Dim sb2 As New SqlBuilder(Gentle.Framework.StatementType.Select, GetType(Program))
-                                'sb2.AddConstraint([Operator].Equals, "startTime", _ClickfinderDB(i).Beginn)
-                                'sb2.AddConstraint([Operator].Equals, "endTime", _ClickfinderDB(i).Ende)
-                                'sb2.AddConstraint([Operator].Equals, "idChannel", _channel.IdChannel)
-                                'Dim stmt2 As SqlStatement = sb2.GetStatement(True)
-                                'Dim _Program As IList(Of Program) = ObjectFactory.GetCollection(GetType(Program), stmt2.Execute())
+                        'Alle TvMprogramme raus, die nicht im Zeitfenster von _ProgramList liegen
+                        _TvMprogramList = _TvMprogramList.FindAll(Function(x As TvMprogram) x.Beginn >= _ProgramList(0).StartTime AndAlso x.Ende <= _ProgramList(_ProgramList.Count - 1).EndTime)
 
+                        MyLog.Info("")
+                        MyLog.Info("TVMovie: Import Clickfinder ProgramGuide data for channel: {0} (idChannel: {1})", _TvMchannel.ReferencedChannel.DisplayName, _TvMchannel.IdChannel)
 
-                                Dim _SQLstring As String = _
-                                    "Select * from program INNER JOIN TvMovieProgram ON program.idprogram = TvMovieProgram.idProgram " & _
-                                    "WHERE startTime = " & MySqlDate(_ClickfinderDB(i).Beginn) & " " & _
-                                    "AND endTime = " & MySqlDate(_ClickfinderDB(i).Ende) & " " & _
-                                    "AND idChannel = " & _Result(d).IdChannel
+                        'Für alle TvMprogramme idProgram ermitteln
+                        Dim _deleteList As New List(Of TvMprogram)
+                        For Each _TvMprogram As TvMprogram In _TvMprogramList
+                            Try
+                                'idProgram suchen über startTime & endTime
+                                Dim _startTime As Date = _TvMprogram.Beginn
+                                Dim _endTime As Date = _TvMprogram.Ende
+                                Dim _program As Program = _ProgramList.Find(Function(x As Program) x.StartTime = _startTime AndAlso x.EndTime = _endTime)
+                                _TvMprogram.idProgram = _program.IdProgram
 
-                                'List: Daten laden
-                                _SQLstring = Replace(_SQLstring, " * ", " TVMovieProgram.idProgram, TVMovieProgram.Action, TVMovieProgram.Actors, TVMovieProgram.BildDateiname, TVMovieProgram.Country, TVMovieProgram.Cover, TVMovieProgram.Describtion, TVMovieProgram.Dolby, TVMovieProgram.EpisodeImage, TVMovieProgram.Erotic, TVMovieProgram.FanArt, TVMovieProgram.Feelings, TVMovieProgram.FileName, TVMovieProgram.Fun, TVMovieProgram.HDTV, TVMovieProgram.idEpisode, TVMovieProgram.idMovingPictures, TVMovieProgram.idSeries, TVMovieProgram.idTVMovieProgram, TVMovieProgram.idVideo, TVMovieProgram.KurzKritik, TVMovieProgram.local, TVMovieProgram.needsUpdate, TVMovieProgram.Regie, TVMovieProgram.Requirement, TVMovieProgram.SeriesPosterImage, TVMovieProgram.ShortDescribtion, TVMovieProgram.Tension, TVMovieProgram.TVMovieBewertung, TVMovieProgram.Year ")
-                                Dim _SQLstate1 As SqlStatement = Broker.GetStatement(_SQLstring)
-                                Dim _TvMovieProgramList As List(Of TVMovieProgram) = ObjectFactory.GetCollection(GetType(TVMovieProgram), _SQLstate1.Execute())
+                            Catch ex1 As Exception
+                                Try
+                                    'idProgram nicht gefunden, suchen über title und time interval: startTime & endTime +/- 30min
+                                    Dim _startTime As Date = _TvMprogram.Beginn.AddMinutes(-30)
+                                    Dim _endTime As Date = _TvMprogram.Ende.AddMinutes(30)
+                                    Dim _title As String = Replace(Replace(_TvMprogram.Titel, " (LIVE)", ""), " (Wdh.)", "")
+                                    Dim _program As Program = _ProgramList.Find(Function(x As Program) x.StartTime >= _startTime AndAlso x.EndTime <= _endTime AndAlso x.Title = _title)
+                                    _TvMprogram.idProgram = _program.IdProgram
 
-                                'Wenn Program gefunden dann in TvMovieProgram schreiben
-                                If _TvMovieProgramList.Count >= 1 Then
-
-                                    For Each _TvMovieProgram As TVMovieProgram In _TvMovieProgramList
-                                        'nur Informationen die zwigend benötigt werden, anzeige in GuiItems, GuiCategories & GuiHighlights
-                                        '+ zusätzlich Infos zum sortieren & suchen (z.B. TvMovieBewretung, Fun, Action, etc.)
-
-                                        'BildDateiname aus Clickfinder DB holen, sofern vorhanden
-                                        If CBool(_ClickfinderDB(i).KzBilddateiHeruntergeladen) = True And Not String.IsNullOrEmpty(_ClickfinderDB(i).Bilddateiname) Then
-                                            _TvMovieProgram.BildDateiname = _ClickfinderDB(i).Bilddateiname
-                                        End If
-
-                                        'TvMovie Bewertung aus Clickfinder DB holen, sofern vorhanden
-                                        If Not _ClickfinderDB(i).Bewertung = 0 Then
-                                            _TvMovieProgram.TVMovieBewertung = _ClickfinderDB(i).Bewertung
-                                        End If
-
-                                        'KurzKritik aus Clickfinder DB holen, sofern vorhanden
-                                        If Not String.IsNullOrEmpty(_ClickfinderDB(i).Kurzkritik) Then
-                                            _TvMovieProgram.KurzKritik = _ClickfinderDB(i).Kurzkritik
-                                        End If
-
-                                        'Bewertungen String aus Clickfinder DB holen, zerlegen, einzel Bewertungen extrahieren
-                                        If Not String.IsNullOrEmpty(_ClickfinderDB(i).Bewertungen) Then
-                                            ' We want to split this input string
-                                            Dim s As String = _ClickfinderDB(i).Bewertungen
-
-                                            ' Split string based on spaces
-                                            Dim words As String() = s.Split(New Char() {";"c})
-
-                                            ' Use For Each loop over words and display them
-                                            Dim word As String
-                                            For Each word In words
-
-                                                'MsgBox(Left(word, InStr(word, "=") - 1))
-
-                                                'MsgBox(CInt(Right(word, word.Length - InStr(word, "="))))
-
-                                                Select Case Left(word, InStr(word, "=") - 1)
-                                                    Case Is = "Spaß"
-                                                        _TvMovieProgram.Fun = CInt(Right(word, word.Length - InStr(word, "=")))
-                                                    Case Is = "Action"
-                                                        _TvMovieProgram.Action = CInt(Right(word, word.Length - InStr(word, "=")))
-                                                    Case Is = "Erotik"
-                                                        _TvMovieProgram.Erotic = CInt(Right(word, word.Length - InStr(word, "=")))
-                                                    Case Is = "Spannung"
-                                                        _TvMovieProgram.Tension = CInt(Right(word, word.Length - InStr(word, "=")))
-                                                    Case Is = "Anspruch"
-                                                        _TvMovieProgram.Requirement = CInt(Right(word, word.Length - InStr(word, "=")))
-                                                    Case Is = "Gefühl"
-                                                        _TvMovieProgram.Feelings = CInt(Right(word, word.Length - InStr(word, "=")))
-                                                End Select
-
-                                            Next
-                                        End If
-
-                                        'Actors aus Clickfinder DB holen, sofern vorhanden
-                                        If Not String.IsNullOrEmpty(_ClickfinderDB(i).Darsteller) Then
-                                            _TvMovieProgram.Actors = _ClickfinderDB(i).Darsteller
-                                        End If
-
-                                        _TvMovieProgram.Persist()
-
-                                        _CounterFound = _CounterFound + 1
-                                    Next
-
-                                    If _TvMovieProgramList.Count > 1 Then
-                                        MyLog.Info("Program found in {0} EPG Entries (Start: {1}, Ende: {2}, Titel: {3}, Channel: {4}", _
-                                                _TvMovieProgramList.Count, _ClickfinderDB(i).Beginn, _ClickfinderDB(i).Ende, _ClickfinderDB(i).Titel, _Result(d).ReferencedChannel.DisplayName)
+                                Catch ex2 As Exception
+                                    'idProgram nicht gefunden = 0, damit aus list rausgeworfen werden kann + Error log wenn nicht daten von gestern
+                                    _TvMprogram.idProgram = 0
+                                    If _TvMprogram.Beginn > Date.Today Then
+                                        MyLog.Error("TVMovie: idProgram not found (Title: {0}, startTime:{1}, endTime: {2}", _TvMprogram.Titel, _TvMprogram.Beginn, _TvMprogram.Ende)
                                     End If
+                                End Try
+                            End Try
+                        Next
 
-                                Else
-                                    'Nur alte Sendungen < 2 Tage sind nicht im EPG enthalten
-                                    'Mylog.[Debug]("Start: {0}, Ende: {1}, Titel: {2}, Channel: {3}", _ClickfinderDB(i).Beginn, _ClickfinderDB(i).Ende, _ClickfinderDB(i).Titel, _channel.DisplayName)
-                                End If
-                            Next
+                        'Alle nicht gefunden programme (idProgram=0) entfernen
+                        _TvMprogramList = _TvMprogramList.FindAll(Function(x As TvMprogram) x.idProgram > 0)
+                        MyLog.Info("TVMovie: TvMprogram.Count = {0}, program.Count = {1}", _TvMprogramList.Count, _ProgramList.Count)
+
+                        Dim _tmpCounter As Integer = _TvMprogramList.Count
+
+                        _TvMprogramList = _TvMprogramList.Distinct(New TvMprogram_GroupByIdprogram).ToList
+
+                        Dim _diffCounter As Integer = _tmpCounter - _TvMprogramList.Count
+                        If _diffCounter <> 0 Then
+                            MyLog.Warn("TVMovie: Duplicate idPrograms removed: {0}", _diffCounter)
                         End If
 
-                    Catch ex As Exception
-                        MyLog.[Error]("TVMovie: [GetTvMovieHighlights]: Titel: {0}, SenderKennung:{1}, DisplayName:{2}, Beginn:{3}", _ClickfinderDB(i).Titel, _ClickfinderDB(i).SenderKennung, _DebugchannelName, _ClickfinderDB(i).Beginn)
-                        MyLog.[Error]("TVMovie: [GetTvMovieHighlights]: databasePath: {0} exception err:{1} stack:{2}", TvMovie.DatabasePath, ex.Message, ex.StackTrace)
-                    End Try
+                        'TvMoviePrograms importieren in TvServer DB
+                        Dim importPrio As ThreadPriority = If(_slowImport, ThreadPriority.BelowNormal, ThreadPriority.AboveNormal)
+                        If _slowImport Then
+                            Thread.Sleep(32)
+                        End If
+
+                        Dim InsertCopy As New List(Of TvMprogram)(_TvMprogramList)
+                        Dim debugCount As Integer = MvLayer.InsertTvMoviePrograms(InsertCopy, importPrio)
+                        MyLog.Info("TVMovie: Inserted {0} TvMoviePrograms", debugCount)
+
+                        _Counter = _Counter + debugCount
+                    Else
+                        MyLog.Debug("TVMovie: no TvMovieProgram infos for channel: {0} found", _TvMchannel.ReferencedChannel.DisplayName)
+                    End If
                 Next
 
-                MyLog.[Info]("TVMovie: [GetTvMovieHighlights]: Summary: Infos for {0}/{1} saved in TvMovieProgram (Duration: {2}s)", _CounterFound, _ClickfinderDB.Count, DateDiff(DateInterval.Second, _StartTimer, Date.Now))
+                MyLog.Info("")
+                MyLog.Info("TVMovie: Waiting for database to be updated...")
+                MvLayer.WaitForInsertPrograms()
+
+                MyLog.Info("")
+
+                Dim ImportDuration As System.TimeSpan = (DateTime.Now - _TestTimer)
+                MyLog.Info("TVMovie: Imported {0} database entries for {1} stations in {2} seconds", _Counter, _stationCounter, Convert.ToString(ImportDuration.TotalSeconds))
+                MyLog.Info("TVMovie: Import data for Clickfinder ProgramGuide finished.")
+                MyLog.Info("")
 
             Catch ex As Exception
-                MyLog.[Error]("TVMovie: [GetTvMovieHighlights]: databasePath: {0} exception err:{1} stack:{2}", TvMovie.DatabasePath, ex.Message, ex.StackTrace)
+                MyLog.[Error]("TVMovie: [GetTvMovieHighlights]: exception err:{0} stack:{1}", ex.Message, ex.StackTrace)
             End Try
-
         End Sub
 
         Private Function allowedSigns(ByVal expression As String) As String

@@ -32,7 +32,7 @@ Imports TvLibrary.Interfaces
 Imports TvLibrary.Log
 Imports TvEngine
 Imports SetupTv
-
+Imports System.Data
 
 
 Namespace TvEngine
@@ -281,7 +281,7 @@ Namespace TvEngine
 
         Public ReadOnly Property Version() As String Implements ITvServerPlugin.Version
             Get
-                Return "1.3.4.9"
+                Return "1.3.5.5"
             End Get
         End Property
 

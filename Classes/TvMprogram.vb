@@ -245,9 +245,9 @@ Namespace TvEngine
         ''' SQLStringAppendix = WHERE, ORDER BY, etc.
         ''' DatabasePath = Pfad zur Datenbank (absolut)
         ''' </summary>
-        Public Overloads Shared Function RetrieveList(ByVal SQLStringAppendix As String, ByVal DatabasePath As String) As List(Of TvMprogram)
+        Public Overloads Shared Function RetrieveList(ByVal SQLStringAppendix As String, ByVal ChannelName As String) As List(Of TvMprogram)
 
-            Dim _dataProviderString As String = String.Format("Provider=Microsoft.Jet.OLEDB.4.0;Data Source={0};Mode=Share Deny None;Jet OLEDB:Engine Type=5;Jet OLEDB:Database Locking Mode=1;", DatabasePath)
+            Dim _dataProviderString As String = String.Format("Provider=Microsoft.Jet.OLEDB.4.0;Data Source={0};Mode=Share Deny None;Jet OLEDB:Engine Type=5;Jet OLEDB:Database Locking Mode=1;", TvMovie.DatabasePath)
             Dim _databaseConnection As OleDbConnection = New OleDbConnection(_dataProviderString)
             Dim databaseTransaction As OleDbTransaction = Nothing
 
@@ -285,14 +285,21 @@ Namespace TvEngine
                             _TvMprogram.KzLive = CBool(reader(5).ToString)
                             _TvMprogram.KzWiederholung = CBool(reader(6).ToString)
 
-                            'DolbyDigital übergeben
-                            If CBool(reader(7).ToString) = True Or CBool(reader(8).ToString) = True Or CBool(reader(9).ToString) = True Then
+                            'Wenn HD Sender -> Dolby = true, Hd = true
+                            If InStr(ChannelName, " HD") > 0 Then
                                 _TvMprogram.KzDolbyDigital = True
+                                _TvMprogram.KzHDTV = True
                             Else
-                                _TvMprogram.KzDolbyDigital = False
+                                'DolbyDigital übergeben
+                                If CBool(reader(7).ToString) = True Or CBool(reader(8).ToString) = True Or CBool(reader(9).ToString) = True Then
+                                    _TvMprogram.KzDolbyDigital = True
+                                Else
+                                    _TvMprogram.KzDolbyDigital = False
+                                End If
+
+                                _TvMprogram.KzHDTV = CBool(reader(10).ToString)
                             End If
 
-                            _TvMprogram.KzHDTV = CBool(reader(10).ToString)
                             _TvMprogram.Bilddateiname = reader(11).ToString
                             _TvMprogram.Darsteller = Replace(reader(12).ToString, ";", ", ")
                             _TvMprogram.Regie = Replace(reader(13).ToString, ";", ", ")
@@ -329,7 +336,7 @@ Namespace TvEngine
                                 Next
                             End If
 
-                            _TvMprogram.Beschreibung = reader(18).ToString
+                            _TvMprogram.Beschreibung = Replace(reader(18).ToString, "<br>", vbNewLine)
                             _TvMprogram.KurzBeschreibung = reader(19).ToString
 
                             _TvMProgramList.Add(_TvMprogram)

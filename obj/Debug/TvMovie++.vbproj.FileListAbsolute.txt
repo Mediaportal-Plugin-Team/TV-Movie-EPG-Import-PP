@@ -29,3 +29,4 @@ D:\Projekte\Tv Movie EPG Import++\bin\Debug\enrichEPG.dll
 D:\Projekte\Tv Movie EPG Import++\bin\Debug\TvdbLib.dll
 D:\Projekte\Tv Movie EPG Import++\bin\Debug\enrichEPG.pdb
 D:\Projekte\Tv Movie EPG Import++\bin\Debug\enrichEPG.xml
+D:\Projekte\Tv Movie EPG Import++\bin\Debug\MySql.Data.dll

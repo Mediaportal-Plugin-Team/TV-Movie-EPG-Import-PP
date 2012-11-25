@@ -38,7 +38,7 @@ Public Class frmEPGgrab
             Dim sb As New SqlBuilder(StatementType.Select, GetType(Channel))
             sb.AddOrderByField(True, "displayName")
             Dim stmt As SqlStatement = sb.GetStatement(True)
-            Dim _channel As IList(Of Channel) = ObjectFactory.GetCollection(GetType(Channel), stmt.Execute())
+            Dim _channel As List(Of Channel) = ObjectFactory.GetCollection(GetType(Channel), stmt.Execute())
 
 
             For i As Integer = 0 To _channel.Count - 1
@@ -46,7 +46,7 @@ Public Class frmEPGgrab
                 Dim sb2 As New SqlBuilder(StatementType.Select, GetType(TvMovieMapping))
                 sb2.AddConstraint([Operator].Equals, "idchannel", _channel(i).IdChannel)
                 Dim stmt2 As SqlStatement = sb2.GetStatement(True)
-                Dim _Result As IList(Of TvMovieMapping) = ObjectFactory.GetCollection(GetType(TvMovieMapping), stmt2.Execute())
+                Dim _Result As List(Of TvMovieMapping) = ObjectFactory.GetCollection(GetType(TvMovieMapping), stmt2.Execute())
 
                 If _Result.Count = 0 Then
                     If _channel(i).IsTv = True And _channel(i).ReferringGroupMap.Count > 1 Then
