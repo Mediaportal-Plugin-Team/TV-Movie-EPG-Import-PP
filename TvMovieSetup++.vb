@@ -295,14 +295,6 @@ Namespace SetupTv.Sections
             End If
             setting.Persist()
 
-            setting = layer.GetSetting("TvMovieCPGImportProgramsWithImages", "false")
-            If CheckCPGimportAllImages.Checked Then
-                setting.Value = "true"
-            Else
-                setting.Value = "false"
-            End If
-
-            setting.Persist()
 
             setting = layer.GetSetting("TvMovieStartImportTime", "06:00")
             setting.Value = tbImportStartTime.Text
@@ -353,7 +345,6 @@ Namespace SetupTv.Sections
             CheckBoxClickfinderPG.Checked = layer.GetSetting("ClickfinderDataAvailable", "false").Value = "true"
             MpCheckBoxStartImportAtTime.Checked = CBool(layer.GetSetting("TvMovieStartImportAtTime", "false").Value)
             tbImportStartTime.Text = layer.GetSetting("TvMovieStartImportTime", "06:00").Value
-            CheckCPGimportAllImages.Checked = CBool(layer.GetSetting("TvMovieCPGImportProgramsWithImages", "false").Value)
 
             If CheckBoxTvSeries.Checked = True Then
                 ButtonSeriesMapping.Enabled = True
@@ -365,12 +356,6 @@ Namespace SetupTv.Sections
                 tbMPThumbs.Enabled = True
             Else
                 tbMPThumbs.Enabled = False
-            End If
-
-            If CheckBoxClickfinderPG.Checked Then
-                CheckCPGimportAllImages.Enabled = True
-            Else
-                CheckCPGimportAllImages.Enabled = False
             End If
 
             If MpCheckBoxStartImportAtTime.Checked Then
@@ -942,18 +927,9 @@ Namespace SetupTv.Sections
         Private Sub CheckBoxClickfinderPG_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles CheckBoxClickfinderPG.CheckedChanged
             If CheckBoxClickfinderPG.Checked And CheckBoxTheTvDb.Checked Then
                 tbMPThumbs.Enabled = True
-                CheckCPGimportAllImages.Enabled = True
             Else
                 tbMPThumbs.Enabled = False
-                CheckCPGimportAllImages.Enabled = False
             End If
-
-            If CheckBoxClickfinderPG.Checked Then
-                CheckCPGimportAllImages.Enabled = True
-            Else
-                CheckCPGimportAllImages.Enabled = False
-            End If
-
         End Sub
 
         Private Sub MpCheckBoxStartImportAtTime_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MpCheckBoxStartImportAtTime.CheckedChanged
@@ -963,5 +939,6 @@ Namespace SetupTv.Sections
                 tbImportStartTime.Enabled = False
             End If
         End Sub
+
     End Class
 End Namespace
