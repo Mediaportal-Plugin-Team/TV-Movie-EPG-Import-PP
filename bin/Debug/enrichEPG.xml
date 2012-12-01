@@ -6,7 +6,37 @@ enrichEPG
 </name>
 </assembly>
 <members>
-<member name="M:enrichEPG.TvDatabase.TvMovieSeriesMapping.#ctor(System.Int32)">
+<member name="M:enrichEPG.TvDatabase.TVMovieEpisodeMapping.#ctor(System.String,System.Int32,System.String,System.Int32,System.Int32)">
+	<summary> 
+ Create an object from an existing row of data. This will be used by Gentle to 
+ construct objects from retrieved rows. 
+ </summary>
+</member><member name="P:enrichEPG.TvDatabase.TVMovieEpisodeMapping.IsChanged">
+	<summary>
+ Indicates whether the entity is changed and requires saving or not.
+ </summary>
+</member><member name="M:enrichEPG.TvDatabase.TVMovieEpisodeMapping.ListAll">
+	<summary>
+ Static method to retrieve all instances that are stored in the database in one call
+ </summary>
+</member><member name="M:enrichEPG.TvDatabase.TVMovieEpisodeMapping.Retrieve(System.String)">
+	<summary>
+ Retrieves an entity given it's id.
+ </summary>
+</member><member name="M:enrichEPG.TvDatabase.TVMovieEpisodeMapping.Retrieve(Gentle.Framework.Key)">
+	<summary>
+ Retrieves an entity given it's id, using Gentle.Framework.Key class.
+ This allows retrieval based on multi-column keys.
+ </summary>
+</member><member name="M:enrichEPG.TvDatabase.TVMovieEpisodeMapping.Persist">
+	<summary>
+ Persists the entity if it was never persisted or was changed.
+ </summary>
+</member><member name="T:enrichEPG.TvDatabase.TVMovieEpisodeMapping">
+	<summary>
+ Instances of this class represent the properties and methods of a row in the table <b>TvMovieEpisodeMapping</b>.
+ </summary>
+</member><member name="M:enrichEPG.TvDatabase.TvMovieSeriesMapping.#ctor(System.Int32)">
 	<summary> 
  Create an object from an existing row of data. This will be used by Gentle to 
  construct objects from retrieved rows. 
@@ -36,6 +66,10 @@ enrichEPG
 	<summary>
  Persists the entity if it was never persisted or was changed.
  </summary>
+</member><member name="M:enrichEPG.TvDatabase.TvMovieSeriesMapping.ReferencedTvMovieProgramList">
+	<summary>
+ alle TvMovieProgram laden (Episoden im EPG)
+ </summary>
 </member><member name="T:enrichEPG.TvDatabase.TvMovieSeriesMapping">
 	<summary>
  Instances of this class represent the properties and methods of a row in the table <b>TvMovieSeriesMapping</b>.
@@ -43,6 +77,10 @@ enrichEPG
 </member><member name="P:enrichEPG.TvDatabase.TVMovieProgram.IsChanged">
 	<summary>
  Indicates whether the entity is changed and requires saving or not.
+ </summary>
+</member><member name="P:enrichEPG.TvDatabase.TVMovieProgram.SeriesDisabled">
+	<summary>
+ Serie disabled (TvMovieSeriesMapping, sofern idseries &gt; 0, sonst false)
  </summary>
 </member><member name="M:enrichEPG.TvDatabase.TVMovieProgram.ListAll">
 	<summary>

@@ -1,4 +1,5 @@
-﻿Imports TvMovie.TvDatabase
+﻿Imports enrichEPG.TvDatabase
+Imports System.Collections.Generic
 
 Public Class frmSeriesMapping
 
@@ -13,6 +14,11 @@ Public Class frmSeriesMapping
             CBSeries.Items.Add(_TvSeriesDB(i).SeriesID & " | " & _TvSeriesDB(i).SeriesName)
         Next
 
+        Dim _SeriesMappingList As IList(Of TvMovieSeriesMapping) = TvMovieSeriesMapping.ListAll
+        DGVseries.AutoGenerateColumns = True
+        DGVseries.DataSource = _SeriesMappingList
+
+        _TvSeriesDB.Dispose()
     End Sub
 
     Private Sub CBSeries_SelectedIndexChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles CBSeries.SelectedIndexChanged

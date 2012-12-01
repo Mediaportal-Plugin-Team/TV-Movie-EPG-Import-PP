@@ -281,7 +281,7 @@ Namespace TvEngine
 
         Public ReadOnly Property Version() As String Implements ITvServerPlugin.Version
             Get
-                Return "1.3.5.5"
+                Return "1.3.5.6 beta"
             End Get
         End Property
 
@@ -298,7 +298,12 @@ Namespace TvEngine
         End Property
         <CLSCompliant(False)> _
         Public Sub Start(ByVal controller As IController) Implements ITvServerPlugin.Start
+            MyLog.Info("")
+            MyLog.Info("-----------------------------------------------------------------------")
+            MyLog.Info("TVMovie: Version {0}", Me.Version)
+            MyLog.Info("TVMovie: enrichEPG.dll Version {0}", enrichEPG.Helper.Version)
             StartStopTimer(True)
+
         End Sub
 
         Public Sub StartedAll() Implements ITvServerPluginStartedAll.StartedAll

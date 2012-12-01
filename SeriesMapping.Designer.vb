@@ -27,6 +27,10 @@ Partial Class frmSeriesMapping
         Me.Label1 = New System.Windows.Forms.Label
         Me.tbEpgName = New System.Windows.Forms.TextBox
         Me.ButtonSave = New System.Windows.Forms.Button
+        Me.DGVseries = New System.Windows.Forms.DataGridView
+        Me.DGVepisodes = New System.Windows.Forms.DataGridView
+        CType(Me.DGVseries, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.DGVepisodes, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'CBSeries
@@ -72,11 +76,29 @@ Partial Class frmSeriesMapping
         Me.ButtonSave.Text = "save"
         Me.ButtonSave.UseVisualStyleBackColor = True
         '
+        'DGVseries
+        '
+        Me.DGVseries.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.DGVseries.Location = New System.Drawing.Point(102, 137)
+        Me.DGVseries.Name = "DGVseries"
+        Me.DGVseries.Size = New System.Drawing.Size(207, 270)
+        Me.DGVseries.TabIndex = 72
+        '
+        'DGVepisodes
+        '
+        Me.DGVepisodes.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.DGVepisodes.Location = New System.Drawing.Point(402, 137)
+        Me.DGVepisodes.Name = "DGVepisodes"
+        Me.DGVepisodes.Size = New System.Drawing.Size(314, 270)
+        Me.DGVepisodes.TabIndex = 73
+        '
         'frmSeriesMapping
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(407, 102)
+        Me.ClientSize = New System.Drawing.Size(867, 469)
+        Me.Controls.Add(Me.DGVepisodes)
+        Me.Controls.Add(Me.DGVseries)
         Me.Controls.Add(Me.ButtonSave)
         Me.Controls.Add(Me.tbEpgName)
         Me.Controls.Add(Me.Label1)
@@ -88,6 +110,8 @@ Partial Class frmSeriesMapping
         Me.Name = "frmSeriesMapping"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "SeriesMapping"
+        CType(Me.DGVseries, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.DGVepisodes, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -97,4 +121,6 @@ Partial Class frmSeriesMapping
     Private WithEvents Label1 As System.Windows.Forms.Label
     Friend WithEvents tbEpgName As System.Windows.Forms.TextBox
     Friend WithEvents ButtonSave As System.Windows.Forms.Button
+    Friend WithEvents DGVseries As System.Windows.Forms.DataGridView
+    Friend WithEvents DGVepisodes As System.Windows.Forms.DataGridView
 End Class

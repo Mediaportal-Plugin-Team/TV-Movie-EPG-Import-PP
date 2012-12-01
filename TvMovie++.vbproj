@@ -134,8 +134,6 @@
     <Compile Include="Classes\Helper.vb" />
     <Compile Include="Classes\MyLog.vb" />
     <Compile Include="Classes\MyTvBusinessLayer.vb" />
-    <Compile Include="Classes\TVMovieProgram.vb" />
-    <Compile Include="Classes\TvMovieSeriesMapping.vb" />
     <Compile Include="Classes\TvMprogram.vb" />
     <Compile Include="Classes\TVSeriesDB.vb" />
     <Compile Include="EnableEPGgrab.Designer.vb">
