@@ -1167,7 +1167,7 @@ Namespace TvEngine
                 MyLog.Debug("Last Update: {0}", TvBLayer.GetSetting("TvMovieLastUpdate").Value)
 
                 'Tabellen erstellen / clear
-                Helper.CreateOrClearTvMovieProgramTable()
+                Helper.CreateOrClearTvMovieProgramTables()
 
                 'Tv Movie Highlight und Suchoptionen für Clickfinder ProgramGuide importieren
                 If _tvbLayer.GetSetting("ClickfinderDataAvailable").Value = "true" Then
@@ -1190,7 +1190,7 @@ Namespace TvEngine
                     CBool(_tvbLayer.GetSetting("TvMovieImportVideoDatabaseInfos").Value), _
                     CBool(_tvbLayer.GetSetting("TvMovieImportMovingPicturesInfos").Value), _
                     _ImportStartTime, _
-                    enrichEPG.EnrichEPG.LogPath.Server, _
+                    enrichEPG.MySettings.LogPath.Server, _
                     _EpisodenScannerPath, , , _
                     "tvmovie++.log", CBool(_tvbLayer.GetSetting("TvMovieUseTheTvDb", "false").Value), , _tvbLayer.GetSetting("TvMovieMPThumbsPath", "").Value)
 
@@ -1200,6 +1200,7 @@ Namespace TvEngine
                     MyLog.Error("TVMovie: [StartTVMoviePlus]: starting enrichEPG.dll")
                     MyLog.Error("TVMovie: [StartTVMoviePlus]: error: {0} stack: {1}", exEnrich.Message, exEnrich.StackTrace)
                 End Try
+
 
                 'Am Ende nochmal TvMovieLastUpdate in Settings speichern -> Abschlusszeit
                 Dim setting As Setting = TvBLayer.GetSetting("TvMovieLastUpdate")

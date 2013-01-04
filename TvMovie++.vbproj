@@ -64,9 +64,9 @@
       <SpecificVersion>False</SpecificVersion>
       <Private>False</Private>
     </Reference>
-    <Reference Include="enrichEPG, Version=1.2.7.4, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="enrichEPG, Version=1.2.9.2, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\enrichEPG\enrichEPG\enrichEPG\bin\Release\enrichEPG.dll</HintPath>
+      <HintPath>C:\Program Files\Team MediaPortal\MediaPortal TV Server\enrichEPG.dll</HintPath>
     </Reference>
     <Reference Include="Gentle.Common, Version=1.5.0.29112, Culture=neutral, PublicKeyToken=80b5de62e27be49b, processorArchitecture=MSIL">
       <HintPath>C:\Program Files\Team MediaPortal\MediaPortal TV Server\Gentle.Common.dll</HintPath>
@@ -81,6 +81,7 @@
     <Reference Include="MySql.Data, Version=5.1.7.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Program Files\Team MediaPortal\MediaPortal TV Server\MySql.Data.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="PluginBase, Version=1.2.2.0, Culture=neutral, processorArchitecture=x86">
       <HintPath>C:\Program Files\Team MediaPortal\MediaPortal TV Server\PluginBase.dll</HintPath>
@@ -135,7 +136,6 @@
     <Compile Include="Classes\MyLog.vb" />
     <Compile Include="Classes\MyTvBusinessLayer.vb" />
     <Compile Include="Classes\TvMprogram.vb" />
-    <Compile Include="Classes\TVSeriesDB.vb" />
     <Compile Include="EnableEPGgrab.Designer.vb">
       <DependentUpon>EnableEPGgrab.vb</DependentUpon>
     </Compile>
@@ -148,12 +148,6 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-    <Compile Include="SeriesMapping.Designer.vb">
-      <DependentUpon>SeriesMapping.vb</DependentUpon>
-    </Compile>
-    <Compile Include="SeriesMapping.vb">
-      <SubType>Form</SubType>
     </Compile>
     <Compile Include="SolutionInfo.vb" />
     <Compile Include="TvMovie++.vb" />
@@ -172,9 +166,6 @@
       <CustomToolNamespace>My.Resources</CustomToolNamespace>
       <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.vb</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="SeriesMapping.resx">
-      <DependentUpon>SeriesMapping.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="TvMovieSetup++.resx">
       <SubType>Designer</SubType>

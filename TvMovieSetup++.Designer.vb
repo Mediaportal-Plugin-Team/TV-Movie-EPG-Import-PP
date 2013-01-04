@@ -126,6 +126,9 @@ Namespace SetupTv.Sections
             Me.LinkClickfinderPG = New System.Windows.Forms.LinkLabel
             Me.CheckBoxClickfinderPG = New MediaPortal.UserInterface.Controls.MPCheckBox
             Me.Label4 = New System.Windows.Forms.Label
+            Me.TabPage1 = New System.Windows.Forms.TabPage
+            Me.BT_ResetEpisodeMapping = New System.Windows.Forms.Button
+            Me.BT_ResetSeriesMapping = New System.Windows.Forms.Button
             Me.fileDialogDb = New System.Windows.Forms.OpenFileDialog
             Me.OpenFileDialog1 = New System.Windows.Forms.OpenFileDialog
             Me.tabControlTvMovie.SuspendLayout()
@@ -143,6 +146,7 @@ Namespace SetupTv.Sections
             Me.panelTimeSpan.SuspendLayout()
             Me.tabClickfinderPG.SuspendLayout()
             Me.GroupBox3.SuspendLayout()
+            Me.TabPage1.SuspendLayout()
             Me.SuspendLayout()
             '
             'openFileDialog
@@ -163,6 +167,7 @@ Namespace SetupTv.Sections
             Me.tabControlTvMovie.Controls.Add(Me.tabPageImportOptions)
             Me.tabControlTvMovie.Controls.Add(Me.tabPageMapChannels)
             Me.tabControlTvMovie.Controls.Add(Me.tabClickfinderPG)
+            Me.tabControlTvMovie.Controls.Add(Me.TabPage1)
             Me.tabControlTvMovie.Location = New System.Drawing.Point(0, 0)
             Me.tabControlTvMovie.Name = "tabControlTvMovie"
             Me.tabControlTvMovie.SelectedIndex = 0
@@ -997,6 +1002,36 @@ Namespace SetupTv.Sections
                 " to import additional infos. Otherwise disable this function, it increases the i" & _
                 "mport time."
             '
+            'TabPage1
+            '
+            Me.TabPage1.Controls.Add(Me.BT_ResetEpisodeMapping)
+            Me.TabPage1.Controls.Add(Me.BT_ResetSeriesMapping)
+            Me.TabPage1.Location = New System.Drawing.Point(4, 22)
+            Me.TabPage1.Name = "TabPage1"
+            Me.TabPage1.Padding = New System.Windows.Forms.Padding(3)
+            Me.TabPage1.Size = New System.Drawing.Size(456, 358)
+            Me.TabPage1.TabIndex = 4
+            Me.TabPage1.Text = "Advanced"
+            Me.TabPage1.UseVisualStyleBackColor = True
+            '
+            'BT_ResetEpisodeMapping
+            '
+            Me.BT_ResetEpisodeMapping.Location = New System.Drawing.Point(22, 104)
+            Me.BT_ResetEpisodeMapping.Name = "BT_ResetEpisodeMapping"
+            Me.BT_ResetEpisodeMapping.Size = New System.Drawing.Size(239, 44)
+            Me.BT_ResetEpisodeMapping.TabIndex = 1
+            Me.BT_ResetEpisodeMapping.Text = "Reset EpisodeMapping database table"
+            Me.BT_ResetEpisodeMapping.UseVisualStyleBackColor = True
+            '
+            'BT_ResetSeriesMapping
+            '
+            Me.BT_ResetSeriesMapping.Location = New System.Drawing.Point(22, 30)
+            Me.BT_ResetSeriesMapping.Name = "BT_ResetSeriesMapping"
+            Me.BT_ResetSeriesMapping.Size = New System.Drawing.Size(239, 44)
+            Me.BT_ResetSeriesMapping.TabIndex = 0
+            Me.BT_ResetSeriesMapping.Text = "Reset SeriesMapping database table"
+            Me.BT_ResetSeriesMapping.UseVisualStyleBackColor = True
+            '
             'fileDialogDb
             '
             Me.fileDialogDb.FileName = "TVDaten.mdb"
@@ -1041,6 +1076,7 @@ Namespace SetupTv.Sections
             Me.tabClickfinderPG.ResumeLayout(False)
             Me.GroupBox3.ResumeLayout(False)
             Me.GroupBox3.PerformLayout()
+            Me.TabPage1.ResumeLayout(False)
             Me.ResumeLayout(False)
 
         End Sub
@@ -1123,5 +1159,8 @@ Namespace SetupTv.Sections
         Friend WithEvents Label7 As System.Windows.Forms.Label
         Private WithEvents MpCheckBoxStartImportAtTime As MediaPortal.UserInterface.Controls.MPCheckBox
         Friend WithEvents tbImportStartTime As System.Windows.Forms.MaskedTextBox
+        Friend WithEvents TabPage1 As System.Windows.Forms.TabPage
+        Friend WithEvents BT_ResetSeriesMapping As System.Windows.Forms.Button
+        Friend WithEvents BT_ResetEpisodeMapping As System.Windows.Forms.Button
     End Class
 End Namespace

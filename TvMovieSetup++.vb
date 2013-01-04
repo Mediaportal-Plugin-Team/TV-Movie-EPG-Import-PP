@@ -31,6 +31,7 @@ Imports TvLibrary.Log
 Imports SetupTv
 Imports TvMovie.TvEngine.TvMovie
 Imports TvMovie.TvEngine
+Imports Gentle.Framework
 
 
 Namespace SetupTv.Sections
@@ -310,13 +311,31 @@ Namespace SetupTv.Sections
 
         Private Sub LoadDbSettings()
             Dim layer As New TvBusinessLayer()
+
+            Dim _plugin As New TvEngine.TvMovie
+
+
+            'Neue Version: benötigte Einstellungen hier
+            If Not layer.GetSetting("TvMovieVersion", String.Empty).Value = _plugin.Version Then
+
+                MsgBox("New TvMovie++ Version detected!" & vbNewLine & vbNewLine & "All database tables must be reset for this new Version. That means you will lost your Series Mapping configuration and have to reconfigure the mappings !" & vbNewLine & vbNewLine & "You have to start a manual import to save the changes !!!", MsgBoxStyle.Information, "New Version")
+
+                Helper.DropSeriesMappingTable()
+
+                Helper.CreateOrClearTvMovieProgramTables()
+
+                'VersionsNr. speichern.
+                Dim Setting As Setting = layer.GetSetting("TvMovieVersion", String.Empty)
+                Setting.Value = _plugin.Version
+                Setting.Persist()
+            End If
+
             checkBoxEnableImport.Checked = layer.GetSetting("TvMovieEnabled", "false").Value = "true"
             checkBoxUseShortDesc.Checked = layer.GetSetting("TvMovieShortProgramDesc", "false").Value = "true"
             checkBoxAdditionalInfo.Checked = layer.GetSetting("TvMovieExtendDescription", "true").Value = "true"
             checkBoxShowRatings.Checked = layer.GetSetting("TvMovieShowRatings", "true").Value = "true"
             checkBoxShowAudioFormat.Checked = layer.GetSetting("TvMovieShowAudioFormat", "false").Value = "true"
             checkBoxSlowImport.Checked = layer.GetSetting("TvMovieSlowImport", "true").Value = "true"
-
 
             Dim tvMovieLimitActors As Decimal = Convert.ToDecimal(layer.GetSetting("TvMovieLimitActors", "5").Value)
             If tvMovieLimitActors < numericUpDownActorCount.Minimum OrElse tvMovieLimitActors > numericUpDownActorCount.Maximum Then
@@ -908,8 +927,12 @@ Namespace SetupTv.Sections
             If File.Exists(tbMPDatabasePath.Text & "\" & "TVSeriesDatabase4.db3") Then
                 SaveMapping()
 
-                Dim SeriesMapping As New frmSeriesMapping
-                SeriesMapping.ShowDialog()
+
+                Dim _layer As New TvBusinessLayer
+                enrichEPG.MySettings.MpDatabasePath = _layer.GetSetting("TvMovieMPDatabase").Value
+
+                Dim SeriesManagement As New enrichEPG.seriesManagement
+                SeriesManagement.ShowDialog()
             Else
                 MsgBox("TvSeries Datenbank nicht gefunden !", MsgBoxStyle.Critical, "Fehler")
             End If
@@ -940,5 +963,20 @@ Namespace SetupTv.Sections
             End If
         End Sub
 
+        Private Sub BT_ResetEpisodeMapping_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles BT_ResetEpisodeMapping.Click
+            MsgBox("You have to start a manual import to save the changes !!!", MsgBoxStyle.Information, "ResetSeriesMapping")
+
+            Helper.DropEpisodeMappingTable()
+
+            Helper.CreateOrClearTvMovieProgramTables()
+        End Sub
+
+        Private Sub BT_ResetSeriesMapping_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles BT_ResetSeriesMapping.Click
+            MsgBox("You have to start a manual import to save the changes !!!", MsgBoxStyle.Information, "ResetSeriesMapping")
+
+            Helper.DropSeriesMappingTable()
+
+            Helper.CreateOrClearTvMovieProgramTables()
+        End Sub
     End Class
 End Namespace

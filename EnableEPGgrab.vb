@@ -38,7 +38,7 @@ Public Class frmEPGgrab
             Dim sb As New SqlBuilder(StatementType.Select, GetType(Channel))
             sb.AddOrderByField(True, "displayName")
             Dim stmt As SqlStatement = sb.GetStatement(True)
-            Dim _channel As List(Of Channel) = ObjectFactory.GetCollection(GetType(Channel), stmt.Execute())
+            Dim _channel As iList(Of Channel) = ObjectFactory.GetCollection(GetType(Channel), stmt.Execute())
 
 
             For i As Integer = 0 To _channel.Count - 1

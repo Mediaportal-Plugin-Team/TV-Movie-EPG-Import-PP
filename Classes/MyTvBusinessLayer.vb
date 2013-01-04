@@ -200,6 +200,7 @@ Namespace TvEngine
             End Try
         End Sub
 
+
         Private Shared Sub ExecuteInsertTvMovieProgramsMySqlCommand(ByVal aProgramList As IEnumerable(Of TvMprogram), ByVal aConnection As MySqlConnection, ByVal aTransaction As MySqlTransaction, ByVal aDelay As Integer)
             Dim aCounter As Integer = 0
             Dim sqlCmd As New MySqlCommand()
