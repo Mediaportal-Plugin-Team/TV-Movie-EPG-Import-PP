@@ -50,6 +50,7 @@ Imports System.Data
 Imports System.Reflection
 Imports System.Collections.Generic
 Imports System.Linq
+Imports enrichEPG.TvDatabase
 
 Namespace TvEngine
 
@@ -1070,28 +1071,6 @@ Namespace TvEngine
             Return strb.ToString()
         End Function
 
-        Private Function datetolong(ByVal dt As DateTime) As Long
-            Try
-                Dim iSec As Long = 0
-                '(long)dt.Second;
-                Dim iMin As Long = CLng(dt.Minute)
-                Dim iHour As Long = CLng(dt.Hour)
-                Dim iDay As Long = CLng(dt.Day)
-                Dim iMonth As Long = CLng(dt.Month)
-                Dim iYear As Long = CLng(dt.Year)
-
-                Dim lRet As Long = (iYear)
-                lRet = lRet * 100L + iMonth
-                lRet = lRet * 100L + iDay
-                lRet = lRet * 100L + iHour
-                lRet = lRet * 100L + iMin
-                lRet = lRet * 100L + iSec
-                Return lRet
-            Catch generatedExceptionName As Exception
-            End Try
-            Return 0
-        End Function
-
         ''' <summary>
         ''' Launches TV Movie's own internet update tool
         ''' </summary>
@@ -1169,7 +1148,7 @@ Namespace TvEngine
                 'Tabellen erstellen / clear
                 Helper.CreateOrClearTvMovieProgramTables()
 
-                'Tv Movie Highlight und Suchoptionen für Clickfinder ProgramGuide importieren
+                ''Tv Movie Highlight und Suchoptionen für Clickfinder ProgramGuide importieren
                 If _tvbLayer.GetSetting("ClickfinderDataAvailable").Value = "true" Then
                     GetTvMovieHighlights()
                 End If
@@ -1220,6 +1199,8 @@ Namespace TvEngine
 
         Private Sub GetTvMovieHighlights()
             Try
+                Thread.Sleep(5000)
+
                 MyLog.Info("")
                 MyLog.Info("-------------------- Import data for Clickfinder ProgramGuide --------------------")
                 Dim _TestTimer As Date = Now
@@ -1227,7 +1208,6 @@ Namespace TvEngine
                 Dim MvLayer As New MyBusinessLayer
                 Dim _Counter As Integer = 0
                 Dim _stationCounter As Integer = 0
-                Dim _tvMdatabasePath As String = "\\10.0.1.2\TV Movie\TV Movie ClickFinder\tvdaten.mdb"
 
                 'List: TvMMapping laden
                 Dim _SQLstate1 As SqlStatement = Broker.GetStatement("SELECT * FROM TvMovieMapping ORDER BY StationName ASC")
@@ -1242,9 +1222,10 @@ Namespace TvEngine
                     Dim sqlb As New StringBuilder()
 
                     'SqlString: Bewertung > 0 laden
-                    sqlb.Append("WHERE (((Sendungen.SenderKennung)=""{0}"") AND ((Sendungen.Beginn)>= #{1}#)) ORDER BY Sendungen.Beginn")
+                    sqlb.Append("WHERE Sendungen.SenderKennung = ""{0}"" AND Sendungen.Beginn >= #{1}# ORDER BY Sendungen.Beginn")
                     _SQLstringClickfinderDB = String.Format(sqlb.ToString(), _TvMchannel.StationName, Date.Today.AddDays(-1).ToString("yyyy-MM-dd HH:mm:ss"))
                     Dim _TvMprogramList As List(Of TvMprogram) = TvMprogram.RetrieveList(_SQLstringClickfinderDB, _TvMchannel.ReferencedChannel.DisplayName)
+                    Dim _TvMResultList As New List(Of TvMprogram)
 
                     'Sofern _TvMprogramList.Count > 0, ProgramList laden um idProgram zu bekommen und importieren
                     If _TvMprogramList.Count > 0 Then
@@ -1258,48 +1239,96 @@ Namespace TvEngine
 
                         MyLog.Info("")
                         MyLog.Info("TVMovie: Import Clickfinder ProgramGuide data for channel: {0} (idChannel: {1})", _TvMchannel.ReferencedChannel.DisplayName, _TvMchannel.IdChannel)
+                        MyLog.Info("TVMovie: TvMprogramList.Count = {0}", _TvMprogramList.Count)
 
-                        'Für alle TvMprogramme idProgram ermitteln
-                        Dim _deleteList As New List(Of TvMprogram)
-                        For Each _TvMprogram As TvMprogram In _TvMprogramList
+                        'alle programme des channels durchlaufen
+                        For Each _program As Program In _ProgramList
+                            Dim _startTime As Date = _program.StartTime
+                            Dim _endTime As Date = _program.EndTime
+                            Dim _title As String = _program.Title
+                            Dim _EpisodeName As String = _program.EpisodeName
                             Try
-                                'idProgram suchen über startTime & endTime
-                                Dim _startTime As Date = _TvMprogram.Beginn
-                                Dim _endTime As Date = _TvMprogram.Ende
-                                Dim _program As Program = _ProgramList.Find(Function(x As Program) x.StartTime = _startTime AndAlso x.EndTime = _endTime)
+                                'TvMprogram suchen über startTime & endTime
+                                Dim _TvMprogram As TvMprogram = _TvMprogramList.Find(Function(x) x.Beginn = _startTime AndAlso x.Ende = _endTime)
                                 _TvMprogram.idProgram = _program.IdProgram
-
+                                _TvMResultList.Add(_TvMprogram)
                             Catch ex1 As Exception
                                 Try
-                                    'idProgram nicht gefunden, suchen über title und time interval: startTime & endTime +/- 30min
-                                    Dim _startTime As Date = _TvMprogram.Beginn.AddMinutes(-30)
-                                    Dim _endTime As Date = _TvMprogram.Ende.AddMinutes(30)
-                                    Dim _title As String = Replace(Replace(_TvMprogram.Titel, " (LIVE)", ""), " (Wdh.)", "")
-                                    Dim _program As Program = _ProgramList.Find(Function(x As Program) x.StartTime >= _startTime AndAlso x.EndTime <= _endTime AndAlso x.Title = _title)
+                                    'nicht gefunden, suchen über title und time interval: startTime & endTime +/- 30min
+                                    Dim _TvMprogram As TvMprogram = _TvMprogramList.Find(Function(x) _
+                                                                    x.Beginn = _startTime.AddMinutes(-30) _
+                                                                    AndAlso x.Ende = _endTime.AddMinutes(30) _
+                                                                    AndAlso x.Titel = Replace(Replace(_title, " (LIVE)", ""), " (Wdh.)", ""))
                                     _TvMprogram.idProgram = _program.IdProgram
-
+                                    _TvMResultList.Add(_TvMprogram)
                                 Catch ex2 As Exception
-                                    'idProgram nicht gefunden = 0, damit aus list rausgeworfen werden kann + Error log wenn nicht daten von gestern
-                                    _TvMprogram.idProgram = 0
-                                    If _TvMprogram.Beginn > Date.Today Then
-                                        MyLog.Error("TVMovie: idProgram not found (Title: {0}, startTime:{1}, endTime: {2}", _TvMprogram.Titel, _TvMprogram.Beginn, _TvMprogram.Ende)
-                                    End If
+                                    Try
+                                        'nicht gefunden, suchen über title und org.titel
+                                        Dim _TvMprogram As TvMprogram = _TvMprogramList.Find(Function(x) _
+                                                                        x.Titel = Replace(Replace(_title, " (LIVE)", ""), " (Wdh.)", "") _
+                                                                        AndAlso x.orgTitel = _EpisodeName)
+                                        _TvMprogram.idProgram = _program.IdProgram
+                                        _TvMResultList.Add(_TvMprogram)
+                                    Catch ex3 As Exception
+                                        If _program.StartTime > Date.Today Then
+                                            MyLog.Error("TVMovie: TvMProgram not found (idProgram: {4}, Channel: {5} , Title: {0}, startTime: {1}, endTime: {2}, episodeName: {3}", _title, _startTime, _endTime, _EpisodeName, _program.IdProgram, _program.ReferencedChannel.DisplayName)
+                                        End If
+                                    End Try
                                 End Try
                             End Try
                         Next
 
-                        'Alle nicht gefunden programme (idProgram=0) entfernen
-                        _TvMprogramList = _TvMprogramList.FindAll(Function(x As TvMprogram) x.idProgram > 0)
-                        MyLog.Info("TVMovie: TvMprogram.Count = {0}, program.Count = {1}", _TvMprogramList.Count, _ProgramList.Count)
 
-                        Dim _tmpCounter As Integer = _TvMprogramList.Count
+                        MyLog.Info("TVMovie: ProgramList.Count = {0}, TvMResultList.Count = {1}", _ProgramList.Count, _TvMResultList.Count)
 
-                        _TvMprogramList = _TvMprogramList.Distinct(New TvMprogram_GroupByIdprogram).ToList
+                        ''Für alle TvMprogramme idProgram ermitteln
+                        'For Each _TvMprogram As TvMprogram In _TvMprogramList
+                        '    Try
+                        '        'idProgram suchen über startTime & endTime
+                        '        Dim _startTime As Date = _TvMprogram.Beginn
+                        '        Dim _endTime As Date = _TvMprogram.Ende
+                        '        Dim _program As Program = _ProgramList.Find(Function(x As Program) x.StartTime = _startTime AndAlso x.EndTime = _endTime)
+                        '        _TvMprogram.idProgram = _program.IdProgram
 
-                        Dim _diffCounter As Integer = _tmpCounter - _TvMprogramList.Count
+                        '    Catch ex1 As Exception
+                        '        Try
+                        '            'idProgram nicht gefunden, suchen über title und time interval: startTime & endTime +/- 30min
+                        '            Dim _startTime As Date = _TvMprogram.Beginn.AddMinutes(-30)
+                        '            Dim _endTime As Date = _TvMprogram.Ende.AddMinutes(30)
+                        '            Dim _title As String = _TvMprogram.Titel
+                        '            Dim _program As Program = _ProgramList.Find(Function(x As Program) x.StartTime >= _startTime AndAlso x.EndTime <= _endTime AndAlso Replace(Replace(x.Title, " (LIVE)", ""), " (Wdh.)", "") = _title)
+                        '            _TvMprogram.idProgram = _program.IdProgram
+
+                        '        Catch ex2 As Exception
+                        '            'idProgram nicht gefunden = 0, damit aus list rausgeworfen werden kann + Error log wenn nicht daten von gestern
+                        '            _TvMprogram.idProgram = 0
+                        '            If _TvMprogram.Beginn > Date.Today Then
+                        '                MyLog.Error("TVMovie: idProgram not found (Title: {0}, startTime:{1}, endTime: {2}", _TvMprogram.Titel, _TvMprogram.Beginn, _TvMprogram.Ende)
+                        '            End If
+                        '        End Try
+                        '    End Try
+                        'Next
+
+                        ''Alle nicht gefunden programme (idProgram=0) entfernen
+                        'Dim _NotIdentiefiedProgramsList As List(Of TvMprogram) = _TvMprogramList.FindAll(Function(x As TvMprogram) x.idProgram = 0)
+
+                        'For Each _TvMprogram As TvMprogram In _NotIdentiefiedProgramsList
+                        '    MyLog.Info("{0}, {1}, {2}, {3}", _TvMchannel.ReferencedChannel.DisplayName, _TvMprogram.Titel, _TvMprogram.Beginn, _TvMprogram.Ende)
+                        'Next
+
+                        '_TvMprogramList = _TvMprogramList.FindAll(Function(x As TvMprogram) x.idProgram > 0)
+                        'MyLog.Info("TVMovie: TvMprogramList.Count = {0}, programList.Count = {1}", _TvMprogramList.Count, _ProgramList.Count)
+
+                        Dim _tmpCounter As Integer = _TvMResultList.Count
+
+                        _TvMResultList = _TvMResultList.Distinct(New TvMprogram_GroupByIdprogram).ToList
+
+                        Dim _diffCounter As Integer = _tmpCounter - _TvMResultList.Count
                         If _diffCounter <> 0 Then
                             MyLog.Warn("TVMovie: Duplicate idPrograms removed: {0}", _diffCounter)
                         End If
+
+
 
                         'TvMoviePrograms importieren in TvServer DB
                         Dim importPrio As ThreadPriority = If(_slowImport, ThreadPriority.BelowNormal, ThreadPriority.AboveNormal)
@@ -1307,7 +1336,7 @@ Namespace TvEngine
                             Thread.Sleep(32)
                         End If
 
-                        Dim InsertCopy As New List(Of TvMprogram)(_TvMprogramList)
+                        Dim InsertCopy As New List(Of TvMprogram)(_TvMResultList)
                         Dim debugCount As Integer = MvLayer.InsertTvMoviePrograms(InsertCopy, importPrio)
                         MyLog.Info("TVMovie: Inserted {0} TvMoviePrograms", debugCount)
 
@@ -1322,6 +1351,46 @@ Namespace TvEngine
                 MvLayer.WaitForInsertPrograms()
 
                 MyLog.Info("")
+
+                'Dim _Sqlstring As String = "Select * from program left JOIN tvmovieprogram ON program.idprogram = tvmovieprogram.idprogram " & _
+                '                            "where tvmovieprogram.idprogram Is null " & _
+                '                            "OrderBY title ASC"
+
+                '_Sqlstring = Replace(_Sqlstring, " * ", " Program.IdProgram, Program.Classification, Program.Description, Program.EndTime, Program.EpisodeName, Program.EpisodeNum, Program.EpisodePart, Program.Genre, Program.IdChannel, Program.OriginalAirDate, Program.ParentalRating, Program.SeriesNum, Program.StarRating, Program.StartTime, Program.state, Program.Title ")
+                'Dim stmt3 As SqlStatement = Broker.GetStatement(_Sqlstring)
+                'Dim _NotIdentifiedList As List(Of Program) = ObjectFactory.GetCollection(GetType(Program), stmt3.Execute())
+
+                'MyLog.Info("TVMovie: _NotIdentifiedList.count = {0}", _NotIdentifiedList.Count)
+
+                'For Each _program As Program In _NotIdentifiedList
+                '    _Sqlstring = "Select * from program left JOIN tvmovieprogram ON program.idprogram = tvmovieprogram.idprogram " & _
+                '                           "where title LIKE '" & allowedSigns(_program.Title) & "' " & _
+                '                           "AND episodeName LIKE '" & allowedSigns(_program.EpisodeName) & "' " & _
+                '                           "AND idChannel = " & _program.IdChannel
+
+                '    _Sqlstring = Replace(_Sqlstring, " * ", " TVMovieProgram.idProgram, TVMovieProgram.Action, TVMovieProgram.Actors, TVMovieProgram.BildDateiname, TVMovieProgram.Country, TVMovieProgram.Cover, TVMovieProgram.Describtion, TVMovieProgram.Dolby, TVMovieProgram.EpisodeImage, TVMovieProgram.Erotic, TVMovieProgram.FanArt, TVMovieProgram.Feelings, TVMovieProgram.FileName, TVMovieProgram.Fun, TVMovieProgram.HDTV, TVMovieProgram.idEpisode, TVMovieProgram.idMovingPictures, TVMovieProgram.idSeries, TVMovieProgram.idVideo, TVMovieProgram.KurzKritik, TVMovieProgram.local, TVMovieProgram.Regie, TVMovieProgram.Requirement, TVMovieProgram.SeriesPosterImage, TVMovieProgram.ShortDescribtion, TVMovieProgram.Tension, TVMovieProgram.TVMovieBewertung ")
+                '    Dim stmt4 As SqlStatement = Broker.GetStatement(_Sqlstring)
+                '    Dim _RepeatList As List(Of TVMovieProgram) = ObjectFactory.GetCollection(GetType(TVMovieProgram), stmt4.Execute())
+
+                '    If _RepeatList.Count > 0 Then
+                '        Dim _NewTvMovieProgram As New TVMovieProgram(_program.IdProgram)
+
+                '        _NewTvMovieProgram.Action = _RepeatList(0).Action
+                '        _NewTvMovieProgram.Actors = _RepeatList(0).Actors
+                '        _NewTvMovieProgram.BildDateiname = _RepeatList(0).BildDateiname
+
+                '        _NewTvMovieProgram.Country = _RepeatList(0).Country
+                '        _NewTvMovieProgram.Cover = _RepeatList(0).Cover
+                '        _NewTvMovieProgram.Describtion = _RepeatList(0).Describtion
+
+
+
+                '        _NewTvMovieProgram.Persist()
+                '    Else
+                '        MyLog.Error("TVMovie: TvMProgram not found (idProgram: {4}, Channel: {5} , Title: {0}, startTime: {1}, endTime: {2}, episodeName: {3}", _program.Title, _program.StartTime, _program.EndTime, _program.EpisodeName, _program.IdProgram, _program.ReferencedChannel.DisplayName)
+                '    End If
+
+                'Next
 
                 Dim ImportDuration As System.TimeSpan = (DateTime.Now - _TestTimer)
                 MyLog.Info("TVMovie: Imported {0} database entries for {1} stations in {2} seconds", _Counter, _stationCounter, Convert.ToString(ImportDuration.TotalSeconds))

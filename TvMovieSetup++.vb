@@ -950,8 +950,10 @@ Namespace SetupTv.Sections
         Private Sub CheckBoxClickfinderPG_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles CheckBoxClickfinderPG.CheckedChanged
             If CheckBoxClickfinderPG.Checked And CheckBoxTheTvDb.Checked Then
                 tbMPThumbs.Enabled = True
+                enrichEPG.MySettings.ClickfinderProgramGuideImportEnable = True
             Else
                 tbMPThumbs.Enabled = False
+                enrichEPG.MySettings.ClickfinderProgramGuideImportEnable = False
             End If
         End Sub
 

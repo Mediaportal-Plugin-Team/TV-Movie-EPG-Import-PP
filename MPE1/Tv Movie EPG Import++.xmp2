@@ -257,8 +257,8 @@ Click Next to continue or Cancel to exit Setup.
     <Version>
       <Major>1</Major>
       <Minor>3</Minor>
-      <Build>5</Build>
-      <Revision>6</Revision>
+      <Build>8</Build>
+      <Revision>0</Revision>
     </Version>
     <ExtensionDescription>TV Movie EPG Import++ plugin is a replacement for the Tv Movie EPG Import Plugin (Author: rtv) that comes as part of MediaPortal TvServer. The plugin use the Tv Movie Clickfinder Database to supplying you with EPG data for german TV channels. The Clickfinder Plugin maps this data to your MediaPortal TV channels.
 
@@ -281,21 +281,12 @@ New Features (Optional):
 - Imports ratings from your MovingPictures and Video databases and mark existing Movie as „Lokal verfügbar“ in EPG Describtion. An integration of MyFilms database will be supported in a feature version.
 
 - Imports addiotional Data that are needed for the MediaPortal Plugin Clickfinder ProgramGuide </ExtensionDescription>
-    <VersionDescription>=== Version 1.3.5.6 beta ===
+    <VersionDescription>=== Version 1.3.8.0 beta ===
 
-You have to start a manual import, 
-after updating to this version !!!
-
-  * import all datas for Clickfinder ProgramGuide at once
-  * import code revised -&gt; faster import
-  * table structure changed
-  * user defined import start time
-  * series renaming bug fixed
-  * series mapping bug fixed
-  * enrichEPG.dll Version 1.2.7.7</VersionDescription>
-    <DevelopmentStatus>Stable</DevelopmentStatus>
-    <OnlineLocation>http://tv-movie-epg-import-plusplus.googlecode.com/files/Tv%20Movie%20EPG%20Import%2B%2B_v1.3.5.6.mpe1</OnlineLocation>
-    <ReleaseDate>2012-11-25T17:12:10</ReleaseDate>
+* import bug fixes</VersionDescription>
+    <DevelopmentStatus>Beta</DevelopmentStatus>
+    <OnlineLocation>http://tv-movie-epg-import-plusplus.googlecode.com/files/Tv%20Movie%20EPG%20Import%2B%2B_v1.3.5.6.beta.mpe1</OnlineLocation>
+    <ReleaseDate>2014-01-11T17:12:10</ReleaseDate>
     <Tags />
     <Location>D:\Projekte\Tv Movie EPG Import++\MPE1\Tv Movie EPG Import++_v[Version].beta.mpe1</Location>
     <Params>

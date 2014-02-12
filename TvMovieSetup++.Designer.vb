@@ -53,14 +53,14 @@ Namespace SetupTv.Sections
             Me.components = New System.ComponentModel.Container
             Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(TvMovieSetup))
             Me.openFileDialog = New System.Windows.Forms.OpenFileDialog
-            Me.tabControlTvMovie = New MediaPortal.UserInterface.Controls.MPTabControl
+            Me.tabControlTvMovie = New System.Windows.Forms.TabControl
             Me.tabPageSettings = New System.Windows.Forms.TabPage
             Me.linkLabelInfo = New System.Windows.Forms.LinkLabel
-            Me.groupBoxEnableTvMovie = New MediaPortal.UserInterface.Controls.MPGroupBox
+            Me.groupBoxEnableTvMovie = New System.Windows.Forms.GroupBox
             Me.GroupBox1 = New System.Windows.Forms.GroupBox
             Me.Linklabel_EpSc = New System.Windows.Forms.LinkLabel
-            Me.CheckBoxEpSc = New MediaPortal.UserInterface.Controls.MPCheckBox
-            Me.checkBoxRunHidden = New MediaPortal.UserInterface.Controls.MPCheckBox
+            Me.CheckBoxEpSc = New System.Windows.Forms.CheckBox
+            Me.checkBoxRunHidden = New System.Windows.Forms.CheckBox
             Me.tbRunAppAfter = New System.Windows.Forms.TextBox
             Me.Label2 = New System.Windows.Forms.Label
             Me.BTAppBrowse = New System.Windows.Forms.Button
@@ -72,50 +72,50 @@ Namespace SetupTv.Sections
             Me.tbDbPath = New System.Windows.Forms.TextBox
             Me.groupBoxImportTime = New System.Windows.Forms.GroupBox
             Me.tbImportStartTime = New System.Windows.Forms.MaskedTextBox
-            Me.MpCheckBoxStartImportAtTime = New MediaPortal.UserInterface.Controls.MPCheckBox
+            Me.MpCheckBoxStartImportAtTime = New System.Windows.Forms.CheckBox
             Me.progressBarImportTotal = New System.Windows.Forms.ProgressBar
             Me.buttonImportNow = New System.Windows.Forms.Button
-            Me.checkBoxSlowImport = New MediaPortal.UserInterface.Controls.MPCheckBox
+            Me.checkBoxSlowImport = New System.Windows.Forms.CheckBox
             Me.radioButton7d = New System.Windows.Forms.RadioButton
             Me.radioButton2d = New System.Windows.Forms.RadioButton
             Me.radioButton24h = New System.Windows.Forms.RadioButton
             Me.radioButton12h = New System.Windows.Forms.RadioButton
             Me.radioButton6h = New System.Windows.Forms.RadioButton
-            Me.checkBoxEnableImport = New MediaPortal.UserInterface.Controls.MPCheckBox
+            Me.checkBoxEnableImport = New System.Windows.Forms.CheckBox
             Me.tabPageImportOptions = New System.Windows.Forms.TabPage
             Me.GroupBox2 = New System.Windows.Forms.GroupBox
-            Me.CheckBoxTheTvDb = New MediaPortal.UserInterface.Controls.MPCheckBox
+            Me.CheckBoxTheTvDb = New System.Windows.Forms.CheckBox
             Me.ButtonSeriesMapping = New System.Windows.Forms.Button
-            Me.CheckBoxVideoDB = New MediaPortal.UserInterface.Controls.MPCheckBox
-            Me.CheckBoxMyFilms = New MediaPortal.UserInterface.Controls.MPCheckBox
-            Me.CheckBoxMovingPictures = New MediaPortal.UserInterface.Controls.MPCheckBox
-            Me.CheckBoxTvSeries = New MediaPortal.UserInterface.Controls.MPCheckBox
+            Me.CheckBoxVideoDB = New System.Windows.Forms.CheckBox
+            Me.CheckBoxMyFilms = New System.Windows.Forms.CheckBox
+            Me.CheckBoxMovingPictures = New System.Windows.Forms.CheckBox
+            Me.CheckBoxTvSeries = New System.Windows.Forms.CheckBox
             Me.ButtonBrowseMPDatabases = New System.Windows.Forms.Button
             Me.Label3 = New System.Windows.Forms.Label
             Me.tbMPDatabasePath = New System.Windows.Forms.TextBox
-            Me.groupBoxDescriptions = New MediaPortal.UserInterface.Controls.MPGroupBox
-            Me.checkBoxShowRepeat = New MediaPortal.UserInterface.Controls.MPCheckBox
-            Me.checkBoxShowLive = New MediaPortal.UserInterface.Controls.MPCheckBox
+            Me.groupBoxDescriptions = New System.Windows.Forms.GroupBox
+            Me.checkBoxShowRepeat = New System.Windows.Forms.CheckBox
+            Me.checkBoxShowLive = New System.Windows.Forms.CheckBox
             Me.numericUpDownActorCount = New System.Windows.Forms.NumericUpDown
-            Me.checkBoxLimitActors = New MediaPortal.UserInterface.Controls.MPCheckBox
-            Me.checkBoxShowRatings = New MediaPortal.UserInterface.Controls.MPCheckBox
-            Me.checkBoxAdditionalInfo = New MediaPortal.UserInterface.Controls.MPCheckBox
-            Me.checkBoxShowAudioFormat = New MediaPortal.UserInterface.Controls.MPCheckBox
-            Me.checkBoxUseShortDesc = New MediaPortal.UserInterface.Controls.MPCheckBox
-            Me.tabPageMapChannels = New MediaPortal.UserInterface.Controls.MPTabPage
-            Me.labelNote = New MediaPortal.UserInterface.Controls.MPLabel
-            Me.groupBoxMapping = New MediaPortal.UserInterface.Controls.MPGroupBox
+            Me.checkBoxLimitActors = New System.Windows.Forms.CheckBox
+            Me.checkBoxShowRatings = New System.Windows.Forms.CheckBox
+            Me.checkBoxAdditionalInfo = New System.Windows.Forms.CheckBox
+            Me.checkBoxShowAudioFormat = New System.Windows.Forms.CheckBox
+            Me.checkBoxUseShortDesc = New System.Windows.Forms.CheckBox
+            Me.tabPageMapChannels = New System.Windows.Forms.TabPage
+            Me.labelNote = New System.Windows.Forms.Label
+            Me.groupBoxMapping = New System.Windows.Forms.GroupBox
             Me.ButtonEPGgrab = New System.Windows.Forms.Button
             Me.panelTimeSpan = New System.Windows.Forms.Panel
             Me.maskedTextBoxTimeStart = New System.Windows.Forms.MaskedTextBox
-            Me.label1 = New MediaPortal.UserInterface.Controls.MPLabel
+            Me.label1 = New System.Windows.Forms.Label
             Me.maskedTextBoxTimeEnd = New System.Windows.Forms.MaskedTextBox
             Me.treeViewMpChannels = New System.Windows.Forms.TreeView
             Me.treeViewTvMStations = New System.Windows.Forms.TreeView
             Me.imageListTvmStations = New System.Windows.Forms.ImageList(Me.components)
-            Me.listView1 = New MediaPortal.UserInterface.Controls.MPListView
+            Me.listView1 = New System.Windows.Forms.ListView
             Me.columnHeader1 = New System.Windows.Forms.ColumnHeader
-            Me.listView2 = New MediaPortal.UserInterface.Controls.MPListView
+            Me.listView2 = New System.Windows.Forms.ListView
             Me.columnHeader2 = New System.Windows.Forms.ColumnHeader
             Me.tabClickfinderPG = New System.Windows.Forms.TabPage
             Me.GroupBox3 = New System.Windows.Forms.GroupBox
@@ -124,7 +124,7 @@ Namespace SetupTv.Sections
             Me.tbMPThumbs = New System.Windows.Forms.TextBox
             Me.Label5 = New System.Windows.Forms.Label
             Me.LinkClickfinderPG = New System.Windows.Forms.LinkLabel
-            Me.CheckBoxClickfinderPG = New MediaPortal.UserInterface.Controls.MPCheckBox
+            Me.CheckBoxClickfinderPG = New System.Windows.Forms.CheckBox
             Me.Label4 = New System.Windows.Forms.Label
             Me.TabPage1 = New System.Windows.Forms.TabPage
             Me.BT_ResetEpisodeMapping = New System.Windows.Forms.Button
@@ -159,7 +159,7 @@ Namespace SetupTv.Sections
             'tabControlTvMovie
             '
             Me.tabControlTvMovie.AllowDrop = True
-            Me.tabControlTvMovie.AllowReorderTabs = False
+            'Me.tabControlTvMovie.AllowReorderTabs = False
             Me.tabControlTvMovie.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
                         Or System.Windows.Forms.AnchorStyles.Left) _
                         Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
@@ -875,9 +875,9 @@ Namespace SetupTv.Sections
             'listView1
             '
             Me.listView1.AllowDrop = True
-            Me.listView1.AllowRowReorder = True
+            'Me.listView1.AllowRowReorder = True
             Me.listView1.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.columnHeader1})
-            Me.listView1.IsChannelListView = False
+            'Me.listView1.IsChannelListView = False
             Me.listView1.Location = New System.Drawing.Point(12, 27)
             Me.listView1.Name = "listView1"
             Me.listView1.Scrollable = False
@@ -894,11 +894,11 @@ Namespace SetupTv.Sections
             'listView2
             '
             Me.listView2.AllowDrop = True
-            Me.listView2.AllowRowReorder = True
+            'Me.listView2.AllowRowReorder = True
             Me.listView2.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
                         Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
             Me.listView2.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.columnHeader2})
-            Me.listView2.IsChannelListView = False
+            'Me.listView2.IsChannelListView = False
             Me.listView2.Location = New System.Drawing.Point(236, 27)
             Me.listView2.Name = "listView2"
             Me.listView2.Scrollable = False
@@ -1084,41 +1084,41 @@ Namespace SetupTv.Sections
 #End Region
 
         Private WithEvents openFileDialog As System.Windows.Forms.OpenFileDialog
-        Private WithEvents tabControlTvMovie As MediaPortal.UserInterface.Controls.MPTabControl
-        Private WithEvents tabPageMapChannels As MediaPortal.UserInterface.Controls.MPTabPage
-        Private WithEvents labelNote As MediaPortal.UserInterface.Controls.MPLabel
-        Private WithEvents groupBoxMapping As MediaPortal.UserInterface.Controls.MPGroupBox
+        Private WithEvents tabControlTvMovie As System.Windows.Forms.TabControl
+        Private WithEvents tabPageMapChannels As System.Windows.Forms.TabPage
+        Private WithEvents labelNote As System.Windows.Forms.Label
+        Private WithEvents groupBoxMapping As System.Windows.Forms.GroupBox
         Private WithEvents panelTimeSpan As System.Windows.Forms.Panel
         Private WithEvents maskedTextBoxTimeStart As System.Windows.Forms.MaskedTextBox
-        Private WithEvents label1 As MediaPortal.UserInterface.Controls.MPLabel
+        Private WithEvents label1 As System.Windows.Forms.Label
         Private WithEvents maskedTextBoxTimeEnd As System.Windows.Forms.MaskedTextBox
         Private WithEvents treeViewMpChannels As System.Windows.Forms.TreeView
         Private WithEvents treeViewTvMStations As System.Windows.Forms.TreeView
-        Private WithEvents listView1 As MediaPortal.UserInterface.Controls.MPListView
+        Private WithEvents listView1 As System.Windows.Forms.ListView
         Private WithEvents columnHeader1 As System.Windows.Forms.ColumnHeader
-        Private WithEvents listView2 As MediaPortal.UserInterface.Controls.MPListView
+        Private WithEvents listView2 As System.Windows.Forms.ListView
         Private WithEvents columnHeader2 As System.Windows.Forms.ColumnHeader
         Private WithEvents tabPageSettings As System.Windows.Forms.TabPage
-        Private WithEvents checkBoxEnableImport As MediaPortal.UserInterface.Controls.MPCheckBox
-        Private WithEvents groupBoxEnableTvMovie As MediaPortal.UserInterface.Controls.MPGroupBox
+        Private WithEvents checkBoxEnableImport As System.Windows.Forms.CheckBox
+        Private WithEvents groupBoxEnableTvMovie As System.Windows.Forms.GroupBox
         Private WithEvents groupBoxImportTime As System.Windows.Forms.GroupBox
         Private WithEvents radioButton24h As System.Windows.Forms.RadioButton
         Private WithEvents radioButton12h As System.Windows.Forms.RadioButton
         Private WithEvents radioButton6h As System.Windows.Forms.RadioButton
         Private WithEvents radioButton7d As System.Windows.Forms.RadioButton
         Private WithEvents radioButton2d As System.Windows.Forms.RadioButton
-        Private WithEvents checkBoxSlowImport As MediaPortal.UserInterface.Controls.MPCheckBox
+        Private WithEvents checkBoxSlowImport As System.Windows.Forms.CheckBox
         Private WithEvents linkLabelInfo As System.Windows.Forms.LinkLabel
         Private WithEvents imageListTvmStations As System.Windows.Forms.ImageList
         Public WithEvents progressBarImportTotal As System.Windows.Forms.ProgressBar
         Private WithEvents buttonImportNow As System.Windows.Forms.Button
         Private WithEvents tabPageImportOptions As System.Windows.Forms.TabPage
-        Private WithEvents groupBoxDescriptions As MediaPortal.UserInterface.Controls.MPGroupBox
-        Private WithEvents checkBoxLimitActors As MediaPortal.UserInterface.Controls.MPCheckBox
-        Private WithEvents checkBoxShowRatings As MediaPortal.UserInterface.Controls.MPCheckBox
-        Private WithEvents checkBoxAdditionalInfo As MediaPortal.UserInterface.Controls.MPCheckBox
-        Private WithEvents checkBoxShowAudioFormat As MediaPortal.UserInterface.Controls.MPCheckBox
-        Private WithEvents checkBoxUseShortDesc As MediaPortal.UserInterface.Controls.MPCheckBox
+        Private WithEvents groupBoxDescriptions As System.Windows.Forms.GroupBox
+        Private WithEvents checkBoxLimitActors As System.Windows.Forms.CheckBox
+        Private WithEvents checkBoxShowRatings As System.Windows.Forms.CheckBox
+        Private WithEvents checkBoxAdditionalInfo As System.Windows.Forms.CheckBox
+        Private WithEvents checkBoxShowAudioFormat As System.Windows.Forms.CheckBox
+        Private WithEvents checkBoxUseShortDesc As System.Windows.Forms.CheckBox
         Private WithEvents groupBoxInstallMethod As System.Windows.Forms.GroupBox
         Private WithEvents rbManual As System.Windows.Forms.RadioButton
         Private WithEvents rbLocal As System.Windows.Forms.RadioButton
@@ -1126,38 +1126,38 @@ Namespace SetupTv.Sections
         Private WithEvents lbDbPath As System.Windows.Forms.Label
         Private WithEvents buttonBrowse As System.Windows.Forms.Button
         Private WithEvents fileDialogDb As System.Windows.Forms.OpenFileDialog
-        Private WithEvents checkBoxShowRepeat As MediaPortal.UserInterface.Controls.MPCheckBox
-        Private WithEvents checkBoxShowLive As MediaPortal.UserInterface.Controls.MPCheckBox
+        Private WithEvents checkBoxShowRepeat As System.Windows.Forms.CheckBox
+        Private WithEvents checkBoxShowLive As System.Windows.Forms.CheckBox
         Private WithEvents numericUpDownActorCount As System.Windows.Forms.NumericUpDown
         Private WithEvents BTAppBrowse As System.Windows.Forms.Button
         Private WithEvents tbRunAppAfter As System.Windows.Forms.TextBox
         Friend WithEvents GroupBox1 As System.Windows.Forms.GroupBox
         Private WithEvents Label2 As System.Windows.Forms.Label
         Friend WithEvents tbMPDatabasePath As System.Windows.Forms.TextBox
-        Private WithEvents checkBoxRunHidden As MediaPortal.UserInterface.Controls.MPCheckBox
+        Private WithEvents checkBoxRunHidden As System.Windows.Forms.CheckBox
         Friend WithEvents GroupBox2 As System.Windows.Forms.GroupBox
         Private WithEvents ButtonBrowseMPDatabases As System.Windows.Forms.Button
         Private WithEvents Label3 As System.Windows.Forms.Label
         Friend WithEvents OpenFileDialog1 As System.Windows.Forms.OpenFileDialog
-        Private WithEvents CheckBoxTvSeries As MediaPortal.UserInterface.Controls.MPCheckBox
-        Private WithEvents CheckBoxMyFilms As MediaPortal.UserInterface.Controls.MPCheckBox
-        Private WithEvents CheckBoxMovingPictures As MediaPortal.UserInterface.Controls.MPCheckBox
+        Private WithEvents CheckBoxTvSeries As System.Windows.Forms.CheckBox
+        Private WithEvents CheckBoxMyFilms As System.Windows.Forms.CheckBox
+        Private WithEvents CheckBoxMovingPictures As System.Windows.Forms.CheckBox
         Friend WithEvents ButtonEPGgrab As System.Windows.Forms.Button
         Friend WithEvents tabClickfinderPG As System.Windows.Forms.TabPage
-        Private WithEvents CheckBoxClickfinderPG As MediaPortal.UserInterface.Controls.MPCheckBox
+        Private WithEvents CheckBoxClickfinderPG As System.Windows.Forms.CheckBox
         Friend WithEvents GroupBox3 As System.Windows.Forms.GroupBox
         Friend WithEvents LinkClickfinderPG As System.Windows.Forms.LinkLabel
         Friend WithEvents Label5 As System.Windows.Forms.Label
         Friend WithEvents Label4 As System.Windows.Forms.Label
-        Private WithEvents CheckBoxVideoDB As MediaPortal.UserInterface.Controls.MPCheckBox
+        Private WithEvents CheckBoxVideoDB As System.Windows.Forms.CheckBox
         Friend WithEvents Linklabel_EpSc As System.Windows.Forms.LinkLabel
-        Private WithEvents CheckBoxEpSc As MediaPortal.UserInterface.Controls.MPCheckBox
+        Private WithEvents CheckBoxEpSc As System.Windows.Forms.CheckBox
         Friend WithEvents ButtonSeriesMapping As System.Windows.Forms.Button
-        Private WithEvents CheckBoxTheTvDb As MediaPortal.UserInterface.Controls.MPCheckBox
+        Private WithEvents CheckBoxTheTvDb As System.Windows.Forms.CheckBox
         Private WithEvents Label6 As System.Windows.Forms.Label
         Friend WithEvents tbMPThumbs As System.Windows.Forms.TextBox
         Friend WithEvents Label7 As System.Windows.Forms.Label
-        Private WithEvents MpCheckBoxStartImportAtTime As MediaPortal.UserInterface.Controls.MPCheckBox
+        Private WithEvents MpCheckBoxStartImportAtTime As System.Windows.Forms.CheckBox
         Friend WithEvents tbImportStartTime As System.Windows.Forms.MaskedTextBox
         Friend WithEvents TabPage1 As System.Windows.Forms.TabPage
         Friend WithEvents BT_ResetSeriesMapping As System.Windows.Forms.Button

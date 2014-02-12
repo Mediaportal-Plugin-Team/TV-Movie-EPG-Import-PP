@@ -1,4 +1,5 @@
-﻿<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -14,8 +15,24 @@
     <OldToolsVersion>3.5</OldToolsVersion>
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <SourceAnalysisOverrideSettingsFile>C:\Users\ab\Desktop\SharpDevelopPortable\App\SharpDevelop\bin\Data\settings\Settings.SourceAnalysis</SourceAnalysisOverrideSettingsFile>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -25,6 +42,8 @@
     <DefineConstants>DEBUG,TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <NoWarn>42353,42354,42355</NoWarn>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -33,6 +52,8 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <NoWarn>42353,42354,42355</NoWarn>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <DebugSymbols>true</DebugSymbols>
@@ -41,6 +62,8 @@
     <DebugType>full</DebugType>
     <PlatformTarget>x86</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
+    <NoWarn>42353,42354,42355</NoWarn>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <OutputPath>bin\Release\</OutputPath>
@@ -49,87 +72,54 @@
     <DebugType>pdbonly</DebugType>
     <PlatformTarget>x86</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
+    <NoWarn>42353,42354,42355</NoWarn>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.VisualBasic.Targets" />
   <ItemGroup>
     <Import Include="Microsoft.VisualBasic" />
     <Import Include="System" />
-    <Reference Include="Common.Utils, Version=1.2.2.0, Culture=neutral, processorArchitecture=x86">
+    <Reference Include="Common.Utils">
       <HintPath>C:\Program Files\Team MediaPortal\MediaPortal TV Server\Common.Utils.dll</HintPath>
-      <SpecificVersion>False</SpecificVersion>
-      <Private>False</Private>
     </Reference>
-    <Reference Include="Databases, Version=1.2.2.0, Culture=neutral, processorArchitecture=x86">
-      <HintPath>C:\Program Files\Team MediaPortal\MediaPortal\Databases.dll</HintPath>
+    <Reference Include="Databases, Version=1.2.200.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <Private>False</Private>
+      <HintPath>C:\Program Files\Team MediaPortal\MediaPortal TV Server\Databases.dll</HintPath>
     </Reference>
-    <Reference Include="enrichEPG, Version=1.2.9.2, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="enrichEPG, Version=1.2.3.2, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Program Files\Team MediaPortal\MediaPortal TV Server\enrichEPG.dll</HintPath>
     </Reference>
-    <Reference Include="Gentle.Common, Version=1.5.0.29112, Culture=neutral, PublicKeyToken=80b5de62e27be49b, processorArchitecture=MSIL">
+    <Reference Include="Gentle.Common">
       <HintPath>C:\Program Files\Team MediaPortal\MediaPortal TV Server\Gentle.Common.dll</HintPath>
-      <SpecificVersion>False</SpecificVersion>
-      <Private>False</Private>
     </Reference>
-    <Reference Include="Gentle.Framework, Version=1.5.0.29112, Culture=neutral, PublicKeyToken=80b5de62e27be49b, processorArchitecture=MSIL">
+    <Reference Include="Gentle.Framework">
       <HintPath>C:\Program Files\Team MediaPortal\MediaPortal TV Server\Gentle.Framework.dll</HintPath>
-      <SpecificVersion>False</SpecificVersion>
-      <Private>False</Private>
     </Reference>
-    <Reference Include="MySql.Data, Version=5.1.7.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="MySql.Data">
       <HintPath>C:\Program Files\Team MediaPortal\MediaPortal TV Server\MySql.Data.dll</HintPath>
-      <Private>False</Private>
     </Reference>
-    <Reference Include="PluginBase, Version=1.2.2.0, Culture=neutral, processorArchitecture=x86">
+    <Reference Include="PluginBase">
       <HintPath>C:\Program Files\Team MediaPortal\MediaPortal TV Server\PluginBase.dll</HintPath>
-      <SpecificVersion>False</SpecificVersion>
-      <Private>False</Private>
     </Reference>
-    <Reference Include="PowerScheduler.Interfaces, Version=1.2.2.0, Culture=neutral, processorArchitecture=x86">
+    <Reference Include="PowerScheduler.Interfaces">
       <HintPath>C:\Program Files\Team MediaPortal\MediaPortal TV Server\PowerScheduler.Interfaces.dll</HintPath>
-      <SpecificVersion>False</SpecificVersion>
-      <Private>False</Private>
     </Reference>
     <Reference Include="SetupControls, Version=1.2.2.0, Culture=neutral, processorArchitecture=x86">
       <HintPath>C:\Program Files\Team MediaPortal\MediaPortal TV Server\SetupControls.dll</HintPath>
       <SpecificVersion>False</SpecificVersion>
       <Private>False</Private>
     </Reference>
-    <Reference Include="System, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL" />
+    <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
-    <Reference Include="System.Data, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=x86" />
-    <Reference Include="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
-    <Reference Include="System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL" />
-    <Reference Include="System.Xml, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <Private>False</Private>
-    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="TvBusinessLayer, Version=1.2.2.0, Culture=neutral, processorArchitecture=x86">
-      <HintPath>C:\Program Files\Team MediaPortal\MediaPortal TV Server\TvBusinessLayer.dll</HintPath>
-      <SpecificVersion>False</SpecificVersion>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="TvControl, Version=1.2.2.0, Culture=neutral, processorArchitecture=x86">
-      <HintPath>C:\Program Files\Team MediaPortal\MediaPortal TV Server\TvControl.dll</HintPath>
-      <SpecificVersion>False</SpecificVersion>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="TVDatabase, Version=1.2.2.0, Culture=neutral, processorArchitecture=x86">
-      <HintPath>C:\Program Files\Team MediaPortal\MediaPortal TV Server\TVDatabase.dll</HintPath>
-      <SpecificVersion>False</SpecificVersion>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="TvLibrary.Interfaces, Version=1.2.2.0, Culture=neutral, processorArchitecture=x86">
-      <HintPath>C:\Program Files\Team MediaPortal\MediaPortal TV Server\TvLibrary.Interfaces.dll</HintPath>
-      <SpecificVersion>False</SpecificVersion>
-      <Private>False</Private>
     </Reference>
     <Compile Include="Classes\ClickfinderDB.vb" />
     <Compile Include="Classes\Helper.vb" />
@@ -171,6 +161,18 @@
       <SubType>Designer</SubType>
       <DependentUpon>TvMovieSetup++.vb</DependentUpon>
     </EmbeddedResource>
+    <Reference Include="TvBusinessLayer">
+      <HintPath>C:\Program Files\Team MediaPortal\MediaPortal TV Server\TvBusinessLayer.dll</HintPath>
+    </Reference>
+    <Reference Include="TvControl">
+      <HintPath>C:\Program Files\Team MediaPortal\MediaPortal TV Server\TvControl.dll</HintPath>
+    </Reference>
+    <Reference Include="TVDatabase">
+      <HintPath>C:\Program Files\Team MediaPortal\MediaPortal TV Server\TVDatabase.dll</HintPath>
+    </Reference>
+    <Reference Include="TvLibrary.Interfaces">
+      <HintPath>C:\Program Files\Team MediaPortal\MediaPortal TV Server\TvLibrary.Interfaces.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <None Include="Libaries\Core.dll">
@@ -192,5 +194,22 @@
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
   </ItemGroup>
 </Project>
