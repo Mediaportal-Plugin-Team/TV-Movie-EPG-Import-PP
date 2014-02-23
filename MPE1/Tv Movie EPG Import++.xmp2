@@ -55,14 +55,14 @@
             <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
               <Param1 />
               <UpdateOption>AlwaysOverwrite</UpdateOption>
-              <LocalFileName>..\..\enrichEPG\enrichEPG\enrichEPG\bin\Release\enrichEPG.dll</LocalFileName>
+              <LocalFileName>..\..\enrichEPG\enrichEPG\enrichEPG\bin\Debug\enrichEPG.dll</LocalFileName>
               <ZipFileName>Installer{CopyFile}\{6d350e75-337d-4361-8fd5-25dc6630244f}-enrichEPG.dll</ZipFileName>
               <DestinationFilename>%Temp%\MPTvMovie++\TvServer\enrichEPG.dll</DestinationFilename>
             </FileItem>
             <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
               <Param1 />
-              <UpdateOption>AlwaysOverwrite</UpdateOption>
-              <LocalFileName>..\..\enrichEPG\enrichEPG\enrichEPG\bin\Release\TvdbLib.dll</LocalFileName>
+              <UpdateOption>OverwriteIfOlder</UpdateOption>
+              <LocalFileName>..\..\enrichEPG\enrichEPG\enrichEPG\bin\Debug\TvdbLib.dll</LocalFileName>
               <ZipFileName>Installer{CopyFile}\{af481f27-e764-4115-96a6-f7fca4e1014f}-TvdbLib.dll</ZipFileName>
               <DestinationFilename>%Temp%\MPTvMovie++\TvServer\TvdbLib.dll</DestinationFilename>
             </FileItem>
@@ -256,8 +256,8 @@ Click Next to continue or Cancel to exit Setup.
     <UpdateUrl>http://tv-movie-epg-import-plusplus.googlecode.com/git/MPE1/update.xml</UpdateUrl>
     <Version>
       <Major>1</Major>
-      <Minor>3</Minor>
-      <Build>8</Build>
+      <Minor>6</Minor>
+      <Build>4</Build>
       <Revision>0</Revision>
     </Version>
     <ExtensionDescription>TV Movie EPG Import++ plugin is a replacement for the Tv Movie EPG Import Plugin (Author: rtv) that comes as part of MediaPortal TvServer. The plugin use the Tv Movie Clickfinder Database to supplying you with EPG data for german TV channels. The Clickfinder Plugin maps this data to your MediaPortal TV channels.
@@ -281,12 +281,13 @@ New Features (Optional):
 - Imports ratings from your MovingPictures and Video databases and mark existing Movie as „Lokal verfügbar“ in EPG Describtion. An integration of MyFilms database will be supported in a feature version.
 
 - Imports addiotional Data that are needed for the MediaPortal Plugin Clickfinder ProgramGuide </ExtensionDescription>
-    <VersionDescription>=== Version 1.3.8.0 beta ===
+    <VersionDescription>=== Version 1.6.4.0 beta ===
 
-* import bug fixes</VersionDescription>
+* MP 1.6
+* net4 bug fixes</VersionDescription>
     <DevelopmentStatus>Beta</DevelopmentStatus>
     <OnlineLocation>http://tv-movie-epg-import-plusplus.googlecode.com/files/Tv%20Movie%20EPG%20Import%2B%2B_v1.3.5.6.beta.mpe1</OnlineLocation>
-    <ReleaseDate>2014-01-11T17:12:10</ReleaseDate>
+    <ReleaseDate>2014-02-13T17:12:10</ReleaseDate>
     <Tags />
     <Location>D:\Projekte\Tv Movie EPG Import++\MPE1\Tv Movie EPG Import++_v[Version].beta.mpe1</Location>
     <Params>
@@ -368,14 +369,14 @@ New Features (Optional):
       <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
         <Param1 />
         <UpdateOption>AlwaysOverwrite</UpdateOption>
-        <LocalFileName>..\..\enrichEPG\enrichEPG\enrichEPG\bin\Release\enrichEPG.dll</LocalFileName>
+        <LocalFileName>..\..\enrichEPG\enrichEPG\enrichEPG\bin\Debug\enrichEPG.dll</LocalFileName>
         <ZipFileName>Installer{CopyFile}\{6d350e75-337d-4361-8fd5-25dc6630244f}-enrichEPG.dll</ZipFileName>
         <DestinationFilename>%Temp%\MPTvMovie++\TvServer\enrichEPG.dll</DestinationFilename>
       </FileItem>
       <FileItem InstallType="CopyFile" SystemFile="false" Modified="true">
         <Param1 />
-        <UpdateOption>AlwaysOverwrite</UpdateOption>
-        <LocalFileName>..\..\enrichEPG\enrichEPG\enrichEPG\bin\Release\TvdbLib.dll</LocalFileName>
+        <UpdateOption>OverwriteIfOlder</UpdateOption>
+        <LocalFileName>..\..\enrichEPG\enrichEPG\enrichEPG\bin\Debug\TvdbLib.dll</LocalFileName>
         <ZipFileName>Installer{CopyFile}\{af481f27-e764-4115-96a6-f7fca4e1014f}-TvdbLib.dll</ZipFileName>
         <DestinationFilename>%Temp%\MPTvMovie++\TvServer\TvdbLib.dll</DestinationFilename>
       </FileItem>
@@ -383,7 +384,7 @@ New Features (Optional):
         <Param1 />
         <UpdateOption>OverwriteIfOlder</UpdateOption>
         <LocalFileName>..\Grafiken\MPE1 Icon.png</LocalFileName>
-        <ZipFileName>Installer{CopyFile}\{0eef5dcc-8f5c-4c96-ac5f-b1e1fd5fe0b1}-MPE1 Icon.png</ZipFileName>
+        <ZipFileName>Installer{CopyFile}\{26032876-e534-434f-b43f-b29956a1f257}-MPE1 Icon.png</ZipFileName>
         <DestinationFilename />
       </FileItem>
     </Items>

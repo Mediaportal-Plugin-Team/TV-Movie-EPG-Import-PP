@@ -316,21 +316,21 @@ Namespace TvEngine
             For Each prog As TvMprogram In currentInserts
                 sqlCmd.Parameters("idProgram").Value = prog.idProgram
                 sqlCmd.Parameters("TvMovieBewertung").Value = prog.Bewertung
-                sqlCmd.Parameters("Bilddateiname").Value = prog.Bilddateiname
-                sqlCmd.Parameters("Kurzkritik").Value = prog.Kurzkritik
+                sqlCmd.Parameters("Bilddateiname").Value = If(Not String.IsNullOrEmpty(prog.Bilddateiname), prog.Bilddateiname, String.Empty)
+                sqlCmd.Parameters("Kurzkritik").Value = If(Not String.IsNullOrEmpty(prog.Kurzkritik), prog.Kurzkritik, String.Empty)
                 sqlCmd.Parameters("Fun").Value = prog.Spass
                 sqlCmd.Parameters("Action").Value = prog.Action
                 sqlCmd.Parameters("Feelings").Value = prog.Gefuhl
                 sqlCmd.Parameters("Erotic").Value = prog.Erotik
                 sqlCmd.Parameters("Tension").Value = prog.Spannung
                 sqlCmd.Parameters("Requirement").Value = prog.Anspruch
-                sqlCmd.Parameters("Actors").Value = prog.Darsteller
+                sqlCmd.Parameters("Actors").Value = If(Not String.IsNullOrEmpty(prog.Darsteller), prog.Darsteller, String.Empty)
                 sqlCmd.Parameters("Dolby").Value = prog.KzDolbyDigital
                 sqlCmd.Parameters("HDTV").Value = prog.KzHDTV
-                sqlCmd.Parameters("Country").Value = prog.Herstellungsland
-                sqlCmd.Parameters("Regie").Value = prog.Regie
-                sqlCmd.Parameters("Describtion").Value = prog.Beschreibung
-                sqlCmd.Parameters("ShortDescribtion").Value = prog.KurzBeschreibung
+                sqlCmd.Parameters("Country").Value = If(Not String.IsNullOrEmpty(prog.Herstellungsland), prog.Herstellungsland, String.Empty)
+                sqlCmd.Parameters("Regie").Value = If(Not String.IsNullOrEmpty(prog.Regie), prog.Regie, String.Empty)
+                sqlCmd.Parameters("Describtion").Value = If(Not String.IsNullOrEmpty(prog.Beschreibung), prog.Beschreibung, String.Empty)
+                sqlCmd.Parameters("ShortDescribtion").Value = If(Not String.IsNullOrEmpty(prog.KurzBeschreibung), prog.KurzBeschreibung, String.Empty)
 
                 Try
                     ' Finally insert all our data
