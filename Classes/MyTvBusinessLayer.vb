@@ -285,7 +285,7 @@ Namespace TvEngine
             Dim sqlCmd As New SqlCommand()
             Dim currentInserts As New List(Of TvMprogram)(aProgramList)
 
-            sqlCmd.CommandText = "INSERT INTO MpTvDb.[dbo].TVMovieProgram (idProgram, TvMovieBewertung, Kurzkritik, Bilddateiname, Fun, Action, Feelings, Erotic, Tension, Requirement, Actors, Dolby, HDTV, Country, Regie, Describtion, ShortDescribtion) VALUES (@idProgram, @TvMovieBewertung, @Kurzkritik, @Bilddateiname, @Fun, @Action, @Feelings, @Erotic, @Tension, @Requirement, @Actors, @Dolby, @HDTV, @Country, @Regie, @Describtion, @ShortDescribtion)"
+            sqlCmd.CommandText = "SET IDENTITY_INSERT MpTvDb.[dbo].TVMovieProgram ON; INSERT INTO MpTvDb.[dbo].TVMovieProgram (idProgram, TvMovieBewertung, Kurzkritik, Bilddateiname, Fun, Action, Feelings, Erotic, Tension, Requirement, Actors, Dolby, HDTV, Country, Regie, Describtion, ShortDescribtion) VALUES (@idProgram, @TvMovieBewertung, @Kurzkritik, @Bilddateiname, @Fun, @Action, @Feelings, @Erotic, @Tension, @Requirement, @Actors, @Dolby, @HDTV, @Country, @Regie, @Describtion, @ShortDescribtion)"
 
             sqlCmd.Parameters.Add("idProgram", SqlDbType.Int)
             sqlCmd.Parameters.Add("TvMovieBewertung", SqlDbType.Int)
@@ -310,9 +310,13 @@ Namespace TvEngine
                 ' Prepare the command since we will reuse it quite often
                 ' sqlCmd.Prepare(); <-- this would need exact param field length definitions
                 sqlCmd.Transaction = aTransaction
+                sqlCmd.Prepare()
             Catch ex As Exception
                 Log.Info("MyBusinessLayer: ExecuteInsertProgramsSqlServerCommand - Prepare caused an Exception - {0}", ex.Message)
             End Try
+            MyLog.Info("MSSQL: " & sqlCmd.CommandText.ToString)
+
+
             For Each prog As TvMprogram In currentInserts
                 sqlCmd.Parameters("idProgram").Value = prog.idProgram
                 sqlCmd.Parameters("TvMovieBewertung").Value = prog.Bewertung
@@ -331,6 +335,21 @@ Namespace TvEngine
                 sqlCmd.Parameters("Regie").Value = If(Not String.IsNullOrEmpty(prog.Regie), prog.Regie, String.Empty)
                 sqlCmd.Parameters("Describtion").Value = If(Not String.IsNullOrEmpty(prog.Beschreibung), prog.Beschreibung, String.Empty)
                 sqlCmd.Parameters("ShortDescribtion").Value = If(Not String.IsNullOrEmpty(prog.KurzBeschreibung), prog.KurzBeschreibung, String.Empty)
+
+                'Log Ausgabe des Insert string, für debug Zwecke
+                'Dim _LogCmd As String = sqlCmd.CommandText
+
+                'For Each p As SqlParameter In sqlCmd.Parameters
+                '    Try
+                '        'MyLog.Info(p.ParameterName & " (" & p.SqlDbType.ToString & "): " & p.Value.ToString())
+                '        _LogCmd = Replace(_LogCmd, "@" & p.ParameterName, p.Value.ToString)
+                '    Catch ex As Exception
+                '        'MyLog.Error(p.ParameterName & " (" & p.SqlDbType.ToString & "): ERROR !!!!")
+                '        _LogCmd = Replace(_LogCmd, "@" & p.ParameterName, "ERROR !!!!")
+                '    End Try
+                'Next
+
+                'MyLog.Info(_LogCmd)
 
                 Try
                     ' Finally insert all our data
