@@ -17,6 +17,7 @@
 ' along with MediaPortal. If not, see <http://www.gnu.org/licenses/>.
 
 #End Region
+
 Imports System
 Imports System.Collections.Generic
 Imports System.Diagnostics
@@ -28,8 +29,9 @@ Imports TvDatabase
 Imports TvEngine
 Imports TvLibrary.Log
 Imports SetupTv
-
 Imports TvMovie.TvEngine.TvMovie
+Imports TvMovie.TvEngine
+Imports Gentle.Framework
 
 
 Namespace SetupTv.Sections
@@ -94,7 +96,12 @@ Namespace SetupTv.Sections
         Private Sub linkLabelInfo_LinkClicked(ByVal sender As Object, ByVal e As LinkLabelLinkClickedEventArgs) Handles linkLabelInfo.LinkClicked
             Process.Start("http://www.tvmovie.de/ClickFinder.57.0.html")
         End Sub
-
+        Private Sub LinkClickfinderPG_LinkClicked(ByVal sender As System.Object, ByVal e As System.Windows.Forms.LinkLabelLinkClickedEventArgs) Handles LinkClickfinderPG.LinkClicked
+            Process.Start("http://www.team-mediaportal.com/extensions/television/clickfinder-programguide?lang=en")
+        End Sub
+        Private Sub Linklabel_EpSc_LinkClicked(ByVal sender As System.Object, ByVal e As System.Windows.Forms.LinkLabelLinkClickedEventArgs) Handles Linklabel_EpSc.LinkClicked
+            Process.Start("http://forum.team-mediaportal.com/electronic-program-guide-67/new-tool-episodescanner-adds-series-episodenumbers-your-mediaportal-4tr-epg-76220/")
+        End Sub
 #End Region
 
 #Region "Constructor"
@@ -124,7 +131,6 @@ Namespace SetupTv.Sections
 
         Private Sub SaveDbSettings()
             Dim layer As New TvBusinessLayer()
-
 
             DatabasePath = tbDbPath.Text
 
@@ -204,8 +210,95 @@ Namespace SetupTv.Sections
             setting.Value = GetRestPeriod()
             setting.Persist()
 
+            'TV Movie++ Enhancement by Scrounger
             setting = layer.GetSetting("TvMovieRunAppAfter", String.Empty)
             setting.Value = tbRunAppAfter.Text
+            setting.Persist()
+
+            setting = layer.GetSetting("TvMovieRunAppHidden", "true")
+            If checkBoxRunHidden.Checked Then
+                setting.Value = "true"
+            Else
+                setting.Value = "false"
+            End If
+            setting.Persist()
+
+            setting = layer.GetSetting("TvMovieIsEpisodenScanner", "false")
+            If CheckBoxEpSc.Checked Then
+                setting.Value = "true"
+            Else
+                setting.Value = "false"
+            End If
+            setting.Persist()
+
+            setting = layer.GetSetting("TvMovieMPDatabase", "C:\ProgramData\Team MediaPortal\MediaPortal\database")
+            setting.Value = tbMPDatabasePath.Text
+            setting.Persist()
+
+            setting = layer.GetSetting("TvMovieMPThumbsPath", "")
+            setting.Value = tbMPThumbs.Text
+            setting.Persist()
+
+            setting = layer.GetSetting("TvMovieImportTvSeriesInfos", "false")
+            If CheckBoxTvSeries.Checked Then
+                setting.Value = "true"
+            Else
+                setting.Value = "false"
+            End If
+            setting.Persist()
+
+            setting = layer.GetSetting("TvMovieUseTheTvDb", "false")
+            If CheckBoxTheTvDb.Checked Then
+                setting.Value = "true"
+            Else
+                setting.Value = "false"
+            End If
+            setting.Persist()
+
+
+            setting = layer.GetSetting("TvMovieImportMovingPicturesInfos", "false")
+            If CheckBoxMovingPictures.Checked Then
+                setting.Value = "true"
+            Else
+                setting.Value = "false"
+            End If
+            setting.Persist()
+
+            setting = layer.GetSetting("TvMovieImportMyFilmsInfos", "false")
+            If CheckBoxMyFilms.Checked Then
+                setting.Value = "true"
+            Else
+                setting.Value = "false"
+            End If
+            setting.Persist()
+
+            setting = layer.GetSetting("TvMovieImportVideoDatabaseInfos", "false")
+            If CheckBoxVideoDB.Checked Then
+                setting.Value = "true"
+            Else
+                setting.Value = "false"
+            End If
+            setting.Persist()
+
+            setting = layer.GetSetting("ClickfinderDataAvailable", "false")
+            If CheckBoxClickfinderPG.Checked Then
+                setting.Value = "true"
+            Else
+                setting.Value = "false"
+            End If
+            setting.Persist()
+
+            setting = layer.GetSetting("TvMovieStartImportAtTime", "false")
+            If MpCheckBoxStartImportAtTime.Checked Then
+                setting.Value = "true"
+            Else
+                setting.Value = "false"
+            End If
+            setting.Persist()
+
+
+            setting = layer.GetSetting("TvMovieStartImportTime", "06:00")
+            setting.Value = tbImportStartTime.Text
             setting.Persist()
 
         End Sub
@@ -218,6 +311,25 @@ Namespace SetupTv.Sections
 
         Private Sub LoadDbSettings()
             Dim layer As New TvBusinessLayer()
+
+            Dim _plugin As New TvEngine.TvMovie
+
+
+            'Neue Version: benötigte Einstellungen hier
+            If Not layer.GetSetting("TvMovieVersion", String.Empty).Value = _plugin.Version Then
+
+                MsgBox("New TvMovie++ Version detected!" & vbNewLine & vbNewLine & "All database tables must be reset for this new Version. That means you will lost your Series Mapping configuration and have to reconfigure the mappings !" & vbNewLine & vbNewLine & "You have to start a manual import to save the changes !!!", MsgBoxStyle.Information, "New Version")
+
+                Helper.DropSeriesMappingTable()
+
+                Helper.CreateOrClearTvMovieProgramTables()
+
+                'VersionsNr. speichern.
+                Dim Setting As Setting = layer.GetSetting("TvMovieVersion", String.Empty)
+                Setting.Value = _plugin.Version
+                Setting.Persist()
+            End If
+
             checkBoxEnableImport.Checked = layer.GetSetting("TvMovieEnabled", "false").Value = "true"
             checkBoxUseShortDesc.Checked = layer.GetSetting("TvMovieShortProgramDesc", "false").Value = "true"
             checkBoxAdditionalInfo.Checked = layer.GetSetting("TvMovieExtendDescription", "true").Value = "true"
@@ -237,7 +349,39 @@ Namespace SetupTv.Sections
             checkBoxShowLive.Checked = layer.GetSetting("TvMovieShowLive", "true").Value = "true"
             checkBoxShowRepeat.Checked = layer.GetSetting("TvMovieShowRepeating", "false").Value = "true"
             SetRestPeriod(layer.GetSetting("TvMovieRestPeriod", "24").Value)
+
+            'TV Movie++ Enhancement by Scrounger
             tbRunAppAfter.Text = layer.GetSetting("TvMovieRunAppAfter", String.Empty).Value
+            tbMPDatabasePath.Text = layer.GetSetting("TvMovieMPDatabase", "C:\ProgramData\Team MediaPortal\MediaPortal\database").Value
+            tbMPThumbs.Text = layer.GetSetting("TvMovieMPThumbsPath", "").Value
+            checkBoxRunHidden.Checked = layer.GetSetting("TvMovieRunAppHidden", "true").Value = "true"
+            CheckBoxEpSc.Checked = layer.GetSetting("TvMovieIsEpisodenScanner", "false").Value = "true"
+            CheckBoxTvSeries.Checked = layer.GetSetting("TvMovieImportTvSeriesInfos", "false").Value = "true"
+            CheckBoxTheTvDb.Checked = layer.GetSetting("TvMovieUseTheTvDb", "false").Value = "true"
+            CheckBoxMovingPictures.Checked = layer.GetSetting("TvMovieImportMovingPicturesInfos", "false").Value = "true"
+            CheckBoxMyFilms.Checked = layer.GetSetting("TvMovieImportMyFilmsInfos", "false").Value = "true"
+            CheckBoxVideoDB.Checked = layer.GetSetting("TvMovieImportVideoDatabaseInfos", "false").Value = "true"
+            CheckBoxClickfinderPG.Checked = layer.GetSetting("ClickfinderDataAvailable", "false").Value = "true"
+            MpCheckBoxStartImportAtTime.Checked = CBool(layer.GetSetting("TvMovieStartImportAtTime", "false").Value)
+            tbImportStartTime.Text = layer.GetSetting("TvMovieStartImportTime", "06:00").Value
+
+            If CheckBoxTvSeries.Checked = True Then
+                ButtonSeriesMapping.Enabled = True
+            Else
+                ButtonSeriesMapping.Enabled = False
+            End If
+
+            If CheckBoxTheTvDb.Checked And CheckBoxClickfinderPG.Checked Then
+                tbMPThumbs.Enabled = True
+            Else
+                tbMPThumbs.Enabled = False
+            End If
+
+            If MpCheckBoxStartImportAtTime.Checked Then
+                tbImportStartTime.Enabled = True
+            Else
+                tbImportStartTime.Enabled = False
+            End If
 
         End Sub
 
@@ -285,7 +429,7 @@ Namespace SetupTv.Sections
                                 stationNode.Tag = channelInfo
                                 treeViewTvMStations.Nodes.Add(stationNode)
                             Catch exstat As Exception
-                                Log.Info("TvMovieSetup: Error loading TV Movie station - {0}", exstat.Message)
+                                MyLog.Info("TvMovieSetup: Error loading TV Movie station - {0}", exstat.Message)
                             End Try
                         Next
                     Finally
@@ -303,12 +447,12 @@ Namespace SetupTv.Sections
                             treeViewMpChannels.Nodes.Add(stationNode)
                         Next
                     Catch exdb As Exception
-                        Log.Info("TvMovieSetup: Error loading MP's channels from database - {0}", exdb.Message)
+                        MyLog.Info("TvMovieSetup: Error loading MP's channels from database - {0}", exdb.Message)
                     Finally
                         treeViewMpChannels.EndUpdate()
                     End Try
                 Catch ex As Exception
-                    Log.Info("TvMovieSetup: Unhandled error in  LoadStations - {0}" & vbLf & "{1}", ex.Message, ex.StackTrace)
+                    MyLog.Info("TvMovieSetup: Unhandled error in  LoadStations - {0}" & vbLf & "{1}", ex.Message, ex.StackTrace)
                 End Try
             End If
         End Sub
@@ -374,28 +518,28 @@ Namespace SetupTv.Sections
                     mapping.Remove()
                 Next
             Else
-                Log.Info("TvMovieSetup: SaveMapping - no mappingList items")
+                MyLog.Info("TvMovieSetup: SaveMapping - no mappingList items")
             End If
 
             Dim layer As New TvBusinessLayer()
 
             For Each channel As TreeNode In treeViewMpChannels.Nodes
-                'Log.Debug("TvMovieSetup: Processing channel {0}", channel.Text);
+                'Mylog.Debug("TvMovieSetup: Processing channel {0}", channel.Text);
                 For Each station As TreeNode In channel.Nodes
                     Dim channelInfo As ChannelInfo = DirectCast(station.Tag, ChannelInfo)
-                    'Log.Debug("TvMovieSetup: Processing channelInfo {0}", channelInfo.Name);
+                    'Mylog.Debug("TvMovieSetup: Processing channelInfo {0}", channelInfo.Name);
                     Dim mapping As TvMovieMapping = Nothing
                     Try
                         mapping = New TvMovieMapping(DirectCast(channel.Tag, Channel).IdChannel, channelInfo.Name, channelInfo.Start, channelInfo.[End])
                     Catch exm As Exception
-                        Log.[Error]("TvMovieSetup: Error on new TvMovieMapping for channel {0} - {1}", channel.Text, exm.Message)
+                        MyLog.[Error]("TvMovieSetup: Error on new TvMovieMapping for channel {0} - {1}", channel.Text, exm.Message)
                     End Try
-                    'Log.Write("TvMovieSetup: SaveMapping - new mapping for {0}/{1}", channel.Text, channelInfo.Name);
+                    'Mylog.Write("TvMovieSetup: SaveMapping - new mapping for {0}/{1}", channel.Text, channelInfo.Name);
                     Try
-                        Log.Debug("TvMovieSetup: Persisting TvMovieMapping for channel {0}", channel.Text)
+                        MyLog.Debug("TvMovieSetup: Persisting TvMovieMapping for channel {0}", channel.Text)
                         mapping.Persist()
                     Catch ex As Exception
-                        Log.[Error]("TvMovieSetup: Error on mapping.Persist() {0},{1}", ex.Message, ex.StackTrace)
+                        MyLog.[Error]("TvMovieSetup: Error on mapping.Persist() {0},{1}", ex.Message, ex.StackTrace)
                     End Try
                 Next
             Next
@@ -444,18 +588,18 @@ Namespace SetupTv.Sections
                                             channelNode.Expand()
                                         End If
                                     Else
-                                        Log.Debug("TVMovie plugin: Channel {0} no longer present in Database - ignoring", stationName)
+                                        MyLog.Debug("TVMovie plugin: Channel {0} no longer present in Database - ignoring", stationName)
                                     End If
                                 End If
                             Catch exInner As Exception
-                                Log.Debug("TVMovie plugin: Mapping of station {0} failed; maybe it has been deleted / changed ({1})", MpChannelName, exInner.Message)
+                                MyLog.Debug("TVMovie plugin: Mapping of station {0} failed; maybe it has been deleted / changed ({1})", MpChannelName, exInner.Message)
                             End Try
                         Next
                     Else
-                        Log.Debug("TVMovie plugin: LoadMapping did not find any mapped channels")
+                        MyLog.Debug("TVMovie plugin: LoadMapping did not find any mapped channels")
                     End If
                 Catch ex As Exception
-                    Log.Debug("TVMovie plugin: LoadMapping failed - {0},{1}", ex.Message, ex.StackTrace)
+                    MyLog.Debug("TVMovie plugin: LoadMapping failed - {0},{1}", ex.Message, ex.StackTrace)
                 End Try
                 ColorTree()
             Finally
@@ -472,7 +616,7 @@ Namespace SetupTv.Sections
                             Return MpNode
                         End If
                     Else
-                        Log.Debug("TVMovie plugin: FindChannel failed - no Channel in Node tag of {0}", MpNode.Text)
+                        MyLog.Debug("TVMovie plugin: FindChannel failed - no Channel in Node tag of {0}", MpNode.Text)
                     End If
                 End If
             Next
@@ -645,7 +789,7 @@ Namespace SetupTv.Sections
                 Catch ex1 As Exception
                     MessageBox.Show(Me, "Please make sure a supported TV Movie Clickfinder release has been successfully installed.", "Error loading TV Movie stations", MessageBoxButtons.OK, MessageBoxIcon.[Error])
                     checkBoxEnableImport.Checked = False
-                    Log.Info("TVMovie plugin: Error enabling TV Movie import in LoadStations() - {0},{1}", ex1.Message, ex1.StackTrace)
+                    MyLog.Info("TVMovie plugin: Error enabling TV Movie import in LoadStations() - {0},{1}", ex1.Message, ex1.StackTrace)
                     Return
                 End Try
 
@@ -654,7 +798,7 @@ Namespace SetupTv.Sections
                 Catch ex2 As Exception
                     MessageBox.Show(Me, "Please make sure your using a valid channel mapping.", "Error loading TVM <-> MP channel mapping", MessageBoxButtons.OK, MessageBoxIcon.[Error])
                     checkBoxEnableImport.Checked = False
-                    Log.Info("TVMovie plugin: Error enabling TV Movie import in LoadMapping() - {0},{1}", ex2.Message, ex2.StackTrace)
+                    MyLog.Info("TVMovie plugin: Error enabling TV Movie import in LoadMapping() - {0},{1}", ex2.Message, ex2.StackTrace)
                     Return
                 End Try
             Else
@@ -674,6 +818,7 @@ Namespace SetupTv.Sections
         Private Sub buttonImportNow_Click(ByVal sender As Object, ByVal e As EventArgs) Handles buttonImportNow.Click
             buttonImportNow.Enabled = False
             SaveDbSettings()
+
             Try
                 Dim manualThread As New Thread(New ThreadStart(AddressOf ManualImportThread))
                 manualThread.Name = "TV Movie manual importer"
@@ -681,12 +826,12 @@ Namespace SetupTv.Sections
                 manualThread.IsBackground = False
                 manualThread.Start()
             Catch ex2 As Exception
-                Log.[Error]("TVMovie: Error spawing import thread - {0},{1}", ex2.Message, ex2.StackTrace)
+                MyLog.[Error]("TVMovie: Error spawing import thread - {0},{1}", ex2.Message, ex2.StackTrace)
                 buttonImportNow.Enabled = True
             End Try
         End Sub
 
-        Private Sub ManualImportThread()
+        Public Sub ManualImportThread()
             Dim _database As New TvEngine.TvMovieDatabase()
             Try
                 _database.LaunchTVMUpdater(False)
@@ -696,8 +841,8 @@ Namespace SetupTv.Sections
                 End If
                 buttonImportNow.Enabled = True
             Catch ex As Exception
-                Log.Info("TvMovie plugin error:")
-                Log.Write(ex)
+                MyLog.Info("TvMovie plugin error:")
+                MyLog.Write(ex)
                 buttonImportNow.Enabled = True
             End Try
         End Sub
@@ -728,8 +873,112 @@ Namespace SetupTv.Sections
 
 #End Region
 
-        Private Sub Button1_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button1.Click
+#Region "TVMovie++ enhancement"
+        Private Sub BTAppBrowse_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles BTAppBrowse.Click
+            Dim openFileDialog1 As New OpenFileDialog()
 
+            openFileDialog1.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyComputer)
+            openFileDialog1.Filter = "Application (*.exe)|*.exe|All files (*.*)|*.*"
+
+            If openFileDialog1.ShowDialog(Me) = System.Windows.Forms.DialogResult.OK Then
+                tbRunAppAfter.Text = openFileDialog1.FileName
+            End If
+
+        End Sub
+
+        Private Sub ButtonBrowseMPDatabases_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonBrowseMPDatabases.Click
+            ' First create a FolderBrowserDialog object
+            Dim FolderBrowserDialog1 As New FolderBrowserDialog
+
+            ' Then use the following code to create the Dialog window
+            ' Change the .SelectedPath property to the default location
+            With FolderBrowserDialog1
+                ' Desktop is the root folder in the diaMylog.
+                .RootFolder = Environment.SpecialFolder.Desktop
+                ' Select the C:\Windows directory on entry.
+                .SelectedPath = Environment.GetFolderPath(Environment.SpecialFolder.MyComputer)
+                ' Prompt the user with a custom message.
+                .Description = "Select the source directory"
+                If .ShowDialog = DialogResult.OK Then
+                    ' Display the selected folder if the user clicked on the OK button.
+                    tbMPDatabasePath.Text = .SelectedPath
+                End If
+            End With
+        End Sub
+        Private Sub ButtonEPGgrab_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonEPGgrab.Click
+            SaveMapping()
+
+            Dim EPGgrab As New frmEPGgrab
+            EPGgrab.ShowDialog()
+        End Sub
+#End Region
+
+        Private Sub CheckBoxTvSeries_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles CheckBoxTvSeries.CheckedChanged
+            If CheckBoxTvSeries.Checked Then
+                ButtonSeriesMapping.Enabled = True
+            Else
+                ButtonSeriesMapping.Enabled = False
+            End If
+
+        End Sub
+
+        Private Sub ButtonSeriesMapping_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonSeriesMapping.Click
+
+            If File.Exists(tbMPDatabasePath.Text & "\" & "TVSeriesDatabase4.db3") Then
+                SaveMapping()
+
+
+                Dim _layer As New TvBusinessLayer
+                enrichEPG.MySettings.MpDatabasePath = _layer.GetSetting("TvMovieMPDatabase").Value
+
+                Dim SeriesManagement As New enrichEPG.seriesManagement
+                SeriesManagement.ShowDialog()
+            Else
+                MsgBox("TvSeries Datenbank nicht gefunden !", MsgBoxStyle.Critical, "Fehler")
+            End If
+
+        End Sub
+
+        Private Sub CheckBoxTheTvDb_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles CheckBoxTheTvDb.CheckedChanged
+            If CheckBoxTheTvDb.Checked And CheckBoxClickfinderPG.Checked Then
+                tbMPThumbs.Enabled = True
+            Else
+                tbMPThumbs.Enabled = False
+            End If
+        End Sub
+
+        Private Sub CheckBoxClickfinderPG_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles CheckBoxClickfinderPG.CheckedChanged
+            If CheckBoxClickfinderPG.Checked And CheckBoxTheTvDb.Checked Then
+                tbMPThumbs.Enabled = True
+                enrichEPG.MySettings.ClickfinderProgramGuideImportEnable = True
+            Else
+                tbMPThumbs.Enabled = False
+                enrichEPG.MySettings.ClickfinderProgramGuideImportEnable = False
+            End If
+        End Sub
+
+        Private Sub MpCheckBoxStartImportAtTime_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MpCheckBoxStartImportAtTime.CheckedChanged
+            If MpCheckBoxStartImportAtTime.Checked Then
+                tbImportStartTime.Enabled = True
+            Else
+                tbImportStartTime.Enabled = False
+            End If
+        End Sub
+
+        Private Sub BT_ResetEpisodeMapping_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles BT_ResetEpisodeMapping.Click
+            MsgBox("You have to start a manual import to save the changes !!!", MsgBoxStyle.Information, "ResetSeriesMapping")
+
+            Helper.DropEpisodeMappingTable()
+
+            Helper.CreateOrClearTvMovieProgramTables()
+        End Sub
+
+        Private Sub BT_ResetSeriesMapping_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles BT_ResetSeriesMapping.Click
+            MsgBox("You have to start a manual import to save the changes !!!", MsgBoxStyle.Information, "ResetSeriesMapping")
+
+            Helper.DropSeriesMappingTable()
+
+            Helper.CreateOrClearTvMovieProgramTables()
         End Sub
     End Class
 End Namespace

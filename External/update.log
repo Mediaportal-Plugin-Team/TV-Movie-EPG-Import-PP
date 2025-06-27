@@ -1,0 +1,53 @@
+ 
+Mediaportal 
+PROGS=C: 
+Found Common.Utils.dll in C:\Team MediaPortal\MediaPortal 
+Скопировано файлов:         1.
+Found Core.dll in C:\Team MediaPortal\MediaPortal 
+Скопировано файлов:         1.
+Found Databases.dll in C:\Team MediaPortal\MediaPortal 
+Скопировано файлов:         1.
+Found Gentle.Common.dll in C:\Team MediaPortal\MediaPortal 
+Скопировано файлов:         1.
+Found Gentle.Framework.dll in C:\Team MediaPortal\MediaPortal 
+Скопировано файлов:         1.
+Found MySql.Data.dll in C:\Team MediaPortal\MediaPortal 
+Скопировано файлов:         1.
+Found PowerScheduler.Interfaces.dll in C:\Team MediaPortal\MediaPortal 
+Скопировано файлов:         1.
+Found sqlite.dll in C:\Team MediaPortal\MediaPortal 
+Скопировано файлов:         1.
+Found TvBusinessLayer.dll in C:\Team MediaPortal\MediaPortal 
+Скопировано файлов:         1.
+Found TvControl.dll in C:\Team MediaPortal\MediaPortal 
+Скопировано файлов:         1.
+Found TVDatabase.dll in C:\Team MediaPortal\MediaPortal 
+Скопировано файлов:         1.
+Found TvLibrary.Interfaces.dll in C:\Team MediaPortal\MediaPortal 
+Скопировано файлов:         1.
+Found Utils.dll in C:\Team MediaPortal\MediaPortal 
+Скопировано файлов:         1.
+Mediaportal TV Server 
+PROGS=C: 
+Found Common.Utils.dll in C:\Team MediaPortal\MediaPortal TV Server 
+Скопировано файлов:         1.
+Found Gentle.Common.dll in C:\Team MediaPortal\MediaPortal TV Server 
+Скопировано файлов:         1.
+Found Gentle.Framework.dll in C:\Team MediaPortal\MediaPortal TV Server 
+Скопировано файлов:         1.
+Found MySql.Data.dll in C:\Team MediaPortal\MediaPortal TV Server 
+Скопировано файлов:         1.
+Found PowerScheduler.Interfaces.dll in C:\Team MediaPortal\MediaPortal TV Server 
+Скопировано файлов:         1.
+Found TvBusinessLayer.dll in C:\Team MediaPortal\MediaPortal TV Server 
+Скопировано файлов:         1.
+Found TvControl.dll in C:\Team MediaPortal\MediaPortal TV Server 
+Скопировано файлов:         1.
+Found TVDatabase.dll in C:\Team MediaPortal\MediaPortal TV Server 
+Скопировано файлов:         1.
+Found TVLibrary.dll in C:\Team MediaPortal\MediaPortal TV Server 
+Скопировано файлов:         1.
+Found TvLibrary.Interfaces.dll in C:\Team MediaPortal\MediaPortal TV Server 
+Скопировано файлов:         1.
+Found TvLibrary.Utils.dll in C:\Team MediaPortal\MediaPortal TV Server 
+Скопировано файлов:         1.

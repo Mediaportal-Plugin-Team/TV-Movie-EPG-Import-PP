@@ -1,8 +1,9 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual Studio 2008
-# SharpDevelop 3.2.0.5505
-Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "TvMovie.Converted", "TvMovie.Converted.vbproj", "{9038DBB3-C3CC-4ED5-A1DB-E922CEC59B35}"
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.36107.64
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "TvMovie.Converted", "TvMovie.Converted.vbproj", "{3685592F-DF10-437A-92F4-5699D736A35D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -10,19 +11,21 @@ Global
 		Debug|x86 = Debug|x86
 		Release|Any CPU = Release|Any CPU
 		Release|x86 = Release|x86
-		Debug|Any CPU = Debug|Any CPU
-		Debug|x86 = Debug|x86
-		Release|Any CPU = Release|Any CPU
-		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{9038DBB3-C3CC-4ED5-A1DB-E922CEC59B35}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9038DBB3-C3CC-4ED5-A1DB-E922CEC59B35}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9038DBB3-C3CC-4ED5-A1DB-E922CEC59B35}.Debug|x86.Build.0 = Debug|x86
-		{9038DBB3-C3CC-4ED5-A1DB-E922CEC59B35}.Debug|x86.ActiveCfg = Debug|x86
-		{9038DBB3-C3CC-4ED5-A1DB-E922CEC59B35}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9038DBB3-C3CC-4ED5-A1DB-E922CEC59B35}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9038DBB3-C3CC-4ED5-A1DB-E922CEC59B35}.Release|x86.Build.0 = Release|x86
-		{9038DBB3-C3CC-4ED5-A1DB-E922CEC59B35}.Release|x86.ActiveCfg = Release|x86
+		{3685592F-DF10-437A-92F4-5699D736A35D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3685592F-DF10-437A-92F4-5699D736A35D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3685592F-DF10-437A-92F4-5699D736A35D}.Debug|x86.ActiveCfg = Debug|x86
+		{3685592F-DF10-437A-92F4-5699D736A35D}.Debug|x86.Build.0 = Debug|x86
+		{3685592F-DF10-437A-92F4-5699D736A35D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3685592F-DF10-437A-92F4-5699D736A35D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3685592F-DF10-437A-92F4-5699D736A35D}.Release|x86.ActiveCfg = Release|x86
+		{3685592F-DF10-437A-92F4-5699D736A35D}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {2F784A9F-980E-46D7-A24B-897D5B86CD54}
 	EndGlobalSection
 EndGlobal

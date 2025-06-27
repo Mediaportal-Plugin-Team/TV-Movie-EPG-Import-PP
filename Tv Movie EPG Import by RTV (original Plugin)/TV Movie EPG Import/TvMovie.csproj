@@ -15,7 +15,7 @@
     <OldToolsVersion>3.5</OldToolsVersion>
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -52,25 +52,25 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Common.Utils">
-      <HintPath>C:\Program Files\Team MediaPortal\MediaPortal TV Server\Common.Utils.dll</HintPath>
+      <HintPath>..\..\External\Common.Utils.dll</HintPath>
     </Reference>
     <Reference Include="Gentle.Common">
-      <HintPath>C:\Program Files\Team MediaPortal\MediaPortal TV Server\Gentle.Common.dll</HintPath>
+      <HintPath>..\..\External\Gentle.Common.dll</HintPath>
     </Reference>
     <Reference Include="Gentle.Framework">
-      <HintPath>C:\Program Files\Team MediaPortal\MediaPortal TV Server\Gentle.Framework.dll</HintPath>
+      <HintPath>..\..\External\Gentle.Framework.dll</HintPath>
     </Reference>
     <Reference Include="PluginBase">
-      <HintPath>C:\Program Files\Team MediaPortal\MediaPortal TV Server\PluginBase.dll</HintPath>
+      <HintPath>..\..\External\PluginBase.dll</HintPath>
     </Reference>
     <Reference Include="PowerScheduler.Interfaces">
-      <HintPath>C:\Program Files\Team MediaPortal\MediaPortal TV Server\PowerScheduler.Interfaces.dll</HintPath>
+      <HintPath>..\..\External\PowerScheduler.Interfaces.dll</HintPath>
     </Reference>
     <Reference Include="SetupControls">
-      <HintPath>C:\Program Files\Team MediaPortal\MediaPortal TV Server\SetupControls.dll</HintPath>
+      <HintPath>..\..\External\SetupControls.dll</HintPath>
     </Reference>
     <Reference Include="SetupTv">
-      <HintPath>C:\Program Files\Team MediaPortal\MediaPortal TV Server\SetupTv.exe</HintPath>
+      <HintPath>..\..\External\SetupTv.exe</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
@@ -83,22 +83,22 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="TvBusinessLayer">
-      <HintPath>C:\Program Files\Team MediaPortal\MediaPortal TV Server\TvBusinessLayer.dll</HintPath>
+      <HintPath>..\..\External\TvBusinessLayer.dll</HintPath>
     </Reference>
     <Reference Include="TvControl">
-      <HintPath>C:\Program Files\Team MediaPortal\MediaPortal TV Server\TvControl.dll</HintPath>
+      <HintPath>..\..\External\TvControl.dll</HintPath>
     </Reference>
     <Reference Include="TVDatabase">
-      <HintPath>C:\Program Files\Team MediaPortal\MediaPortal TV Server\TVDatabase.dll</HintPath>
+      <HintPath>..\..\External\TVDatabase.dll</HintPath>
     </Reference>
     <Reference Include="TVLibrary">
-      <HintPath>C:\Program Files\Team MediaPortal\MediaPortal TV Server\TVLibrary.dll</HintPath>
+      <HintPath>..\..\External\TVLibrary.dll</HintPath>
     </Reference>
     <Reference Include="TvLibrary.Interfaces">
-      <HintPath>C:\Program Files\Team MediaPortal\MediaPortal TV Server\TvLibrary.Interfaces.dll</HintPath>
+      <HintPath>..\..\External\TvLibrary.Interfaces.dll</HintPath>
     </Reference>
     <Reference Include="TvLibrary.Utils">
-      <HintPath>C:\Program Files\Team MediaPortal\MediaPortal TV Server\TvLibrary.Utils.dll</HintPath>
+      <HintPath>..\..\External\TvLibrary.Utils.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

@@ -1,7 +1,6 @@
-/UpgradeLog.XML
-/_UpgradeReport_Files/UpgradeReport.css
-/_UpgradeReport_Files/UpgradeReport.xslt
-/_UpgradeReport_Files/UpgradeReport_Minus.gif
-/_UpgradeReport_Files/UpgradeReport_Plus.gif
-/bin/.gitignore
-/obj/.gitignore
+/bin/
+/obj/
+.log
+.user
+.suo
+.vs
