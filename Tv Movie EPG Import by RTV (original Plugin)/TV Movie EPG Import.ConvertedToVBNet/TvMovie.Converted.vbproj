@@ -109,5 +109,8 @@
       <SubType>Designer</SubType>
       <DependentUpon>TvMovieSetup.vb</DependentUpon>
     </EmbeddedResource>
+    <Reference Include="TvLibrary.Utils">
+      <HintPath>..\..\External\TvLibrary.Utils.dll</HintPath>
+    </Reference>
   </ItemGroup>
 </Project>
