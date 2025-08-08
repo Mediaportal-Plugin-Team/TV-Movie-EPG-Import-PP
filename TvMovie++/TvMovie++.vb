@@ -18,26 +18,21 @@
 
 #End Region
 
-imports System
-imports System.Diagnostics
-imports System.IO
-imports System.Runtime.InteropServices
-imports System.Threading
-imports System.Timers
-imports Microsoft.Win32
+Imports System.IO
+Imports System.Reflection
+Imports System.Threading
+Imports System.Timers
+
+Imports SetupTv
 Imports TvControl
 Imports TvDatabase
+Imports TvEngine
 Imports TvEngine.PowerScheduler.Interfaces
 Imports TvLibrary.Interfaces
-Imports TvLibrary.Log
-Imports TvEngine
-Imports SetupTv
-Imports System.Data
-
 
 Namespace TvEngine
-	Public Class TvMovie
-		Implements ITvServerPlugin
+    Public Class TvMovie
+        Implements ITvServerPlugin
         Implements ITvServerPluginStartedAll
 
 #Region "Members"
@@ -123,7 +118,7 @@ Namespace TvEngine
                 Return path
             End Get
             Set(ByVal value As String)
-                Dim path As String = Value
+                Dim path As String = value
 
                 'If passed path is invalid
                 If Not File.Exists(path) Then
@@ -207,7 +202,7 @@ Namespace TvEngine
                             End If
                         Else
                             MyLog.Info("TVMovie: Import skipped because the update process timed out / has been aborted.")
-                            End If
+                        End If
                     End If
                 Catch ex As Exception
                     MyLog.Info("TvMovie plugin error:")
@@ -281,7 +276,8 @@ Namespace TvEngine
 
         Public ReadOnly Property Version() As String Implements ITvServerPlugin.Version
             Get
-                Return "1.6.4.2 beta"
+                ' Return "1.7.0.0"
+                Return Assembly.GetExecutingAssembly().GetName().Version.ToString()
             End Get
         End Property
 

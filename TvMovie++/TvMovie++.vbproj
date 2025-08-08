@@ -61,12 +61,10 @@
     <Reference Include="Common.Utils">
       <HintPath>..\External\Common.Utils.dll</HintPath>
     </Reference>
-    <Reference Include="Databases, Version=1.2.200.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="Databases">
       <HintPath>..\External\Databases.dll</HintPath>
     </Reference>
-    <Reference Include="enrichEPG, Version=1.2.3.2, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="enrichEPG">
       <HintPath>..\External\enrichEPG.dll</HintPath>
     </Reference>
     <Reference Include="Gentle.Common">
@@ -84,7 +82,7 @@
     <Reference Include="PowerScheduler.Interfaces">
       <HintPath>..\External\PowerScheduler.Interfaces.dll</HintPath>
     </Reference>
-    <Reference Include="SetupControls, Version=1.2.2.0, Culture=neutral, processorArchitecture=x86">
+    <Reference Include="SetupControls">
       <HintPath>..\External\SetupControls.dll</HintPath>
       <SpecificVersion>False</SpecificVersion>
       <Private>False</Private>

@@ -4,3 +4,7 @@
 .user
 .suo
 .vs
+[Bb]in
+[Dd]ebug*/
+[Rr]elease*/
+*.log

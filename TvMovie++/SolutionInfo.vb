@@ -51,6 +51,6 @@ Imports System.Reflection
 ' by using the '*' as shown below:
 
 <Assembly: AssemblyVersion("1.7.0.999")>
-<Assembly: AssemblyFileVersion("1.7.0.000")>
+<Assembly: AssemblyFileVersion("1.7.0.999")>
 
 '[assembly: CompatibleVersion("1.1.8.*", "1.1.8.*")]
